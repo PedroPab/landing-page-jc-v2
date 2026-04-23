@@ -1,0 +1,79 @@
+---
+/**
+ * GalleryStrip — compact gallery supporting 'strip', 'grid', and 'featured' layouts.
+ * Each item can be an image, video, or gif.
+ * Shows a MediaPlaceholder for missing files during development.
+ */
+import MediaPlaceholder from '@/components/ui/MediaPlaceholder.astro';
+import VideoBlock from '@/components/ui/VideoBlock.astro';
+
+interface MediaItem {
+  type: 'image' | 'video' | 'gif';
+  src: string;
+  alt: string;
+  poster?: string;
+  caption?: string;
+}
+
+interface Props {
+  items: MediaItem[];
+  layout?: 'strip' | 'grid' | 'featured';
+  class?: string;
+}
+
+const { items, layout = 'strip', class: className = '' } = Astro.props;
+
+// Layout grid classes
+const layoutClasses: Record<string, string> = {
+  strip:    'flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory',
+  grid:     'grid grid-cols-2 gap-3',
+  featured: 'grid grid-cols-2 gap-3',
+};
+
+const itemClasses: Record<string, string> = {
+  strip:    'shrink-0 snap-start w-64 sm:w-72',
+  grid:     '',
+  featured: '',
+};
+---
+
+<div class={`${layoutClasses[layout]} ${className}`} role="list" aria-label="Galería de imágenes">
+  {items.map((item, i) => {
+    const isFirst = i === 0;
+    const featuredClass = layout === 'featured' && isFirst ? 'col-span-2' : '';
+    const wrapClass = `${itemClasses[layout]} ${featuredClass}`;
+
+    return (
+      <div class={wrapClass} role="listitem">
+        {item.type === 'video' ? (
+          <VideoBlock
+            src={item.src}
+            poster={item.poster}
+            alt={item.alt}
+            caption={item.caption}
+            controls
+            aspect={layout === 'featured' && isFirst ? 'video' : 'video'}
+            class="h-full"
+          />
+        ) : (
+          <figure class="flex flex-col gap-2 h-full">
+            <div class={`relative overflow-hidden rounded-lg bg-surface ${layout === 'strip' ? 'aspect-video' : isFirst && layout === 'featured' ? 'aspect-video' : 'aspect-square'}`}>
+              <img
+                src={item.src}
+                alt={item.alt}
+                class="w-full h-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+                loading={isFirst ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </div>
+            {item.caption && (
+              <figcaption class="text-[0.7rem] text-neutral leading-snug px-1">
+                {item.caption}
+              </figcaption>
+            )}
+          </figure>
+        )}
+      </div>
+    );
+  })}
+</div>

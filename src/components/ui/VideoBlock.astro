@@ -1,0 +1,72 @@
+---
+/**
+ * VideoBlock — renders a <video> element with poster support.
+ * By default: autoplay, muted, loop, no controls (ambient/background style).
+ * Pass controls=true for interactive videos (e.g. case study process video).
+ */
+interface Props {
+  src: string;
+  poster?: string;
+  alt: string;
+  caption?: string;
+  controls?: boolean;
+  autoplay?: boolean;
+  loop?: boolean;
+  aspect?: 'video' | 'square' | 'portrait';
+  class?: string;
+}
+
+const {
+  src,
+  poster,
+  alt,
+  caption,
+  controls = true,
+  autoplay = false,
+  loop = false,
+  aspect = 'video',
+  class: className = '',
+} = Astro.props;
+
+const aspectClass: Record<string, string> = {
+  video:    'aspect-video',
+  square:   'aspect-square',
+  portrait: 'aspect-[3/4]',
+};
+---
+
+<figure class={`flex flex-col gap-2 ${className}`}>
+  <div class={`relative overflow-hidden rounded-lg bg-foreground ${aspectClass[aspect]}`}>
+    <video
+      src={src}
+      poster={poster}
+      class="w-full h-full object-cover"
+      title={alt}
+      controls={controls}
+      autoplay={autoplay}
+      loop={loop}
+      muted={autoplay}
+      playsinline
+      preload={poster ? 'none' : 'metadata'}
+    >
+      <p>Tu navegador no admite reproducción de video. <a href={src} class="text-primary underline">Descargar video</a></p>
+    </video>
+
+    {/* Play overlay for non-autoplay videos without controls that have a poster */}
+    {!controls && !autoplay && poster && (
+      <div class="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+        <div class="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-elevated">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-primary ml-1" aria-hidden="true">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+      </div>
+    )}
+  </div>
+
+  {caption && (
+    <figcaption class="text-[0.75rem] text-neutral leading-relaxed px-1">
+      {caption}
+    </figcaption>
+  )}
+</figure>

@@ -1,6 +1,7 @@
 [
   {
     "id": "default",
+
     "hero": {
       "eyebrow": "Empresa familiar de Medellín especializada en resortes industriales",
       "title": "Fabricación de resortes a la medida para necesidades reales de la industria",
@@ -12,15 +13,17 @@
         "Atención por WhatsApp",
         "Experiencia en múltiples industrias"
       ],
-      "primaryCta": {
-        "label": "Solicitar información",
-        "href": "#contacto"
-      },
-      "secondaryCta": {
-        "label": "Ver ubicación",
-        "href": "#contacto"
+      "primaryCta": { "label": "Solicitar información", "href": "#contacto" },
+      "secondaryCta": { "label": "Ver ubicación", "href": "#contacto" },
+      "media": {
+        "type": "image",
+        "src": "/media/hero/taller-principal.jpg",
+        "alt": "Vista interior del taller de JC Resortes con maquinaria y resortes en fabricación",
+        "caption": "Taller JC Resortes — Medellín",
+        "priority": true
       }
     },
+
     "trustStrip": {
       "items": [
         {
@@ -50,14 +53,22 @@
         }
       ]
     },
+
     "about": {
       "title": "Una empresa familiar construida con trabajo, experiencia y continuidad",
       "paragraphs": [
         "JC Resortes es una empresa familiar fundada en 1999 en Medellín. Nació del trabajo de los padres de la familia y hoy continúa fortaleciéndose con la participación de las nuevas generaciones, manteniendo vivo un legado construido con esfuerzo, conocimiento y compromiso.",
         "Más que una fábrica, JC Resortes representa una historia de oficio y permanencia. Su trayectoria ha estado marcada por la capacidad de aprender, adaptarse y responder a necesidades reales de la industria con cercanía, responsabilidad y criterio técnico.",
         "La empresa ha consolidado una identidad propia donde conviven la experiencia acumulada, el trabajo artesanal y una visión práctica para resolver problemas concretos."
-      ]
+      ],
+      "media": {
+        "type": "image",
+        "src": "/media/about/equipo-familia.jpg",
+        "alt": "El equipo de JC Resortes, empresa familiar con trayectoria desde 1999",
+        "caption": "Tres generaciones, un mismo oficio"
+      }
     },
+
     "services": {
       "title": "Fabricamos resortes según la necesidad real de cada proyecto",
       "subtitle": "En JC Resortes no trabajamos únicamente con soluciones estándar. Desarrollamos resortes a la medida, entendiendo que cada necesidad técnica exige una respuesta específica.",
@@ -65,26 +76,47 @@
         {
           "title": "Resortes a la medida",
           "description": "Diseñamos y fabricamos piezas según el comportamiento, tensión, compresión o resistencia que cada aplicación requiere.",
-          "icon": "target"
+          "icon": "target",
+          "image": {
+            "type": "image",
+            "src": "/media/services/resortes-medida.jpg",
+            "alt": "Resortes industriales fabricados a la medida en JC Resortes"
+          }
         },
         {
           "title": "Desarrollo según necesidad",
           "description": "Adaptamos el producto al problema del cliente, no al revés. El punto de partida siempre es entender qué necesita realmente el proyecto.",
-          "icon": "wrench"
+          "icon": "wrench",
+          "image": {
+            "type": "image",
+            "src": "/media/services/proceso-desarrollo.jpg",
+            "alt": "Proceso de análisis y desarrollo de soluciones en el taller"
+          }
         },
         {
           "title": "Soluciones metalmecánicas complementarias",
           "description": "También desarrollamos adaptaciones, piezas especiales y soluciones relacionadas cuando el proyecto lo exige.",
-          "icon": "cog"
+          "icon": "cog",
+          "image": {
+            "type": "image",
+            "src": "/media/services/piezas-especiales.jpg",
+            "alt": "Piezas metalmecánicas especiales fabricadas en JC Resortes"
+          }
         },
         {
           "title": "Trabajo con distintos materiales",
           "description": "Fabricamos con diferentes tipos de acero y materiales usados en el sector industrial, según el requerimiento de cada caso.",
-          "icon": "layers"
+          "icon": "layers",
+          "image": {
+            "type": "image",
+            "src": "/media/services/materiales.jpg",
+            "alt": "Distintos materiales y tipos de acero utilizados en la fabricación"
+          }
         }
       ],
       "closing": "Nuestro enfoque no parte de vender una pieza genérica, sino de entender qué necesita realmente el cliente para que el resultado funcione."
     },
+
     "differentials": {
       "title": "Lo que hace diferente a JC Resortes",
       "items": [
@@ -120,6 +152,7 @@
         }
       ]
     },
+
     "industries": {
       "title": "Presencia en diferentes sectores productivos",
       "subtitle": "A lo largo de su trayectoria, JC Resortes ha atendido necesidades de distintos sectores donde un resorte bien desarrollado puede marcar la diferencia en el funcionamiento de una máquina, un mecanismo o un proceso.",
@@ -136,6 +169,7 @@
       ],
       "closing": "Los resortes suelen ser piezas que pasan desapercibidas, pero están presentes en innumerables aplicaciones industriales. Por eso, cuando fallan o no se consiguen fácilmente, contar con una solución especializada hace toda la diferencia."
     },
+
     "workshop": {
       "title": "Un taller que no solo fabrica: también adapta, construye y mantiene",
       "blocks": [
@@ -147,8 +181,36 @@
           "heading": "Dominio del proceso productivo",
           "body": "Algunas máquinas han sido reparadas, reconstruidas o ajustadas por ellos mismos, lo que demuestra no solo capacidad técnica, sino también entendimiento profundo del proceso productivo. Ese dominio práctico les permite mantener una operación funcional, flexible y orientada a resolver necesidades reales."
         }
-      ]
+      ],
+      "media": {
+        "type": "gallery",
+        "layout": "grid",
+        "items": [
+          {
+            "type": "image",
+            "src": "/media/workshop/maquinaria-01.jpg",
+            "alt": "Maquinaria principal del taller de JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/workshop/herramientas-01.jpg",
+            "alt": "Herramientas y equipos especializados para fabricación de resortes"
+          },
+          {
+            "type": "video",
+            "src": "/media/workshop/proceso-fabricacion.mp4",
+            "poster": "/media/workshop/proceso-poster.jpg",
+            "alt": "Proceso de fabricación de resortes en el taller de JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/workshop/horno-tratamiento.jpg",
+            "alt": "Horno para tratamiento térmico construido por JC Resortes"
+          }
+        ]
+      }
     },
+
     "workValues": {
       "culture": {
         "title": "Experiencia técnica con una base profundamente humana",
@@ -158,7 +220,12 @@
           "Aprendizaje compartido",
           "Compromiso con el oficio",
           "Cercanía en la atención"
-        ]
+        ],
+        "media": {
+          "type": "image",
+          "src": "/media/about/equipo-trabajo.jpg",
+          "alt": "Equipo de JC Resortes trabajando juntos en el taller"
+        }
       },
       "safety": {
         "title": "Responsabilidad en cada proceso",

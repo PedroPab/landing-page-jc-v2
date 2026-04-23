@@ -1,8 +1,31 @@
 import { defineCollection, z } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 
+// ── Shared Media Schemas ─────────────────────────────────────────
+// Reusable across any collection. All media fields are optional so
+// sections degrade gracefully when no assets are provided yet.
+
+const mediaItemSchema = z.object({
+  type: z.enum(['image', 'video', 'gif']),
+  src: z.string(),                   // path relative to /public or /src/assets
+  alt: z.string(),
+  poster: z.string().optional(),     // poster frame for video/gif
+  caption: z.string().optional(),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  priority: z.boolean().default(false), // true = eager load (LCP images)
+});
+
+const gallerySchema = z.object({
+  type: z.literal('gallery'),
+  items: z.array(mediaItemSchema).min(1).max(6),
+  layout: z.enum(['strip', 'grid', 'featured']).default('strip'),
+});
+
+// A section can have a single media item OR a gallery
+const sectionMediaSchema = z.union([mediaItemSchema, gallerySchema]).optional();
+
 // ── Site Settings (singleton JSON array) ────────────────────────
-// To toggle sections, change booleans in src/content/site/settings.json
 const siteSettings = defineCollection({
   loader: file('src/content/site/settings.json'),
   schema: z.object({
@@ -49,6 +72,7 @@ const homePages = defineCollection({
   loader: file('src/content/pages/home.json'),
   schema: z.object({
     id: z.string(),
+
     hero: z.object({
       eyebrow: z.string(),
       title: z.string(),
@@ -57,7 +81,10 @@ const homePages = defineCollection({
       badges: z.array(z.string()),
       primaryCta: z.object({ label: z.string(), href: z.string() }),
       secondaryCta: z.object({ label: z.string(), href: z.string() }),
+      // Hero visual: image, video or gif shown on the right column (desktop)
+      media: sectionMediaSchema,
     }),
+
     trustStrip: z.object({
       items: z.array(z.object({
         value: z.string(),
@@ -65,10 +92,14 @@ const homePages = defineCollection({
         detail: z.string().optional(),
       })),
     }),
+
     about: z.object({
       title: z.string(),
       paragraphs: z.array(z.string()).min(1).max(5),
+      // Team / family photo shown alongside the text
+      media: sectionMediaSchema,
     }),
+
     services: z.object({
       title: z.string(),
       subtitle: z.string().optional(),
@@ -76,9 +107,12 @@ const homePages = defineCollection({
         title: z.string(),
         description: z.string(),
         icon: z.string().optional(),
+        // Per-service image (optional: shown inside card)
+        image: mediaItemSchema.optional(),
       })),
       closing: z.string().optional(),
     }),
+
     differentials: z.object({
       title: z.string(),
       items: z.array(z.object({
@@ -87,26 +121,35 @@ const homePages = defineCollection({
         icon: z.string().optional(),
       })),
     }),
+
     industries: z.object({
       title: z.string(),
       subtitle: z.string().optional(),
       items: z.array(z.object({
         name: z.string(),
+        // Optional icon image per industry
+        image: mediaItemSchema.optional(),
       })),
       closing: z.string().optional(),
     }),
+
     workshop: z.object({
       title: z.string(),
       blocks: z.array(z.object({
         heading: z.string(),
         body: z.string(),
       })),
+      // Gallery of workshop photos / machinery / tools
+      media: sectionMediaSchema,
     }),
+
     workValues: z.object({
       culture: z.object({
         title: z.string(),
         body: z.string(),
         items: z.array(z.string()).optional(),
+        // Team / people photo
+        media: sectionMediaSchema,
       }),
       safety: z.object({
         title: z.string(),
@@ -126,6 +169,8 @@ const contactSections = defineCollection({
     microcopy: z.string().optional(),
     whatsappLabel: z.string(),
     mapsLabel: z.string(),
+    // Optional background for CTA section
+    backgroundMedia: mediaItemSchema.optional(),
   }),
 });
 
@@ -137,6 +182,8 @@ const stories = defineCollection({
     subtitle: z.string().optional(),
     sectionTitle: z.string(),
     publishedAt: z.coerce.date(),
+    // Optional documentary photo alongside history text
+    media: sectionMediaSchema,
   }),
 });
 
@@ -151,10 +198,12 @@ const caseStudies = defineCollection({
     challenge: z.string(),
     result: z.string(),
     tags: z.array(z.string()),
-    image: z.string().optional(),
-    imageAlt: z.string().optional(),
     featured: z.boolean().default(false),
     publishedAt: z.coerce.date(),
+    // Hero image for the case study
+    image: mediaItemSchema.optional(),
+    // Gallery of process / result photos
+    gallery: gallerySchema.optional(),
   }),
 });
 

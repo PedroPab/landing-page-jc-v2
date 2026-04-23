@@ -3,6 +3,8 @@ import { render, type CollectionEntry } from 'astro:content';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import Badge from '@/components/ui/Badge.astro';
 import SpringDivider from '@/components/ui/SpringDivider.astro';
+import SectionMedia from '@/components/ui/SectionMedia.astro';
+import GalleryStrip from '@/components/ui/GalleryStrip.astro';
 
 interface Props {
   entry: CollectionEntry<'caseStudies'>;
@@ -10,11 +12,23 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, client, industry, summary, challenge, result, tags } = entry.data;
+const { title, client, industry, summary, challenge, result, tags, image, gallery } = entry.data;
 ---
 
 <section id="caso" class="section-pad bg-white">
   <div class="container-jc">
+
+    <!-- Hero image (full-width, above content) -->
+    {image && (
+      <div class="mb-10 rounded-lg overflow-hidden shadow-card">
+        <SectionMedia
+          media={image}
+          aspect="video"
+          label="Imagen del caso"
+          class="w-full"
+        />
+      </div>
+    )}
 
     <!-- Header -->
     <div class="max-w-2xl mb-10">
@@ -32,13 +46,11 @@ const { title, client, industry, summary, challenge, result, tags } = entry.data
       <!-- Sidebar (2 cols) -->
       <aside class="lg:col-span-2 flex flex-col gap-5">
 
-        <!-- Industry + client info -->
         <div class="flex flex-wrap gap-2">
           <Badge variant="primary">{industry}</Badge>
           {client !== 'Sector minero' && <Badge variant="muted">{client}</Badge>}
         </div>
 
-        <!-- Tags -->
         <div class="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <Badge variant="muted">{tag}</Badge>
@@ -68,10 +80,23 @@ const { title, client, industry, summary, challenge, result, tags } = entry.data
       </aside>
 
       <!-- Main content (3 cols) -->
-      <div class="lg:col-span-3">
+      <div class="lg:col-span-3 flex flex-col gap-8">
         <article class="prose-jc">
           <Content />
         </article>
+
+        <!-- Process gallery below MDX content -->
+        {gallery && (
+          <div>
+            <h3 class="font-heading text-[0.75rem] uppercase tracking-widest text-neutral font-bold mb-4">
+              Proceso y resultado
+            </h3>
+            <GalleryStrip
+              items={gallery.items}
+              layout={gallery.layout ?? 'featured'}
+            />
+          </div>
+        )}
       </div>
 
     </div>

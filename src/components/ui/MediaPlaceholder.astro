@@ -1,0 +1,46 @@
+---
+/**
+ * MediaPlaceholder — shown when no media is provided for a section.
+ * Renders a branded, on-theme empty state with spring motif.
+ * Replace this by providing real media in the content files.
+ */
+interface Props {
+  label?: string;
+  aspect?: 'video' | 'square' | 'portrait' | 'auto';
+  class?: string;
+}
+
+const {
+  label = 'Foto por agregar',
+  aspect = 'video',
+  class: className = '',
+} = Astro.props;
+
+const aspectClass: Record<string, string> = {
+  video:    'aspect-video',
+  square:   'aspect-square',
+  portrait: 'aspect-[3/4]',
+  auto:     '',
+};
+---
+
+<div
+  class={`relative flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed border-muted bg-surface ${aspectClass[aspect] ?? aspectClass.video} ${className}`}
+  role="img"
+  aria-label={label}
+>
+  <!-- Spring decoration -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 16" width="80" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="text-muted" aria-hidden="true">
+    <path d="M0 8 C5 0, 10 16, 15 8 C20 0, 25 16, 30 8 C35 0, 40 16, 45 8 C50 0, 55 16, 60 8 C65 0, 70 16, 75 8 C77 5, 79 8, 80 8"/>
+  </svg>
+
+  <!-- Camera icon -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted" aria-hidden="true">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+    <circle cx="12" cy="13" r="4"/>
+  </svg>
+
+  <span class="text-[0.75rem] text-muted font-heading uppercase tracking-widest font-medium">
+    {label}
+  </span>
+</div>

@@ -3,6 +3,11 @@ title: "Nuestra historia"
 subtitle: "Una historia que comenzó en Medellín y sigue creciendo con cada generación"
 sectionTitle: "Historia y trayectoria"
 publishedAt: 2024-01-01
+media:
+  type: "image"
+  src: "/media/history/taller-espacio.jpg"
+  alt: "El espacio de trabajo de JC Resortes, donde comenzó todo en 1999"
+  caption: "Centro Empresarial Caribe — donde nació JC Resortes"
 ---
 
 ## Los primeros pasos en el centro empresarial Caribe

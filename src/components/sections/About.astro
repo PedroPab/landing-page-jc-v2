@@ -1,10 +1,20 @@
 ---
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import SpringDivider from '@/components/ui/SpringDivider.astro';
+import SectionMedia from '@/components/ui/SectionMedia.astro';
+
+type MediaItem = {
+  type: 'image' | 'video' | 'gif';
+  src: string;
+  alt: string;
+  poster?: string;
+  caption?: string;
+};
 
 interface AboutData {
   title: string;
   paragraphs: string[];
+  media?: MediaItem | null;
 }
 
 interface Props {
@@ -34,27 +44,35 @@ const { data } = Astro.props;
         </div>
       </div>
 
-      <!-- Visual column — brand accent block -->
-      <div class="relative hidden lg:flex items-center justify-center">
-        <div class="w-full aspect-[4/3] bg-surface rounded-lg border border-muted flex flex-col items-center justify-center gap-6 p-10">
-          <!-- Large year accent -->
-          <div class="text-center">
-            <span class="font-heading text-[5rem] font-bold text-primary/10 leading-none select-none">
-              1999
-            </span>
-            <p class="font-heading text-[0.75rem] uppercase tracking-widest text-neutral mt-1">
-              Fundados en Medellín
+      <!-- Visual column -->
+      <div class="relative flex flex-col gap-4">
+        <!-- Accent border -->
+        <div class="absolute -left-3 top-6 bottom-6 w-1 bg-primary rounded-full hidden lg:block" aria-hidden="true"></div>
+
+        {data.media ? (
+          <SectionMedia
+            media={data.media}
+            aspect="portrait"
+            label="Foto del equipo"
+            class="rounded-lg overflow-hidden shadow-card"
+          />
+        ) : (
+          /* Brand accent block fallback when no photo is provided */
+          <div class="w-full aspect-[4/3] bg-surface rounded-lg border border-muted flex flex-col items-center justify-center gap-6 p-10">
+            <div class="text-center">
+              <span class="font-heading text-[5rem] font-bold text-primary/10 leading-none select-none">
+                1999
+              </span>
+              <p class="font-heading text-[0.75rem] uppercase tracking-widest text-neutral mt-1">
+                Fundados en Medellín
+              </p>
+            </div>
+            <SpringDivider width={120} coils={8} class="opacity-30" />
+            <p class="text-center text-[0.75rem] text-neutral/60 uppercase tracking-wide font-medium max-w-[180px]">
+              Empresa familiar · Oficio especializado
             </p>
           </div>
-          <!-- Decorative spring -->
-          <SpringDivider width={120} coils={8} class="opacity-30" />
-          <!-- Tagline -->
-          <p class="text-center text-[0.75rem] text-neutral/60 uppercase tracking-wide font-medium max-w-[180px]">
-            Empresa familiar · Oficio especializado
-          </p>
-        </div>
-        <!-- Accent border -->
-        <div class="absolute -left-3 top-6 bottom-6 w-1 bg-primary rounded-full"></div>
+        )}
       </div>
 
     </div>

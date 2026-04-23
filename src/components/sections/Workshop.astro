@@ -1,6 +1,21 @@
 ---
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import SpringDivider from '@/components/ui/SpringDivider.astro';
+import SectionMedia from '@/components/ui/SectionMedia.astro';
+
+type MediaItem = {
+  type: 'image' | 'video' | 'gif';
+  src: string;
+  alt: string;
+  poster?: string;
+  caption?: string;
+};
+
+type GalleryMedia = {
+  type: 'gallery';
+  items: MediaItem[];
+  layout?: 'strip' | 'grid' | 'featured';
+};
 
 interface WorkshopBlock {
   heading: string;
@@ -10,6 +25,7 @@ interface WorkshopBlock {
 interface WorkshopData {
   title: string;
   blocks: WorkshopBlock[];
+  media?: MediaItem | GalleryMedia | null;
 }
 
 interface Props {
@@ -30,10 +46,22 @@ const { data } = Astro.props;
       <SpringDivider width={80} coils={6} class="mt-5" />
     </div>
 
+    <!-- Media gallery (full span, above text blocks) -->
+    {data.media && (
+      <div class="mb-10">
+        <SectionMedia
+          media={data.media}
+          aspect="video"
+          label="Fotos del taller"
+          class="rounded-lg overflow-hidden"
+        />
+      </div>
+    )}
+
+    <!-- Text blocks grid -->
     <div class="grid sm:grid-cols-2 gap-6">
       {data.blocks.map((block) => (
         <article class="bg-white rounded-lg p-8 border border-muted shadow-card">
-          <!-- Accent line -->
           <div class="w-8 h-0.5 bg-primary mb-5" aria-hidden="true"></div>
           <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-4">
             {block.heading}

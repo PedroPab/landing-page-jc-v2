@@ -1,0 +1,96 @@
+---
+/**
+ * SectionMedia — universal media renderer for any section.
+ * Handles: image, video, gif, or gallery.
+ * Falls back to MediaPlaceholder when media is null/undefined.
+ *
+ * Usage:
+ *   <SectionMedia media={data.hero.media} aspect="video" />
+ *   <SectionMedia media={undefined} label="Foto del taller" />
+ */
+import MediaPlaceholder from '@/components/ui/MediaPlaceholder.astro';
+import VideoBlock from '@/components/ui/VideoBlock.astro';
+import GalleryStrip from '@/components/ui/GalleryStrip.astro';
+
+type MediaItem = {
+  type: 'image' | 'video' | 'gif';
+  src: string;
+  alt: string;
+  poster?: string;
+  caption?: string;
+  priority?: boolean;
+};
+
+type GalleryMedia = {
+  type: 'gallery';
+  items: MediaItem[];
+  layout?: 'strip' | 'grid' | 'featured';
+};
+
+interface Props {
+  media?: MediaItem | GalleryMedia | null;
+  aspect?: 'video' | 'square' | 'portrait' | 'auto';
+  label?: string;   // placeholder label when no media
+  showPlaceholder?: boolean; // set false to hide section if no media
+  class?: string;
+}
+
+const {
+  media,
+  aspect = 'video',
+  label = 'Foto por agregar',
+  showPlaceholder = true,
+  class: className = '',
+} = Astro.props;
+
+const hasMedia = media != null;
+const isGallery = hasMedia && media.type === 'gallery';
+const isSingleMedia = hasMedia && media.type !== 'gallery';
+---
+
+{!hasMedia && showPlaceholder && (
+  <MediaPlaceholder label={label} aspect={aspect} class={className} />
+)}
+
+{isSingleMedia && (
+  <>
+    {(media as MediaItem).type === 'video' || (media as MediaItem).type === 'gif' ? (
+      <VideoBlock
+        src={(media as MediaItem).src}
+        poster={(media as MediaItem).poster}
+        alt={(media as MediaItem).alt}
+        caption={(media as MediaItem).caption}
+        controls={(media as MediaItem).type !== 'gif'}
+        autoplay={(media as MediaItem).type === 'gif'}
+        loop={(media as MediaItem).type === 'gif'}
+        aspect={aspect === 'auto' ? 'video' : aspect}
+        class={className}
+      />
+    ) : (
+      <figure class={`flex flex-col gap-2 ${className}`}>
+        <div class={`relative overflow-hidden rounded-lg bg-surface ${aspect === 'video' ? 'aspect-video' : aspect === 'square' ? 'aspect-square' : aspect === 'portrait' ? 'aspect-[3/4]' : ''}`}>
+          <img
+            src={(media as MediaItem).src}
+            alt={(media as MediaItem).alt}
+            class="w-full h-full object-cover"
+            loading={(media as MediaItem).priority ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </div>
+        {(media as MediaItem).caption && (
+          <figcaption class="text-[0.75rem] text-neutral leading-relaxed px-1">
+            {(media as MediaItem).caption}
+          </figcaption>
+        )}
+      </figure>
+    )}
+  </>
+)}
+
+{isGallery && (
+  <GalleryStrip
+    items={(media as GalleryMedia).items}
+    layout={(media as GalleryMedia).layout ?? 'strip'}
+    class={className}
+  />
+)}

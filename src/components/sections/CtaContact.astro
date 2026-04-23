@@ -1,12 +1,20 @@
 ---
 import Button from '@/components/ui/Button.astro';
 
+type MediaItem = {
+  type: 'image' | 'video' | 'gif';
+  src: string;
+  alt: string;
+  poster?: string;
+};
+
 interface ContactData {
   title: string;
   subtitle: string;
   microcopy?: string;
   whatsappLabel: string;
   mapsLabel: string;
+  backgroundMedia?: MediaItem | null;
 }
 
 interface SettingsData {
@@ -21,10 +29,26 @@ interface Props {
 }
 
 const { contact, settings, whatsappUrl } = Astro.props;
+const hasBg = contact.backgroundMedia != null;
 ---
 
-<section id="contacto" class="section-pad bg-primary text-white relative overflow-hidden">
-  <!-- Decorative spring background -->
+<section id="contacto" class="relative section-pad bg-primary text-white overflow-hidden">
+
+  <!-- Background media layer (optional) -->
+  {hasBg && contact.backgroundMedia?.type === 'image' && (
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <img
+        src={contact.backgroundMedia.src}
+        alt=""
+        class="w-full h-full object-cover opacity-15 mix-blend-luminosity"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="absolute inset-0 bg-primary/70"></div>
+    </div>
+  )}
+
+  <!-- Decorative spring background (always visible) -->
   <div class="absolute inset-0 spring-bg opacity-[0.06] pointer-events-none" aria-hidden="true"></div>
 
   <div class="container-jc relative z-10">
@@ -35,17 +59,14 @@ const { contact, settings, whatsappUrl } = Astro.props;
         <path d="M0 6 C5 0, 10 12, 15 6 C20 0, 25 12, 30 6 C35 0, 40 12, 45 6 C50 0, 55 12, 60 6 C65 0, 70 12, 75 6 C77 4, 79 6, 80 6"/>
       </svg>
 
-      <!-- Title -->
       <h2 class="font-heading text-h2 font-bold uppercase leading-tight text-white">
         {contact.title}
       </h2>
 
-      <!-- Subtitle -->
       <p class="text-subtitle text-white/80 leading-relaxed">
         {contact.subtitle}
       </p>
 
-      <!-- CTA buttons -->
       <div class="flex flex-wrap gap-4 justify-center">
         <Button href={whatsappUrl} variant="whatsapp" size="lg" external>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
@@ -63,7 +84,6 @@ const { contact, settings, whatsappUrl } = Astro.props;
         </Button>
       </div>
 
-      <!-- Microcopy -->
       {contact.microcopy && (
         <p class="text-[0.8125rem] text-white/50 italic">
           {contact.microcopy}
