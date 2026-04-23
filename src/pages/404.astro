@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Página no encontrada — JC Resortes"
+  description="La página que buscas no existe. Vuelve al inicio de JC Resortes."
+  noindex
+>
+  <main class="min-h-screen bg-surface flex items-center justify-center px-4">
+    <div class="text-center max-w-md flex flex-col items-center gap-6">
+
+      <!-- 404 accent -->
+      <span class="font-heading text-[6rem] font-bold text-primary/10 leading-none select-none">
+        404
+      </span>
+
+      <!-- Spring divider -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 12" width="80" height="12" fill="none" stroke="#76A646" stroke-width="1.5" stroke-linecap="round" class="opacity-50" aria-hidden="true">
+        <path d="M0 6 C5 0, 10 12, 15 6 C20 0, 25 12, 30 6 C35 0, 40 12, 45 6 C50 0, 55 12, 60 6 C65 0, 70 12, 75 6 C77 4, 79 6, 80 6"/>
+      </svg>
+
+      <h1 class="font-heading text-h2 font-bold uppercase text-foreground">
+        Página no encontrada
+      </h1>
+
+      <p class="text-body text-neutral leading-relaxed">
+        La página que buscas no existe o fue movida. Puedes volver al inicio para encontrar lo que necesitas.
+      </p>
+
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-heading font-bold text-sm uppercase tracking-wide rounded-md hover:bg-[#357a0a] transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Volver al inicio
+      </a>
+
+    </div>
+  </main>
+</BaseLayout>

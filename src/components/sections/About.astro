@@ -1,0 +1,62 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface AboutData {
+  title: string;
+  paragraphs: string[];
+}
+
+interface Props {
+  data: AboutData;
+}
+
+const { data } = Astro.props;
+---
+
+<section id="nosotros" class="section-pad bg-white">
+  <div class="container-jc">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+
+      <!-- Text column -->
+      <div class="flex flex-col gap-5">
+        <SectionHeading
+          eyebrow="Quiénes somos"
+          title={data.title}
+        />
+        <SpringDivider width={80} coils={6} class="mt-1" />
+        <div class="flex flex-col gap-4 mt-2">
+          {data.paragraphs.map((paragraph) => (
+            <p class="text-body text-neutral leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </div>
+
+      <!-- Visual column — brand accent block -->
+      <div class="relative hidden lg:flex items-center justify-center">
+        <div class="w-full aspect-[4/3] bg-surface rounded-lg border border-muted flex flex-col items-center justify-center gap-6 p-10">
+          <!-- Large year accent -->
+          <div class="text-center">
+            <span class="font-heading text-[5rem] font-bold text-primary/10 leading-none select-none">
+              1999
+            </span>
+            <p class="font-heading text-[0.75rem] uppercase tracking-widest text-neutral mt-1">
+              Fundados en Medellín
+            </p>
+          </div>
+          <!-- Decorative spring -->
+          <SpringDivider width={120} coils={8} class="opacity-30" />
+          <!-- Tagline -->
+          <p class="text-center text-[0.75rem] text-neutral/60 uppercase tracking-wide font-medium max-w-[180px]">
+            Empresa familiar · Oficio especializado
+          </p>
+        </div>
+        <!-- Accent border -->
+        <div class="absolute -left-3 top-6 bottom-6 w-1 bg-primary rounded-full"></div>
+      </div>
+
+    </div>
+  </div>
+</section>

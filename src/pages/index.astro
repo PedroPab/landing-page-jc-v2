@@ -1,0 +1,68 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  getHomePageData,
+  getHistoryStory,
+  getFeaturedCaseStudy,
+  buildWhatsAppUrl,
+} from '@/lib/content';
+
+// Section components
+import Header        from '@/components/sections/Header.astro';
+import Hero          from '@/components/sections/Hero.astro';
+import TrustStrip    from '@/components/sections/TrustStrip.astro';
+import About         from '@/components/sections/About.astro';
+import History       from '@/components/sections/History.astro';
+import Services      from '@/components/sections/Services.astro';
+import Differentials from '@/components/sections/Differentials.astro';
+import Industries    from '@/components/sections/Industries.astro';
+import CaseStudy     from '@/components/sections/CaseStudy.astro';
+import Workshop      from '@/components/sections/Workshop.astro';
+import WorkValues    from '@/components/sections/WorkValues.astro';
+import CtaContact    from '@/components/sections/CtaContact.astro';
+import Footer        from '@/components/sections/Footer.astro';
+
+// Load all content in parallel at build time
+const { settings, home, contact } = await getHomePageData();
+const historyStory = await getHistoryStory();
+const featuredCase = await getFeaturedCaseStudy();
+
+// Build WhatsApp URL once — reused by all sections that need it
+const whatsappUrl = buildWhatsAppUrl(
+  settings.whatsapp.number,
+  settings.whatsapp.defaultMessage
+);
+
+// Section visibility flags — toggle in src/content/site/settings.json
+const sections = settings.sections;
+---
+
+<BaseLayout
+  title={settings.seo.defaultTitle}
+  description={settings.seo.defaultDescription}
+  ogImage={settings.seo.defaultImage}
+>
+  <Header settings={settings} whatsappUrl={whatsappUrl} />
+
+  <main id="main-content">
+    <Hero data={home.hero} whatsappUrl={whatsappUrl} />
+
+    {sections.trustStrip    && <TrustStrip    items={home.trustStrip.items} />}
+    {sections.about         && <About         data={home.about} />}
+    {sections.history       && <History       story={historyStory} />}
+    {sections.services      && <Services      data={home.services} />}
+    {sections.differentials && <Differentials data={home.differentials} />}
+    {sections.industries    && <Industries    data={home.industries} />}
+    {sections.caseStudy     && <CaseStudy     entry={featuredCase} />}
+    {sections.workshop      && <Workshop      data={home.workshop} />}
+    {sections.workValues    && <WorkValues    data={home.workValues} />}
+
+    <CtaContact
+      contact={contact}
+      settings={settings}
+      whatsappUrl={whatsappUrl}
+    />
+  </main>
+
+  <Footer settings={settings} whatsappUrl={whatsappUrl} />
+</BaseLayout>

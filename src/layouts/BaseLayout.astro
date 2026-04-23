@@ -1,0 +1,98 @@
+---
+import { getEntry } from 'astro:content';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonical?: string;
+  noindex?: boolean;
+}
+
+const settings = await getEntry('siteSettings', 'default');
+if (!settings) throw new Error('siteSettings "default" not found');
+const s = settings.data;
+
+const {
+  title = s.seo.defaultTitle,
+  description = s.seo.defaultDescription,
+  ogImage = s.seo.defaultImage,
+  canonical,
+  noindex = false,
+} = Astro.props;
+
+const siteUrl = s.seo.siteUrl;
+const canonicalUrl = canonical
+  ? new URL(canonical, siteUrl).href
+  : new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteUrl).href;
+
+// Schema.org structured data — LocalBusiness / ManufacturingBusiness
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ManufacturingBusiness',
+  name: s.name,
+  description: s.seo.defaultDescription,
+  url: siteUrl,
+  telephone: `+${s.whatsapp.number}`,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: s.address.street,
+    addressLocality: s.address.city,
+    addressCountry: 'CO',
+  },
+  foundingDate: '1999',
+  areaServed: 'Colombia',
+  knowsAbout: ['resortes industriales', 'fabricación de resortes a la medida', 'soluciones metalmecánicas'],
+};
+---
+
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content={s.seo.locale} />
+    <meta property="og:site_name" content={s.name} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts — Montserrat (headings) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap"
+    />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body class="bg-white text-foreground font-body antialiased">
+    <slot />
+  </body>
+</html>

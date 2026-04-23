@@ -1,0 +1,80 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Badge from '@/components/ui/Badge.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface Props {
+  entry: CollectionEntry<'caseStudies'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, client, industry, summary, challenge, result, tags } = entry.data;
+---
+
+<section id="caso" class="section-pad bg-white">
+  <div class="container-jc">
+
+    <!-- Header -->
+    <div class="max-w-2xl mb-10">
+      <SectionHeading
+        eyebrow="Caso destacado"
+        title={title}
+        subtitle={summary}
+      />
+      <SpringDivider width={80} coils={6} class="mt-5" />
+    </div>
+
+    <!-- Content layout -->
+    <div class="grid lg:grid-cols-5 gap-10 lg:gap-16 items-start">
+
+      <!-- Sidebar (2 cols) -->
+      <aside class="lg:col-span-2 flex flex-col gap-5">
+
+        <!-- Industry + client info -->
+        <div class="flex flex-wrap gap-2">
+          <Badge variant="primary">{industry}</Badge>
+          {client !== 'Sector minero' && <Badge variant="muted">{client}</Badge>}
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <Badge variant="muted">{tag}</Badge>
+          ))}
+        </div>
+
+        <!-- Challenge block -->
+        <div class="bg-surface border border-muted rounded-lg p-5">
+          <h3 class="font-heading text-[0.75rem] uppercase tracking-widest text-neutral font-bold mb-3">
+            El reto
+          </h3>
+          <p class="text-[0.875rem] text-neutral leading-relaxed">
+            {challenge}
+          </p>
+        </div>
+
+        <!-- Result callout -->
+        <div class="bg-primary/8 border border-primary/20 rounded-lg p-5">
+          <h3 class="font-heading text-[0.75rem] uppercase tracking-widest text-primary font-bold mb-3">
+            El resultado
+          </h3>
+          <p class="text-[0.875rem] text-foreground leading-relaxed">
+            {result}
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- Main content (3 cols) -->
+      <div class="lg:col-span-3">
+        <article class="prose-jc">
+          <Content />
+        </article>
+      </div>
+
+    </div>
+
+  </div>
+</section>

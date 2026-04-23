@@ -1,0 +1,59 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface IndustryItem {
+  name: string;
+}
+
+interface IndustriesData {
+  title: string;
+  subtitle?: string;
+  items: IndustryItem[];
+  closing?: string;
+}
+
+interface Props {
+  data: IndustriesData;
+}
+
+const { data } = Astro.props;
+---
+
+<section id="industrias" class="section-pad bg-surface">
+  <div class="container-jc">
+
+    <SectionHeading
+      eyebrow="Sectores atendidos"
+      title={data.title}
+      subtitle={data.subtitle}
+    />
+
+    <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
+
+    <!-- Industry tags -->
+    <ul class="flex flex-wrap gap-3" aria-label="Industrias y sectores atendidos">
+      {data.items.map((item) => (
+        <li>
+          <span class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-white border border-muted text-foreground text-[0.8125rem] font-medium hover:border-primary hover:text-primary transition-colors cursor-default">
+            <!-- Small spring icon accent -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 6" width="16" height="6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="text-primary-soft opacity-60" aria-hidden="true">
+              <path d="M0 3 C1 0, 3 6, 4 3 C5 0, 7 6, 8 3 C9 0, 11 6, 12 3 C13 0, 15 6, 16 3"/>
+            </svg>
+            {item.name}
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Closing statement -->
+    {data.closing && (
+      <div class="mt-10 pt-8 border-t border-muted max-w-2xl">
+        <p class="text-body text-neutral leading-relaxed">
+          {data.closing}
+        </p>
+      </div>
+    )}
+
+  </div>
+</section>

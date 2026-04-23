@@ -1,0 +1,39 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  align?: 'left' | 'center';
+  light?: boolean;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  align = 'left',
+  light = false,
+  class: className = '',
+} = Astro.props;
+
+const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
+const titleColor = light ? 'text-white' : 'text-foreground';
+const subtitleColor = light ? 'text-white/70' : 'text-neutral';
+---
+
+<div class={`flex flex-col gap-3 ${alignClass} ${className}`}>
+  {eyebrow && (
+    <span class="font-heading text-primary-soft text-[0.75rem] font-bold uppercase tracking-widest">
+      {eyebrow}
+    </span>
+  )}
+  <h2 class={`font-heading text-h2 font-bold uppercase leading-tight ${titleColor}`}>
+    {title}
+  </h2>
+  {subtitle && (
+    <p class={`text-subtitle max-w-prose leading-relaxed ${subtitleColor}`}>
+      {subtitle}
+    </p>
+  )}
+</div>

@@ -1,0 +1,90 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface ServiceItem {
+  title: string;
+  description: string;
+  icon?: string;
+}
+
+interface ServicesData {
+  title: string;
+  subtitle?: string;
+  items: ServiceItem[];
+  closing?: string;
+}
+
+interface Props {
+  data: ServicesData;
+}
+
+const { data } = Astro.props;
+
+// Simple icon SVG map — add more as needed
+const icons: Record<string, string> = {
+  target: `<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"/><path d="M12 14a2 2 0 100-4 2 2 0 000 4z"/>`,
+  wrench: `<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>`,
+  cog: `<path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>`,
+  layers: `<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>`,
+};
+---
+
+<section id="servicios" class="section-pad bg-white">
+  <div class="container-jc">
+
+    <SectionHeading
+      eyebrow="Qué hacemos"
+      title={data.title}
+      subtitle={data.subtitle}
+    />
+
+    <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
+
+    <!-- Service cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      {data.items.map((item) => (
+        <article class="group flex gap-4 bg-surface border border-muted rounded-lg p-6 border-l-4 border-l-primary hover:shadow-card transition-shadow">
+          <!-- Icon -->
+          {item.icon && icons[item.icon] && (
+            <div class="shrink-0 mt-0.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-primary"
+                aria-hidden="true"
+                set:html={icons[item.icon]}
+              />
+            </div>
+          )}
+          <!-- Content -->
+          <div class="flex flex-col gap-2">
+            <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground">
+              {item.title}
+            </h3>
+            <p class="text-[0.875rem] text-neutral leading-relaxed">
+              {item.description}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Closing statement -->
+    {data.closing && (
+      <div class="mt-8 pt-8 border-t border-muted">
+        <p class="text-body text-neutral leading-relaxed max-w-2xl">
+          <span class="text-primary font-semibold">— </span>{data.closing}
+        </p>
+      </div>
+    )}
+
+  </div>
+</section>

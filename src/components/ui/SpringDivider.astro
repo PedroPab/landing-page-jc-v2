@@ -1,0 +1,59 @@
+---
+/**
+ * SpringDivider — decorative SVG spring/coil motif.
+ * Used as a brand visual element between sections or below headings.
+ */
+interface Props {
+  class?: string;
+  width?: number;
+  coils?: number;
+  strokeWidth?: number;
+}
+
+const {
+  class: className = '',
+  width = 100,
+  coils = 8,
+  strokeWidth = 1.5,
+} = Astro.props;
+
+// Build path: alternating sine-wave bezier curves to simulate a coil
+const coilWidth = width / coils;
+const amplitude = 6;
+const midY = amplitude;
+
+const pathParts: string[] = [];
+for (let i = 0; i < coils; i++) {
+  const x = i * coilWidth;
+  const cp1x = x + coilWidth * 0.25;
+  const cp2x = x + coilWidth * 0.75;
+  const endx = x + coilWidth;
+  const cp1y = i % 2 === 0 ? 0 : amplitude * 2;
+  const cp2y = i % 2 === 0 ? amplitude * 2 : 0;
+
+  if (i === 0) {
+    pathParts.push(`M 0 ${midY}`);
+  }
+  pathParts.push(`C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${endx} ${midY}`);
+}
+
+const d = pathParts.join(' ');
+const svgHeight = amplitude * 2 + 4;
+const viewBox = `0 -2 ${width} ${svgHeight}`;
+---
+
+<svg
+  class={`text-primary-soft opacity-50 ${className}`}
+  viewBox={viewBox}
+  width={width}
+  height={svgHeight}
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  role="presentation"
+>
+  <path d={d} />
+</svg>

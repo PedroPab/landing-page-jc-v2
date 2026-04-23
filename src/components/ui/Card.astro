@@ -1,0 +1,19 @@
+---
+interface Props {
+  variant?: 'default' | 'flat' | 'highlighted' | 'dark';
+  class?: string;
+}
+
+const { variant = 'default', class: className = '' } = Astro.props;
+
+const variants: Record<string, string> = {
+  default:     'bg-white border border-muted shadow-card',
+  flat:        'bg-surface border border-muted',
+  highlighted: 'bg-white border-2 border-primary shadow-elevated',
+  dark:        'bg-foreground border border-white/10',
+};
+---
+
+<div class={`rounded-lg p-6 ${variants[variant] ?? variants.default} ${className}`}>
+  <slot />
+</div>

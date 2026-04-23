@@ -1,0 +1,169 @@
+[
+  {
+    "id": "default",
+    "hero": {
+      "eyebrow": "Empresa familiar de Medellín especializada en resortes industriales",
+      "title": "Fabricación de resortes a la medida para necesidades reales de la industria",
+      "subtitle": "En JC Resortes combinamos experiencia, trabajo artesanal y capacidad técnica para desarrollar resortes y soluciones metalmecánicas adaptadas a cada necesidad.",
+      "supportingText": "Desde 1999 acompañamos empresas que necesitan piezas confiables, personalizadas y funcionales, incluso cuando el problema parece difícil de resolver.",
+      "badges": [
+        "Empresa familiar con trayectoria",
+        "Soluciones a la medida",
+        "Atención por WhatsApp",
+        "Experiencia en múltiples industrias"
+      ],
+      "primaryCta": {
+        "label": "Solicitar información",
+        "href": "#contacto"
+      },
+      "secondaryCta": {
+        "label": "Ver ubicación",
+        "href": "#contacto"
+      }
+    },
+    "trustStrip": {
+      "items": [
+        {
+          "value": "1999",
+          "label": "Fundados en",
+          "detail": "Más de dos décadas de experiencia en un oficio especializado."
+        },
+        {
+          "value": "A la medida",
+          "label": "Fabricación",
+          "detail": "Cada resorte se desarrolla según la necesidad real del cliente."
+        },
+        {
+          "value": "Técnico",
+          "label": "Conocimiento artesanal y",
+          "detail": "Trabajo basado en práctica, experiencia y dominio del metal."
+        },
+        {
+          "value": "Sectores",
+          "label": "Múltiples",
+          "detail": "Soluciones para agro, alimentos, manufactura, minería, motos y más."
+        },
+        {
+          "value": "Directo",
+          "label": "Contacto",
+          "detail": "Comunicación cercana para entender mejor cada necesidad."
+        }
+      ]
+    },
+    "about": {
+      "title": "Una empresa familiar construida con trabajo, experiencia y continuidad",
+      "paragraphs": [
+        "JC Resortes es una empresa familiar fundada en 1999 en Medellín. Nació del trabajo de los padres de la familia y hoy continúa fortaleciéndose con la participación de las nuevas generaciones, manteniendo vivo un legado construido con esfuerzo, conocimiento y compromiso.",
+        "Más que una fábrica, JC Resortes representa una historia de oficio y permanencia. Su trayectoria ha estado marcada por la capacidad de aprender, adaptarse y responder a necesidades reales de la industria con cercanía, responsabilidad y criterio técnico.",
+        "La empresa ha consolidado una identidad propia donde conviven la experiencia acumulada, el trabajo artesanal y una visión práctica para resolver problemas concretos."
+      ]
+    },
+    "services": {
+      "title": "Fabricamos resortes según la necesidad real de cada proyecto",
+      "subtitle": "En JC Resortes no trabajamos únicamente con soluciones estándar. Desarrollamos resortes a la medida, entendiendo que cada necesidad técnica exige una respuesta específica.",
+      "items": [
+        {
+          "title": "Resortes a la medida",
+          "description": "Diseñamos y fabricamos piezas según el comportamiento, tensión, compresión o resistencia que cada aplicación requiere.",
+          "icon": "target"
+        },
+        {
+          "title": "Desarrollo según necesidad",
+          "description": "Adaptamos el producto al problema del cliente, no al revés. El punto de partida siempre es entender qué necesita realmente el proyecto.",
+          "icon": "wrench"
+        },
+        {
+          "title": "Soluciones metalmecánicas complementarias",
+          "description": "También desarrollamos adaptaciones, piezas especiales y soluciones relacionadas cuando el proyecto lo exige.",
+          "icon": "cog"
+        },
+        {
+          "title": "Trabajo con distintos materiales",
+          "description": "Fabricamos con diferentes tipos de acero y materiales usados en el sector industrial, según el requerimiento de cada caso.",
+          "icon": "layers"
+        }
+      ],
+      "closing": "Nuestro enfoque no parte de vender una pieza genérica, sino de entender qué necesita realmente el cliente para que el resultado funcione."
+    },
+    "differentials": {
+      "title": "Lo que hace diferente a JC Resortes",
+      "items": [
+        {
+          "title": "Oficio especializado",
+          "description": "La fabricación de resortes es un conocimiento poco común, aprendido desde la práctica, la observación y la experiencia real con el metal.",
+          "icon": "star"
+        },
+        {
+          "title": "Trabajo a la medida",
+          "description": "Cada desarrollo responde a condiciones específicas, no a fórmulas genéricas. El producto se adapta al problema del cliente.",
+          "icon": "ruler"
+        },
+        {
+          "title": "Capacidad de adaptación",
+          "description": "Muchas herramientas, ajustes y soluciones nacen dentro del mismo taller para responder mejor al trabajo.",
+          "icon": "refresh"
+        },
+        {
+          "title": "Mentalidad resolutiva",
+          "description": "No solo fabrican piezas: buscan la forma de resolver problemas concretos, incluso cuando el reto parece difícil.",
+          "icon": "lightbulb"
+        },
+        {
+          "title": "Trayectoria familiar",
+          "description": "La continuidad entre generaciones aporta identidad, compromiso y conocimiento acumulado a cada proyecto.",
+          "icon": "home"
+        },
+        {
+          "title": "Taller con criterio propio",
+          "description": "La experiencia no depende solo de maquinaria, sino del entendimiento profundo de los procesos y del material.",
+          "icon": "shield"
+        }
+      ]
+    },
+    "industries": {
+      "title": "Presencia en diferentes sectores productivos",
+      "subtitle": "A lo largo de su trayectoria, JC Resortes ha atendido necesidades de distintos sectores donde un resorte bien desarrollado puede marcar la diferencia en el funcionamiento de una máquina, un mecanismo o un proceso.",
+      "items": [
+        { "name": "Agroindustria" },
+        { "name": "Industria de alimentos" },
+        { "name": "Manufactura" },
+        { "name": "Minería" },
+        { "name": "Motocicletas" },
+        { "name": "Talleres especializados" },
+        { "name": "Metalmecánica" },
+        { "name": "Construcción" },
+        { "name": "Eléctrico e industrial" }
+      ],
+      "closing": "Los resortes suelen ser piezas que pasan desapercibidas, pero están presentes en innumerables aplicaciones industriales. Por eso, cuando fallan o no se consiguen fácilmente, contar con una solución especializada hace toda la diferencia."
+    },
+    "workshop": {
+      "title": "Un taller que no solo fabrica: también adapta, construye y mantiene",
+      "blocks": [
+        {
+          "heading": "Capacidad técnica y adaptación propia",
+          "body": "Parte de la fortaleza de JC Resortes está en su capacidad de intervenir su propio entorno de trabajo. Muchas herramientas, repuestos, ajustes y adaptaciones nacen dentro del mismo taller, como respuesta a necesidades concretas de producción. La empresa cuenta con maquinaria que continúa operando gracias al conocimiento acumulado y al trabajo directo sobre sus componentes."
+        },
+        {
+          "heading": "Dominio del proceso productivo",
+          "body": "Algunas máquinas han sido reparadas, reconstruidas o ajustadas por ellos mismos, lo que demuestra no solo capacidad técnica, sino también entendimiento profundo del proceso productivo. Ese dominio práctico les permite mantener una operación funcional, flexible y orientada a resolver necesidades reales."
+        }
+      ]
+    },
+    "workValues": {
+      "culture": {
+        "title": "Experiencia técnica con una base profundamente humana",
+        "body": "JC Resortes se distingue por su ambiente cercano y familiar. Es un espacio donde el trabajo se construye en equipo, donde el conocimiento se comparte y donde cada persona cumple un papel importante dentro del proceso. La continuidad entre padres, hijos y nuevas generaciones no solo ha sostenido el negocio: también ha fortalecido una forma de trabajar basada en el compromiso, el aprendizaje y la responsabilidad.",
+        "items": [
+          "Trabajo en familia",
+          "Aprendizaje compartido",
+          "Compromiso con el oficio",
+          "Cercanía en la atención"
+        ]
+      },
+      "safety": {
+        "title": "Responsabilidad en cada proceso",
+        "body": "A pesar de trabajar con maquinaria, calor, herramientas de corte y procesos exigentes, JC Resortes ha mantenido una cultura de cuidado constante en el trabajo diario. La experiencia, la disciplina y el uso responsable de implementos de seguridad hacen parte de una operación seria, comprometida con la calidad del trabajo y el bienestar de quienes hacen parte del taller."
+      }
+    }
+  }
+]

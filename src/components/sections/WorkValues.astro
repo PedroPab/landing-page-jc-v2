@@ -1,0 +1,71 @@
+---
+interface CultureData {
+  title: string;
+  body: string;
+  items?: string[];
+}
+
+interface SafetyData {
+  title: string;
+  body: string;
+}
+
+interface WorkValuesData {
+  culture: CultureData;
+  safety: SafetyData;
+}
+
+interface Props {
+  data: WorkValuesData;
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section-pad bg-white">
+  <div class="container-jc">
+
+    <div class="grid sm:grid-cols-2 gap-6">
+
+      <!-- Culture block -->
+      <article class="rounded-lg p-8 bg-foreground text-white flex flex-col gap-5">
+        <div class="w-8 h-0.5 bg-primary-soft" aria-hidden="true"></div>
+        <h2 class="font-heading text-h3 font-bold uppercase leading-tight text-white">
+          {data.culture.title}
+        </h2>
+        <p class="text-[0.875rem] text-white/70 leading-relaxed">
+          {data.culture.body}
+        </p>
+        {data.culture.items && data.culture.items.length > 0 && (
+          <ul class="flex flex-col gap-2 mt-auto pt-4 border-t border-white/10" aria-label="Valores de cultura">
+            {data.culture.items.map((item) => (
+              <li class="flex items-center gap-2 text-[0.8125rem] text-white/60">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-soft shrink-0" aria-hidden="true"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
+      </article>
+
+      <!-- Safety block -->
+      <article class="rounded-lg p-8 bg-primary text-white flex flex-col gap-5">
+        <div class="w-8 h-0.5 bg-white/40" aria-hidden="true"></div>
+        <h2 class="font-heading text-h3 font-bold uppercase leading-tight text-white">
+          {data.safety.title}
+        </h2>
+        <p class="text-[0.875rem] text-white/80 leading-relaxed">
+          {data.safety.body}
+        </p>
+        <!-- Decorative spring icon -->
+        <div class="mt-auto pt-4 border-t border-white/20">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 12" width="80" height="12" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" class="opacity-30" aria-hidden="true">
+            <path d="M0 6 C5 0, 10 12, 15 6 C20 0, 25 12, 30 6 C35 0, 40 12, 45 6 C50 0, 55 12, 60 6 C65 0, 70 12, 75 6 C77 4, 79 6, 80 6"/>
+          </svg>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>

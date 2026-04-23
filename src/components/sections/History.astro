@@ -1,0 +1,36 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface Props {
+  story: CollectionEntry<'stories'>;
+}
+
+const { story } = Astro.props;
+const { Content } = await render(story);
+---
+
+<section id="historia" class="section-pad bg-surface">
+  <div class="container-jc">
+    <div class="max-w-3xl mx-auto">
+
+      <SectionHeading
+        eyebrow={story.data.sectionTitle}
+        title={story.data.title}
+        subtitle={story.data.subtitle}
+        align="center"
+      />
+
+      <div class="flex justify-center mt-5 mb-10">
+        <SpringDivider width={120} coils={8} />
+      </div>
+
+      <!-- MDX prose content -->
+      <article class="prose-jc">
+        <Content />
+      </article>
+
+    </div>
+  </div>
+</section>

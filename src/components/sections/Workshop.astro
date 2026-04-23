@@ -1,0 +1,49 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface WorkshopBlock {
+  heading: string;
+  body: string;
+}
+
+interface WorkshopData {
+  title: string;
+  blocks: WorkshopBlock[];
+}
+
+interface Props {
+  data: WorkshopData;
+}
+
+const { data } = Astro.props;
+---
+
+<section id="taller" class="section-pad bg-surface">
+  <div class="container-jc">
+
+    <div class="max-w-2xl mb-10">
+      <SectionHeading
+        eyebrow="Capacidad técnica"
+        title={data.title}
+      />
+      <SpringDivider width={80} coils={6} class="mt-5" />
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-6">
+      {data.blocks.map((block) => (
+        <article class="bg-white rounded-lg p-8 border border-muted shadow-card">
+          <!-- Accent line -->
+          <div class="w-8 h-0.5 bg-primary mb-5" aria-hidden="true"></div>
+          <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-4">
+            {block.heading}
+          </h3>
+          <p class="text-body text-neutral leading-relaxed">
+            {block.body}
+          </p>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
