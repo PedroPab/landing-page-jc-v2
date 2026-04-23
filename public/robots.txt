@@ -1,0 +1,18 @@
+# robots.txt para JC Resortes
+# Reemplaza https://TU-DOMINIO.com por el dominio final publicado.
+# Si usas Astro + @astrojs/sitemap, el índice por defecto es /sitemap-index.xml
+
+User-agent: *
+Allow: /
+
+# Bloquea solo rutas no públicas o técnicas si existen.
+Disallow: /admin/
+Disallow: /privado/
+Disallow: /drafts/
+Disallow: /borradores/
+Disallow: /tmp/
+Disallow: /dev/
+Disallow: /preview/
+Disallow: /api/internal/
+
+Sitemap: https://TU-DOMINIO.com/sitemap-index.xml

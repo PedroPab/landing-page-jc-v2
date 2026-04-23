@@ -18,9 +18,7 @@ const { settings, whatsappUrl } = Astro.props;
 
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 shrink-0 group" aria-label={`${settings.name} — Inicio`}>
-      <div class="w-8 h-8 rounded bg-primary flex items-center justify-center shrink-0">
-        <span class="font-heading text-white font-bold text-xs tracking-wide">JC</span>
-      </div>
+      <img src="/favicon.svg" alt="" class="w-8 h-8 shrink-0" aria-hidden="true" />
       <span class="font-heading font-bold text-foreground text-sm uppercase tracking-wide hidden sm:block group-hover:text-primary transition-colors">
         {settings.name}
       </span>
