@@ -1,0 +1,35 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getHomePageData, buildWhatsAppUrl } from '@/lib/content';
+
+import Header     from '@/components/sections/Header.astro';
+import PageHero   from '@/components/ui/PageHero.astro';
+import Industries from '@/components/sections/Industries.astro';
+import Workshop   from '@/components/sections/Workshop.astro';
+import CtaContact from '@/components/sections/CtaContact.astro';
+import Footer     from '@/components/sections/Footer.astro';
+
+const { settings, home, contact } = await getHomePageData();
+const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsapp.defaultMessage);
+---
+
+<BaseLayout
+  title="Industrias — JC Resortes | Resortes para agroindustria, minería, manufactura y más"
+  description="JC Resortes atiende distintos sectores industriales: agroindustria, alimentos, manufactura, minería, motocicletas y metalmecánica. Soluciones a la medida desde Medellín."
+>
+  <Header settings={settings} whatsappUrl={whatsappUrl} />
+
+  <main>
+    <PageHero
+      title="Industrias"
+      subtitle="Presencia en los sectores productivos más importantes de Colombia."
+      breadcrumbs={[{ label: "Industrias" }]}
+    />
+
+    <Industries data={home.industries} />
+    <Workshop data={home.workshop} />
+    <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
+  </main>
+
+  <Footer settings={settings} whatsappUrl={whatsappUrl} />
+</BaseLayout>

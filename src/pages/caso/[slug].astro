@@ -1,0 +1,58 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout  from '@/layouts/BaseLayout.astro';
+import { getHomePageData, buildWhatsAppUrl } from '@/lib/content';
+
+import Header     from '@/components/sections/Header.astro';
+import PageHero   from '@/components/ui/PageHero.astro';
+import CaseStudy  from '@/components/sections/CaseStudy.astro';
+import CtaContact from '@/components/sections/CtaContact.astro';
+import Footer     from '@/components/sections/Footer.astro';
+
+// ── Static path generation ────────────────────────────────────
+// One page per case study in src/content/case-studies/
+export async function getStaticPaths() {
+  const cases = await getCollection('caseStudies');
+  return cases.map((entry) => ({
+    params: { slug: entry.id },
+    props:  { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'caseStudies'>;
+}
+
+const { entry } = Astro.props;
+const { settings, contact } = await getHomePageData();
+const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsapp.defaultMessage);
+
+const pageTitle = `${entry.data.title} — JC Resortes`;
+const pageDescription = entry.data.summary;
+const ogImage = entry.data.image?.src ?? settings.seo.defaultImage;
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  ogImage={ogImage}
+>
+  <Header settings={settings} whatsappUrl={whatsappUrl} />
+
+  <main>
+    <PageHero
+      title={entry.data.title}
+      subtitle={entry.data.summary}
+      breadcrumbs={[
+        { label: "Casos destacados", href: "/caso" },
+        { label: entry.data.industry },
+      ]}
+    />
+
+    <CaseStudy entry={entry} />
+
+    <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
+  </main>
+
+  <Footer settings={settings} whatsappUrl={whatsappUrl} />
+</BaseLayout>

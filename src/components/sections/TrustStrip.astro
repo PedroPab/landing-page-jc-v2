@@ -12,24 +12,31 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<section class="bg-primary text-white py-10" aria-label="Por qué confiar en JC Resortes">
+<section
+  class="bg-primary text-white py-10"
+  aria-label="Por qué confiar en JC Resortes"
+>
   <div class="container-jc">
     <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-0">
-      {items.map((item, i) => (
-        <li class={`flex flex-col items-center text-center gap-1.5 ${i < items.length - 1 ? 'lg:border-r lg:border-white/20 lg:pr-6 lg:mr-6' : ''}`}>
-          <span class="font-heading text-2xl font-bold leading-none">
-            {item.value}
-          </span>
-          <span class="text-[0.7rem] text-white/70 uppercase tracking-widest font-medium font-heading">
-            {item.label}
-          </span>
-          {item.detail && (
-            <p class="text-[0.7rem] text-white/50 leading-snug max-w-[140px] hidden lg:block mt-1">
-              {item.detail}
-            </p>
-          )}
-        </li>
-      ))}
+      {
+        items.map((item, i) => (
+          <li
+            class={`flex flex-col items-center text-center gap-1.5 ${i < items.length - 1 ? "lg:border-r lg:border-white/20 lg:pr-6 lg:mr-6" : ""}`}
+          >
+            <span class="text-[0.7rem] text-white/70 uppercase tracking-widest font-medium font-heading">
+              {item.label}
+            </span>
+            <span class="font-heading text-2xl font-bold leading-none">
+              {item.value}
+            </span>
+            {item.detail && (
+              <p class="text-[0.7rem] text-white/50 leading-snug max-w-[140px] hidden lg:block mt-1">
+                {item.detail}
+              </p>
+            )}
+          </li>
+        ))
+      }
     </ul>
   </div>
 </section>

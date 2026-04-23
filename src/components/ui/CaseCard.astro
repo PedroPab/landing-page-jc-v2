@@ -1,0 +1,74 @@
+---
+import Badge from '@/components/ui/Badge.astro';
+
+interface Props {
+  slug: string;
+  title: string;
+  industry: string;
+  summary: string;
+  tags: string[];
+  image?: {
+    src: string;
+    alt: string;
+  } | null;
+}
+
+const { slug, title, industry, summary, tags, image } = Astro.props;
+---
+
+<article class="group flex flex-col bg-white border border-muted rounded-lg overflow-hidden shadow-card hover:shadow-elevated transition-shadow">
+
+  <!-- Case image / placeholder -->
+  <a href={`/caso/${slug}`} class="block relative aspect-video overflow-hidden bg-surface" aria-label={`Ver caso: ${title}`} tabindex="-1">
+    {image ? (
+      <img
+        src={image.src}
+        alt={image.alt}
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="w-full h-full flex items-center justify-center">
+        <!-- Spring placeholder -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 16" width="80" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="text-muted" aria-hidden="true">
+          <path d="M0 8 C5 0, 10 16, 15 8 C20 0, 25 16, 30 8 C35 0, 40 16, 45 8 C50 0, 55 16, 60 8 C65 0, 70 16, 75 8 C77 5, 79 8, 80 8"/>
+        </svg>
+      </div>
+    )}
+    <!-- Industry badge overlay -->
+    <div class="absolute top-3 left-3">
+      <Badge variant="primary">{industry}</Badge>
+    </div>
+  </a>
+
+  <!-- Content -->
+  <div class="flex flex-col gap-3 p-6 flex-1">
+    <h2 class="font-heading text-[0.875rem] font-bold uppercase leading-tight text-foreground group-hover:text-primary transition-colors">
+      <a href={`/caso/${slug}`}>{title}</a>
+    </h2>
+    <p class="text-[0.8125rem] text-neutral leading-relaxed flex-1">
+      {summary}
+    </p>
+    <div class="flex flex-wrap gap-1.5 pt-3 border-t border-muted">
+      {tags.slice(0, 3).map((tag) => (
+        <Badge variant="muted">{tag}</Badge>
+      ))}
+    </div>
+  </div>
+
+  <!-- Link footer -->
+  <div class="px-6 pb-5">
+    <a
+      href={`/caso/${slug}`}
+      class="inline-flex items-center gap-2 text-[0.8125rem] font-heading font-bold uppercase tracking-wide text-primary hover:text-primary-soft transition-colors"
+    >
+      Ver caso completo
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+
+</article>

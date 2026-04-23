@@ -21,11 +21,11 @@
       "locale": "es_CO"
     },
     "nav": [
-      { "label": "Nosotros", "href": "#nosotros" },
-      { "label": "Qué hacemos", "href": "#servicios" },
-      { "label": "Industrias", "href": "#industrias" },
-      { "label": "Caso destacado", "href": "#caso" },
-      { "label": "Contacto", "href": "#contacto" }
+      { "label": "Nosotros",       "href": "/nosotros" },
+      { "label": "Qué hacemos",    "href": "/que-hacemos" },
+      { "label": "Industrias",     "href": "/industrias" },
+      { "label": "Caso destacado", "href": "/caso" },
+      { "label": "Contacto",       "href": "/contacto" }
     ],
     "sections": {
       "trustStrip": true,

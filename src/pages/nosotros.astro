@@ -1,0 +1,38 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getHomePageData, getHistoryStory, buildWhatsAppUrl } from '@/lib/content';
+
+import Header     from '@/components/sections/Header.astro';
+import PageHero   from '@/components/ui/PageHero.astro';
+import About      from '@/components/sections/About.astro';
+import History    from '@/components/sections/History.astro';
+import WorkValues from '@/components/sections/WorkValues.astro';
+import CtaContact from '@/components/sections/CtaContact.astro';
+import Footer     from '@/components/sections/Footer.astro';
+
+const { settings, home, contact } = await getHomePageData();
+const historyStory = await getHistoryStory();
+const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsapp.defaultMessage);
+---
+
+<BaseLayout
+  title="Nosotros — JC Resortes | Empresa familiar de resortes industriales en Medellín"
+  description="Conoce la historia de JC Resortes. Empresa familiar fundada en 1999 en Medellín con más de dos décadas de experiencia en fabricación de resortes industriales a la medida."
+>
+  <Header settings={settings} whatsappUrl={whatsappUrl} />
+
+  <main>
+    <PageHero
+      title="Nosotros"
+      subtitle="Una empresa familiar construida con trabajo, experiencia y continuidad desde 1999."
+      breadcrumbs={[{ label: "Nosotros" }]}
+    />
+
+    <About data={home.about} />
+    <History story={historyStory} />
+    <WorkValues data={home.workValues} />
+    <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
+  </main>
+
+  <Footer settings={settings} whatsappUrl={whatsappUrl} />
+</BaseLayout>

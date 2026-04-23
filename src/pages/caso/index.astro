@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout    from '@/layouts/BaseLayout.astro';
+import { getHomePageData, buildWhatsAppUrl } from '@/lib/content';
+
+import Header     from '@/components/sections/Header.astro';
+import PageHero   from '@/components/ui/PageHero.astro';
+import CaseCard   from '@/components/ui/CaseCard.astro';
+import CtaContact from '@/components/sections/CtaContact.astro';
+import Footer     from '@/components/sections/Footer.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+const { settings, contact } = await getHomePageData();
+const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsapp.defaultMessage);
+
+// Load all case studies, featured first
+const allCases = await getCollection('caseStudies');
+const cases = allCases.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+});
+---
+
+<BaseLayout
+  title="Casos destacados — JC Resortes | Proyectos y desarrollos industriales a la medida"
+  description="Conoce algunos de los proyectos más representativos de JC Resortes: desarrollos complejos, fabricación a gran escala y soluciones metalmecánicas personalizadas."
+>
+  <Header settings={settings} whatsappUrl={whatsappUrl} />
+
+  <main>
+    <PageHero
+      title="Casos destacados"
+      subtitle="Proyectos que muestran nuestra capacidad para resolver necesidades reales de la industria."
+      breadcrumbs={[{ label: "Casos destacados" }]}
+    />
+
+    <section class="section-pad bg-surface">
+      <div class="container-jc">
+
+        <!-- Intro -->
+        <div class="max-w-2xl mb-10">
+          <p class="text-body text-neutral leading-relaxed">
+            Cada desarrollo en JC Resortes parte de entender el problema real del cliente.
+            Los proyectos que compartimos aquí muestran nuestra capacidad técnica, nuestra
+            disposición para asumir retos complejos y el tipo de resultados que entregamos.
+          </p>
+          <SpringDivider width={80} coils={6} class="mt-6" />
+        </div>
+
+        <!-- Case grid -->
+        {cases.length === 0 ? (
+          <p class="text-body text-neutral">No hay casos publicados todavía.</p>
+        ) : (
+          <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Listado de casos destacados">
+            {cases.map((c) => (
+              <li>
+                <CaseCard
+                  slug={c.id}
+                  title={c.data.title}
+                  industry={c.data.industry}
+                  summary={c.data.summary}
+                  tags={c.data.tags}
+                  image={c.data.image ? { src: c.data.image.src, alt: c.data.image.alt } : null}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+      </div>
+    </section>
+
+    <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
+  </main>
+
+  <Footer settings={settings} whatsappUrl={whatsappUrl} />
+</BaseLayout>
