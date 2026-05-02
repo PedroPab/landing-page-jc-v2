@@ -1,15 +1,15 @@
 [
   {
     "id": "default",
-    "title": "¿Necesitas una solución en resortes o una pieza desarrollada según tu necesidad?",
-    "subtitle": "Si estás buscando una empresa con experiencia, criterio técnico y capacidad real para desarrollar soluciones a la medida, en JC Resortes puedes encontrar un aliado cercano y confiable.",
-    "microcopy": "Cuéntanos tu necesidad y conversemos sobre la mejor forma de resolverla.",
-    "whatsappLabel": "Hablar por WhatsApp",
+    "title": "Solicite una cotización o consulte disponibilidad",
+    "subtitle": "Cuéntenos los requerimientos técnicos de su proyecto y le responderemos con una solución precisa, materiales adecuados y plazo de entrega definido.",
+    "microcopy": "Atención directa con el equipo de fabricación — Medellín, Colombia.",
+    "whatsappLabel": "Solicitar cotización por WhatsApp",
     "mapsLabel": "Ver ubicación en Google Maps",
     "backgroundMedia": {
       "type": "image",
       "src": "/media/contact/taller-fondo.jpg",
-      "alt": "Taller de JC Resortes — fondo decorativo"
+      "alt": "Instalaciones de JC Resortes — Medellín"
     }
   }
 ]

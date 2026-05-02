@@ -2,10 +2,10 @@
   {
     "id": "default",
     "name": "JC Resortes",
-    "tagline": "Fabricación de resortes industriales a la medida desde 1999",
+    "tagline": "Fabricación de resortes industriales de alta calidad desde 1999",
     "whatsapp": {
       "number": "573XXXXXXXXX",
-      "defaultMessage": "Hola, necesito información sobre fabricación de resortes industriales"
+      "defaultMessage": "Hola, necesito cotización para fabricación de resortes industriales"
     },
     "address": {
       "street": "Centro Empresarial Caribe",
@@ -15,8 +15,8 @@
     },
     "seo": {
       "siteUrl": "https://jcresortes.com",
-      "defaultTitle": "JC Resortes — Fabricación de Resortes Industriales a la Medida en Medellín",
-      "defaultDescription": "Empresa familiar fundada en 1999 en Medellín. Fabricamos resortes industriales personalizados para minería, agroindustria, manufactura, alimentos y más. Experiencia, precisión y atención directa.",
+      "defaultTitle": "JC Resortes — Fabricación de Resortes Industriales de Alta Calidad en Medellín",
+      "defaultDescription": "Diseño y fabricación de resortes industriales a la medida desde 1999 en Medellín, Colombia. Compresión, tensión, torsión, templado y tratamiento de dureza para manufactura, alimentos, minería y más.",
       "defaultImage": "/og-image.jpg",
       "locale": "es_CO"
     },
@@ -28,15 +28,17 @@
       { "label": "Contacto",       "href": "/contacto" }
     ],
     "sections": {
-      "trustStrip": true,
-      "about": true,
-      "history": true,
-      "services": true,
+      "trustStrip":    true,
+      "about":         true,
+      "history":       false,
+      "services":      true,
+      "products":      true,
       "differentials": true,
-      "industries": true,
-      "caseStudy": true,
-      "workshop": true,
-      "workValues": true
+      "industries":    true,
+      "clients":       true,
+      "caseStudy":     true,
+      "workshop":      true,
+      "workValues":    true
     }
   }
 ]

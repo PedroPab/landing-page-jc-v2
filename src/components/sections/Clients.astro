@@ -1,0 +1,60 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface ClientItem {
+  id: string;
+  name: string;
+  sector: string;
+  description?: string;
+  logo?: { type: string; src: string; alt: string } | null;
+}
+
+interface ClientsData {
+  title: string;
+  subtitle?: string;
+  items: ClientItem[];
+}
+
+interface Props {
+  data: ClientsData;
+}
+
+const { data } = Astro.props;
+---
+
+<section id="clientes" class="section-pad bg-surface">
+  <div class="container-jc">
+
+    <SectionHeading
+      eyebrow="Clientes"
+      title={data.title}
+      subtitle={data.subtitle}
+    />
+
+    <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      {data.items.map((client) => (
+        <article class="flex flex-col items-center justify-center text-center gap-2 p-6 bg-white border border-muted rounded-lg min-h-[120px]">
+          {client.logo ? (
+            <img
+              src={client.logo.src}
+              alt={client.logo.alt}
+              class="max-h-12 max-w-[120px] object-contain"
+              loading="lazy"
+            />
+          ) : (
+            <p class="font-heading text-[0.875rem] font-bold text-foreground leading-snug">
+              {client.name}
+            </p>
+          )}
+          <p class="text-[0.75rem] text-neutral/70 uppercase tracking-wide">
+            {client.sector}
+          </p>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>

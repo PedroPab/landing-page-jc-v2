@@ -44,6 +44,24 @@ export async function getFeaturedCaseStudy() {
 }
 
 /**
+ * Load product catalog data.
+ */
+export async function getProductsData() {
+  const entry = await getEntry('productPages', 'default');
+  if (!entry) throw new Error('products.json is missing or has no entry with id "default"');
+  return entry.data;
+}
+
+/**
+ * Load client highlights data.
+ */
+export async function getClientsData() {
+  const entry = await getEntry('clientPages', 'default');
+  if (!entry) throw new Error('clients.json is missing or has no entry with id "default"');
+  return entry.data;
+}
+
+/**
  * Build a WhatsApp deep link URL.
  * @param number - International number without +, e.g. "573001234567"
  * @param message - Pre-filled message text (will be URL-encoded)

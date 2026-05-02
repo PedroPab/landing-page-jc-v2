@@ -58,8 +58,10 @@ const siteSettings = defineCollection({
       about:         z.boolean().default(true),
       history:       z.boolean().default(true),
       services:      z.boolean().default(true),
+      products:      z.boolean().default(true),
       differentials: z.boolean().default(true),
       industries:    z.boolean().default(true),
+      clients:       z.boolean().default(true),
       caseStudy:     z.boolean().default(true),
       workshop:      z.boolean().default(true),
       workValues:    z.boolean().default(true),
@@ -207,10 +209,48 @@ const caseStudies = defineCollection({
   }),
 });
 
+// ── Product Catalog (singleton JSON array) ────────────────────────
+const productPages = defineCollection({
+  loader: file('src/content/pages/products.json'),
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    subtitle: z.string().optional(),
+    items: z.array(z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      applications: z.array(z.string()),
+      materials: z.array(z.string()),
+      notes: z.string().optional(),
+      image: mediaItemSchema.optional(),
+    })),
+  }),
+});
+
+// ── Client Highlights (singleton JSON array) ──────────────────────
+const clientPages = defineCollection({
+  loader: file('src/content/pages/clients.json'),
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    subtitle: z.string().optional(),
+    items: z.array(z.object({
+      id: z.string(),
+      name: z.string(),
+      sector: z.string(),
+      description: z.string().optional(),
+      logo: mediaItemSchema.optional().nullable(),
+    })),
+  }),
+});
+
 export const collections = {
   siteSettings,
   homePages,
   contactSections,
   stories,
   caseStudies,
+  productPages,
+  clientPages,
 };

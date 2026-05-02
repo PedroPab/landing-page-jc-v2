@@ -4,6 +4,8 @@ import {
   getHomePageData,
   getHistoryStory,
   getFeaturedCaseStudy,
+  getProductsData,
+  getClientsData,
   buildWhatsAppUrl,
 } from '@/lib/content';
 
@@ -14,8 +16,10 @@ import TrustStrip    from '@/components/sections/TrustStrip.astro';
 import About         from '@/components/sections/About.astro';
 import History       from '@/components/sections/History.astro';
 import Services      from '@/components/sections/Services.astro';
+import Products      from '@/components/sections/Products.astro';
 import Differentials from '@/components/sections/Differentials.astro';
 import Industries    from '@/components/sections/Industries.astro';
+import Clients       from '@/components/sections/Clients.astro';
 import CaseStudy     from '@/components/sections/CaseStudy.astro';
 import Workshop      from '@/components/sections/Workshop.astro';
 import WorkValues    from '@/components/sections/WorkValues.astro';
@@ -24,8 +28,12 @@ import Footer        from '@/components/sections/Footer.astro';
 
 // Load all content in parallel at build time
 const { settings, home, contact } = await getHomePageData();
-const historyStory = await getHistoryStory();
-const featuredCase = await getFeaturedCaseStudy();
+const [historyStory, featuredCase, productsData, clientsData] = await Promise.all([
+  getHistoryStory(),
+  getFeaturedCaseStudy(),
+  getProductsData(),
+  getClientsData(),
+]);
 
 // Build WhatsApp URL once — reused by all sections that need it
 const whatsappUrl = buildWhatsAppUrl(
@@ -51,8 +59,10 @@ const sections = settings.sections;
     {sections.about         && <About         data={home.about} />}
     {sections.history       && <History       story={historyStory} />}
     {sections.services      && <Services      data={home.services} />}
+    {sections.products      && <Products      data={productsData} />}
     {sections.differentials && <Differentials data={home.differentials} />}
     {sections.industries    && <Industries    data={home.industries} />}
+    {sections.clients       && <Clients       data={clientsData} />}
     {sections.caseStudy     && <CaseStudy     entry={featuredCase} />}
     {sections.workshop      && <Workshop      data={home.workshop} />}
     {sections.workValues    && <WorkValues    data={home.workValues} />}

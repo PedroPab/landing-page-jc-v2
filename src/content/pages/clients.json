@@ -1,0 +1,33 @@
+[
+  {
+    "id": "default",
+    "title": "Empresas que confían en JC Resortes",
+    "subtitle": "Nuestros productos están presentes en empresas líderes de distintos sectores industriales en Colombia.",
+    "items": [
+      {
+        "id": "zenu",
+        "name": "Zenú",
+        "sector": "Industria de alimentos",
+        "description": "Suministro de resortes para líneas de producción del sector cárnico."
+      },
+      {
+        "id": "motos",
+        "name": "Sector motocicletas",
+        "sector": "Motocicletas",
+        "description": "Fabricación de resortes de precisión para ensamble y mantenimiento."
+      },
+      {
+        "id": "chocolates",
+        "name": "Industria de chocolates",
+        "sector": "Confitería",
+        "description": "Resortes para equipos de producción en la industria de confitería."
+      },
+      {
+        "id": "galletas",
+        "name": "Industria de galletas",
+        "sector": "Industria de alimentos",
+        "description": "Suministro de piezas para maquinaria de producción de alimentos."
+      }
+    ]
+  }
+]

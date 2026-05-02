@@ -1,32 +1,35 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getHomePageData, buildWhatsAppUrl } from '@/lib/content';
+import { getHomePageData, getProductsData, buildWhatsAppUrl } from '@/lib/content';
 
 import Header        from '@/components/sections/Header.astro';
 import PageHero      from '@/components/ui/PageHero.astro';
 import Services      from '@/components/sections/Services.astro';
+import Products      from '@/components/sections/Products.astro';
 import Differentials from '@/components/sections/Differentials.astro';
 import CtaContact    from '@/components/sections/CtaContact.astro';
 import Footer        from '@/components/sections/Footer.astro';
 
 const { settings, home, contact } = await getHomePageData();
+const productsData = await getProductsData();
 const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsapp.defaultMessage);
 ---
 
 <BaseLayout
-  title="Qué hacemos — JC Resortes | Fabricación de resortes industriales a la medida"
-  description="Fabricamos resortes industriales a la medida: compresión, tensión, torsión y desarrollos especiales. Adaptamos el producto al problema del cliente. Medellín, Colombia."
+  title="Qué hacemos — JC Resortes | Fabricación de resortes industriales de alta calidad"
+  description="Fabricamos resortes industriales a la medida: compresión, tensión, torsión, templado y tratamiento de dureza. Medellín, Colombia."
 >
   <Header settings={settings} whatsappUrl={whatsappUrl} />
 
   <main>
     <PageHero
       title="Qué hacemos"
-      subtitle="Fabricamos resortes industriales según la necesidad técnica real de cada proyecto."
+      subtitle="Diseño, fabricación y tratamiento de resortes industriales según especificación técnica."
       breadcrumbs={[{ label: "Qué hacemos" }]}
     />
 
     <Services data={home.services} />
+    <Products data={productsData} />
     <Differentials data={home.differentials} />
     <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
   </main>

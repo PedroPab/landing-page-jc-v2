@@ -1,0 +1,90 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface ProductItem {
+  id: string;
+  name: string;
+  description: string;
+  applications: string[];
+  materials: string[];
+  notes?: string;
+}
+
+interface ProductsData {
+  title: string;
+  subtitle?: string;
+  items: ProductItem[];
+}
+
+interface Props {
+  data: ProductsData;
+}
+
+const { data } = Astro.props;
+---
+
+<section id="productos" class="section-pad bg-white">
+  <div class="container-jc">
+
+    <SectionHeading
+      eyebrow="Productos"
+      title={data.title}
+      subtitle={data.subtitle}
+    />
+
+    <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {data.items.map((item) => (
+        <article class="bg-surface border border-muted rounded-lg p-8 border-l-4 border-l-primary">
+          <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3">
+            {item.name}
+          </h3>
+          <p class="text-[0.875rem] text-neutral leading-relaxed mb-5">
+            {item.description}
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Applications -->
+            <div>
+              <p class="text-[0.6875rem] font-bold uppercase tracking-wider text-primary mb-2">
+                Aplicaciones
+              </p>
+              <ul class="space-y-1">
+                {item.applications.map((app) => (
+                  <li class="flex items-start gap-1.5 text-[0.8125rem] text-neutral">
+                    <span class="mt-1.5 shrink-0 w-1 h-1 rounded-full bg-primary/50" aria-hidden="true"></span>
+                    {app}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <!-- Materials -->
+            <div>
+              <p class="text-[0.6875rem] font-bold uppercase tracking-wider text-primary mb-2">
+                Materiales
+              </p>
+              <ul class="space-y-1">
+                {item.materials.map((mat) => (
+                  <li class="flex items-start gap-1.5 text-[0.8125rem] text-neutral">
+                    <span class="mt-1.5 shrink-0 w-1 h-1 rounded-full bg-primary/50" aria-hidden="true"></span>
+                    {mat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {item.notes && (
+            <p class="mt-5 pt-4 border-t border-muted text-[0.8125rem] text-neutral/70 italic leading-relaxed">
+              {item.notes}
+            </p>
+          )}
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
