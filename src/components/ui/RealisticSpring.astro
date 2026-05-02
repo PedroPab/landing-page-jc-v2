@@ -1,0 +1,111 @@
+---
+/**
+ * RealisticSpring.astro
+ * Resorte helicoidal decorativo en SVG.
+ */
+
+interface Props {
+    class?: string;
+    width?: number;
+    height?: number;
+    coils?: number;
+}
+
+const {
+    class: className = "",
+    width = 180,
+    height = 240,
+    coils = 6,
+} = Astro.props;
+
+const centerX = 90;
+const radiusX = 48;
+const startY = 30;
+const coilGap = 28;
+const tube = 16;
+
+const paths = Array.from({ length: coils }, (_, i) => {
+    const y = startY + i * coilGap;
+
+    return {
+        back: `
+      M ${centerX - radiusX} ${y}
+      C ${centerX - 20} ${y - 18}, ${centerX + 20} ${y - 18}, ${centerX + radiusX} ${y}
+    `,
+        front: `
+      M ${centerX + radiusX} ${y}
+      C ${centerX + 25} ${y + 20}, ${centerX - 25} ${y + 20}, ${centerX - radiusX} ${y + coilGap}
+    `,
+    };
+});
+---
+
+<svg
+    class={className}
+    width={width}
+    height={height}
+    viewBox="0 0 180 240"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+>
+    <defs>
+        <linearGradient id="springMetal" x1="20" y1="0" x2="160" y2="0">
+            <stop offset="0%" stop-color="#3b2b1f"></stop>
+            <stop offset="18%" stop-color="#8a6a47"></stop>
+            <stop offset="45%" stop-color="#e2c39a"></stop>
+            <stop offset="65%" stop-color="#8b6a46"></stop>
+            <stop offset="100%" stop-color="#2f241b"></stop>
+        </linearGradient>
+
+        <linearGradient id="springShadow" x1="0" y1="0" x2="180" y2="0">
+            <stop offset="0%" stop-color="#1e1712"></stop>
+            <stop offset="50%" stop-color="#6d5438"></stop>
+            <stop offset="100%" stop-color="#1e1712"></stop>
+        </linearGradient>
+
+        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.35"
+            ></feDropShadow>
+        </filter>
+    </defs>
+
+    <g filter="url(#softShadow)">
+        <!-- Partes traseras oscuras -->
+        {
+            paths.map((path) => (
+                <path
+                    d={path.back}
+                    stroke="url(#springShadow)"
+                    stroke-width={tube}
+                    stroke-linecap="round"
+                />
+            ))
+        }
+
+        <!-- Partes frontales metálicas -->
+        {
+            paths.map((path) => (
+                <path
+                    d={path.front}
+                    stroke="url(#springMetal)"
+                    stroke-width={tube}
+                    stroke-linecap="round"
+                />
+            ))
+        }
+
+        <!-- Brillo interno -->
+        {
+            paths.map((path) => (
+                <path
+                    d={path.front}
+                    stroke="#f4d7aa"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    opacity="0.65"
+                />
+            ))
+        }
+    </g>
+</svg>

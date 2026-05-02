@@ -1,59 +1,81 @@
 ---
-/**
- * SpringDivider — decorative SVG spring/coil motif.
- * Used as a brand visual element between sections or below headings.
- */
 interface Props {
   class?: string;
   width?: number;
+  height?: number;
   coils?: number;
   strokeWidth?: number;
 }
 
 const {
-  class: className = '',
-  width = 100,
-  coils = 8,
-  strokeWidth = 1.5,
+  class: className = "",
+  width = 180,
+  height = 34,
+  coils = 10,
+  strokeWidth = 2,
 } = Astro.props;
 
-// Build path: alternating sine-wave bezier curves to simulate a coil
-const coilWidth = width / coils;
-const amplitude = 6;
-const midY = amplitude;
+const padding = 8;
+const springStart = padding + 14;
+const springEnd = width - padding - 14;
+const springWidth = springEnd - springStart;
+const coilWidth = springWidth / coils;
+const centerY = height / 2;
+const radiusY = height * 0.34;
 
-const pathParts: string[] = [];
+const path: string[] = [];
+
+// extremo izquierdo
+path.push(`M ${padding} ${centerY}`);
+path.push(`L ${springStart} ${centerY}`);
+
+// cuerpo del resorte
 for (let i = 0; i < coils; i++) {
-  const x = i * coilWidth;
-  const cp1x = x + coilWidth * 0.25;
-  const cp2x = x + coilWidth * 0.75;
-  const endx = x + coilWidth;
-  const cp1y = i % 2 === 0 ? 0 : amplitude * 2;
-  const cp2y = i % 2 === 0 ? amplitude * 2 : 0;
+  const x = springStart + i * coilWidth;
+  const xMid = x + coilWidth / 2;
+  const xEnd = x + coilWidth;
 
-  if (i === 0) {
-    pathParts.push(`M 0 ${midY}`);
-  }
-  pathParts.push(`C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${endx} ${midY}`);
+  path.push(`
+    C ${x + coilWidth * 0.15} ${centerY - radiusY},
+      ${xMid - coilWidth * 0.15} ${centerY - radiusY},
+      ${xMid} ${centerY}
+  `);
+
+  path.push(`
+    C ${xMid + coilWidth * 0.15} ${centerY + radiusY},
+      ${xEnd - coilWidth * 0.15} ${centerY + radiusY},
+      ${xEnd} ${centerY}
+  `);
 }
 
-const d = pathParts.join(' ');
-const svgHeight = amplitude * 2 + 4;
-const viewBox = `0 -2 ${width} ${svgHeight}`;
+// extremo derecho
+path.push(`L ${width - padding} ${centerY}`);
+
+const d = path.join(" ");
 ---
 
 <svg
-  class={`text-primary-soft opacity-50 ${className}`}
-  viewBox={viewBox}
+  class={`text-primary ${className}`}
   width={width}
-  height={svgHeight}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
   fill="none"
-  stroke="currentColor"
-  stroke-width={strokeWidth}
-  stroke-linecap="round"
-  stroke-linejoin="round"
   aria-hidden="true"
   role="presentation"
 >
-  <path d={d} />
+  <path
+    d={d}
+    stroke="currentColor"
+    stroke-width={strokeWidth}
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+
+  <path
+    d={d}
+    stroke="currentColor"
+    stroke-width={strokeWidth * 0.45}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.35"
+    transform={`translate(0 ${strokeWidth * 1.4})`}></path>
 </svg>

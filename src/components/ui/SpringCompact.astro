@@ -1,0 +1,55 @@
+---
+// SpringCompact.astro
+interface Props {
+    class?: string;
+    width?: number;
+    height?: number;
+    coils?: number;
+    strokeWidth?: number;
+}
+
+const {
+    class: className = "",
+    width = 180,
+    height = 28,
+    coils = 12,
+    strokeWidth = 2,
+} = Astro.props;
+
+const padding = 10;
+const centerY = height / 2;
+const springWidth = width - padding * 2;
+const step = springWidth / coils;
+const radiusY = height * 0.32;
+
+let d = `M ${padding} ${centerY}`;
+
+for (let i = 0; i < coils; i++) {
+    const x = padding + i * step;
+    const mid = x + step / 2;
+    const end = x + step;
+
+    d += ` C ${x + step * 0.2} ${centerY - radiusY},
+          ${mid - step * 0.2} ${centerY - radiusY},
+          ${mid} ${centerY}`;
+
+    d += ` C ${mid + step * 0.2} ${centerY + radiusY},
+          ${end - step * 0.2} ${centerY + radiusY},
+          ${end} ${centerY}`;
+}
+---
+
+<svg
+    class={`text-primary ${className}`}
+    width={width}
+    height={height}
+    viewBox={`0 0 ${width} ${height}`}
+    fill="none"
+>
+    <path
+        d={d}
+        stroke="currentColor"
+        stroke-width={strokeWidth}
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+</svg>
