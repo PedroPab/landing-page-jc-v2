@@ -163,3 +163,98 @@
     background-repeat: repeat;
   }
 }
+
+/* ── 3D Visual Enhancements ──────────────────────────────────── */
+
+/* Keyframe animations */
+@keyframes heroGridScroll {
+  from { background-position: center 0; }
+  to   { background-position: center 60px; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.85; }
+  50%       { opacity: 1; box-shadow: 0 0 12px 2px rgb(66 140 13 / 0.5); }
+}
+
+@layer utilities {
+  /* Animation utility classes */
+  .animate-hero-grid  { animation: heroGridScroll 14s linear infinite; }
+  .animate-float      { animation: float 4s ease-in-out infinite; }
+  .animate-float-slow { animation: float 6s ease-in-out infinite; }
+  .animate-glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
+
+  /* Depth background classes */
+  .bg-depth-foreground {
+    background-color: var(--color-foreground);
+    background-image:
+      radial-gradient(ellipse at 15% 80%, rgb(66 140 13 / 0.13) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 10%, rgb(66 140 13 / 0.07) 0%, transparent 45%);
+  }
+
+  .bg-depth-primary {
+    background-color: var(--color-primary);
+    background-image:
+      radial-gradient(ellipse at 50% 0%,   rgb(255 255 255 / 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 110%, rgb(0 0 0 / 0.20) 0%, transparent 50%);
+  }
+}
+
+/* Hero 3D perspective grid plane */
+.hero-grid-plane {
+  transform-origin: bottom center;
+  transform: perspective(700px) rotateX(68deg);
+  background-image:
+    linear-gradient(to right,  rgb(66 140 13 / 0.20) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(66 140 13 / 0.20) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center 0;
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 82%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 82%);
+  animation: heroGridScroll 14s linear infinite;
+}
+
+/* Product card 3D tilt */
+.product-card {
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.product-card-shimmer-bar {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(66 140 13 / 0.65) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-card-shimmer-bar {
+  opacity: 1;
+  animation: shimmer 1.8s linear infinite;
+}
+
+/* Reduced-motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-grid,
+  .animate-float,
+  .animate-float-slow,
+  .animate-glow-pulse,
+  .product-card-shimmer-bar { animation: none !important; }
+  .product-card { transition: none !important; }
+  .hero-grid-plane { animation: none !important; }
+}

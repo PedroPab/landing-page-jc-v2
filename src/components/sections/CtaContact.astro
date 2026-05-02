@@ -32,7 +32,7 @@ const { contact, settings, whatsappUrl } = Astro.props;
 const hasBg = contact.backgroundMedia != null;
 ---
 
-<section id="contacto" class="relative section-pad bg-primary text-white overflow-hidden">
+<section id="contacto" class="relative section-pad bg-depth-primary text-white overflow-hidden">
 
   <!-- Background media layer (optional) -->
   {hasBg && contact.backgroundMedia?.type === 'image' && (

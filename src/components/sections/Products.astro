@@ -1,6 +1,7 @@
 ---
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import SpringDivider from '@/components/ui/SpringDivider.astro';
+import RealisticSpring from '@/components/ui/RealisticSpring.astro';
 
 interface ProductItem {
   id: string;
@@ -24,8 +25,12 @@ interface Props {
 const { data } = Astro.props;
 ---
 
-<section id="productos" class="section-pad bg-white">
+<section id="productos" class="section-pad bg-surface relative overflow-hidden">
   <div class="container-jc">
+    <!-- Decorative spring (desktop only) -->
+    <div class="absolute top-4 right-0 opacity-[0.03] pointer-events-none select-none hidden lg:block animate-float-slow" aria-hidden="true">
+      <RealisticSpring width={260} height={340} coils={9} />
+    </div>
 
     <SectionHeading
       eyebrow="Productos"
@@ -37,7 +42,11 @@ const { data } = Astro.props;
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {data.items.map((item) => (
-        <article class="bg-surface border border-muted rounded-lg p-8 border-l-4 border-l-primary">
+        <article class="product-card bg-surface border border-muted rounded-lg p-8 relative overflow-hidden">
+          <!-- Animated top shimmer bar -->
+          <div class="product-card-shimmer-bar absolute top-0 left-0 right-0 h-px" aria-hidden="true"></div>
+          <!-- Animated left accent -->
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg animate-glow-pulse" aria-hidden="true"></div>
           <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3">
             {item.name}
           </h3>
@@ -88,3 +97,41 @@ const { data } = Astro.props;
 
   </div>
 </section>
+
+<script>
+(function () {
+  const TILT_MAX = 10;
+  const SCALE = 1.022;
+
+  function applyTilt(card: HTMLElement, e: MouseEvent) {
+    const rect = card.getBoundingClientRect();
+    const dx = (e.clientX - (rect.left + rect.width  / 2)) / (rect.width  / 2);
+    const dy = (e.clientY - (rect.top  + rect.height / 2)) / (rect.height / 2);
+    const rotX = -dy * TILT_MAX;
+    const rotY =  dx * TILT_MAX;
+    card.style.transform =
+      `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(${SCALE},${SCALE},1)`;
+    card.style.boxShadow =
+      `${-dx * 8}px ${-dy * 8}px 28px rgb(0 0 0 / 0.14), 0 2px 8px rgb(0 0 0 / 0.07)`;
+  }
+
+  function resetTilt(card: HTMLElement) {
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  }
+
+  const grid = document.querySelector<HTMLElement>('#productos .grid');
+  if (!grid) return;
+
+  grid.addEventListener('mousemove', (e) => {
+    const card = (e.target as Element).closest<HTMLElement>('.product-card');
+    if (card) applyTilt(card, e);
+  });
+
+  grid.addEventListener('mouseout', (e) => {
+    const me = e as MouseEvent;
+    const card = (me.target as Element).closest<HTMLElement>('.product-card');
+    if (card && !card.contains(me.relatedTarget as Node)) resetTilt(card);
+  });
+})();
+</script>
