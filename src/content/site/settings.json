@@ -23,6 +23,7 @@
     "nav": [
       { "label": "Nosotros",       "href": "/nosotros" },
       { "label": "Qué hacemos",    "href": "/que-hacemos" },
+      { "label": "Catálogo",       "href": "/catalogo" },
       { "label": "Industrias",     "href": "/industrias" },
       { "label": "Caso destacado", "href": "/caso" },
       { "label": "Contacto",       "href": "/contacto" }

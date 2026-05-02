@@ -19,9 +19,11 @@
 </style>
 
 <script>
-  import * as THREE from 'three';
+  import * as THREE from "three";
 
-  const canvas = document.querySelector<HTMLCanvasElement>('[data-spring-background]');
+  const canvas = document.querySelector<HTMLCanvasElement>(
+    "[data-spring-background]",
+  );
 
   if (canvas) {
     const scene = new THREE.Scene();
@@ -35,7 +37,7 @@
       canvas,
       alpha: true,
       antialias: window.devicePixelRatio < 2,
-      powerPreference: 'high-performance',
+      powerPreference: "high-performance",
     });
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
@@ -71,7 +73,7 @@
       turns = 9,
       segments = 120,
       tube = 0.08,
-      radialSegments = 10,
+      radialSegments = 30,
     }: SpringParams) {
       const points: THREE.Vector3[] = [];
       for (let i = 0; i <= segments; i++) {
@@ -86,7 +88,13 @@
         );
       }
       const curve = new THREE.CatmullRomCurve3(points);
-      return new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
+      return new THREE.TubeGeometry(
+        curve,
+        segments,
+        tube,
+        radialSegments,
+        false,
+      );
     }
 
     // Three spring variants — industrial proportions
@@ -99,25 +107,25 @@
     // Brand-matched materials: soft green, steel-green, near-white steel
     const materials = [
       new THREE.MeshStandardMaterial({
-        color: 0x7ab340,   // soft brand green
+        color: 0x7ab340, // soft brand green
         metalness: 0.65,
-        roughness: 0.30,
+        roughness: 0.3,
         transparent: true,
         opacity: 0.62,
       }),
       new THREE.MeshStandardMaterial({
-        color: 0xbac9a8,   // metallic steel-green
+        color: 0xbac9a8, // metallic steel-green
         metalness: 0.78,
         roughness: 0.25,
         transparent: true,
-        opacity: 0.50,
+        opacity: 0.5,
       }),
       new THREE.MeshStandardMaterial({
-        color: 0xdce8d0,   // near-white steel highlight
+        color: 0xdce8d0, // near-white steel highlight
         metalness: 0.35,
-        roughness: 0.50,
+        roughness: 0.5,
         transparent: true,
-        opacity: 0.30,
+        opacity: 0.3,
       }),
     ];
 
@@ -164,7 +172,7 @@
 
     function resize() {
       const parent = canvas.parentElement;
-      const w = parent?.clientWidth  ?? window.innerWidth;
+      const w = parent?.clientWidth ?? window.innerWidth;
       const h = parent?.clientHeight ?? window.innerHeight;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
@@ -178,7 +186,7 @@
       const t = clock.getElapsedTime();
 
       // Slow, organic group sway
-      group.rotation.y = Math.sin(t * 0.07) * 0.10;
+      group.rotation.y = Math.sin(t * 0.07) * 0.1;
       group.rotation.x = Math.cos(t * 0.05) * 0.04;
 
       for (const item of items) {
@@ -187,13 +195,13 @@
         item.mesh.position.x =
           item.baseX + Math.cos(t * item.speed + item.phase) * 0.12;
         item.mesh.rotation.y += 0.0018;
-        item.mesh.rotation.x += 0.0010;
+        item.mesh.rotation.x += 0.001;
       }
 
       renderer.render(scene, camera);
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
     if (canvas.parentElement) {
       new ResizeObserver(resize).observe(canvas.parentElement);
     }

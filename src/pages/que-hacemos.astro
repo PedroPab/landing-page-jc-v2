@@ -29,7 +29,7 @@ const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsapp
     />
 
     <Services data={home.services} />
-    <Products data={productsData} />
+    <Products data={productsData} linkBase="/catalogo" />
     <Differentials data={home.differentials} />
     <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
   </main>
