@@ -1,0 +1,171 @@
+---
+interface Props {
+  src?: string;
+  label?: string;
+}
+
+const { src = '/models/resorte.stl', label = 'Modelo 3D del producto' } = Astro.props;
+---
+
+<div
+  class="product-viewer"
+  data-stl-viewer
+  data-src={src}
+  role="img"
+  aria-label={label}
+>
+  <canvas></canvas>
+  <div class="viewer-loading" aria-hidden="true">
+    <span class="viewer-spinner"></span>
+  </div>
+</div>
+
+<style>
+  .product-viewer {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(66, 140, 13, 0.12), transparent 60%),
+      #0e160b;
+  }
+
+  .product-viewer canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .viewer-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+
+  .viewer-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .viewer-spinner {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid rgba(66, 140, 13, 0.25);
+    border-top-color: #428c0d;
+    border-radius: 50%;
+    animation: spinnerTurn 0.8s linear infinite;
+  }
+
+  @keyframes spinnerTurn {
+    to { transform: rotate(360deg); }
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+
+  document.querySelectorAll<HTMLElement>('[data-stl-viewer]').forEach((viewer) => {
+    const canvas  = viewer.querySelector<HTMLCanvasElement>('canvas');
+    const loading = viewer.querySelector<HTMLElement>('.viewer-loading');
+    const modelUrl = viewer.dataset.src;
+
+    if (!canvas || !modelUrl) return;
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
+    camera.position.set(0, 0, 120);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    // Lights — same industrial palette as SpringBackground
+    scene.add(new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.2));
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(4, 6, 8);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0x428c0d, 0.6);
+    fillLight.position.set(-6, -3, 4);
+    scene.add(fillLight);
+
+    const loader = new STLLoader();
+    let mesh: THREE.Mesh | null = null;
+
+    loader.load(
+      modelUrl,
+      (geometry) => {
+        geometry.computeVertexNormals();
+        geometry.computeBoundingBox();
+
+        const box    = geometry.boundingBox!;
+        const center = new THREE.Vector3();
+        const size   = new THREE.Vector3();
+        box.getCenter(center);
+        box.getSize(size);
+
+        // Center geometry at origin
+        geometry.translate(-center.x, -center.y, -center.z);
+
+        const material = new THREE.MeshStandardMaterial({
+          color:     0xc8d4b8,   // steel with slight green tint
+          metalness: 0.55,
+          roughness: 0.35,
+        });
+
+        mesh = new THREE.Mesh(geometry, material);
+
+        // Scale to fill ~70% of view
+        const maxAxis = Math.max(size.x, size.y, size.z);
+        mesh.scale.setScalar(70 / maxAxis);
+
+        scene.add(mesh);
+
+        // Hide loading indicator
+        loading?.classList.add('hidden');
+      },
+      undefined,
+      (err) => {
+        console.warn('[ProductStlViewer] Failed to load model:', err);
+        loading?.classList.add('hidden');
+      },
+    );
+
+    function resize() {
+      const w = viewer.clientWidth;
+      const h = viewer.clientHeight;
+      if (w === 0 || h === 0) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (document.hidden) return;
+      if (mesh) {
+        mesh.rotation.y += 0.008;
+        mesh.rotation.x += 0.002;
+      }
+      renderer.render(scene, camera);
+    }
+
+    new ResizeObserver(resize).observe(viewer);
+    resize();
+    animate();
+  });
+</script>

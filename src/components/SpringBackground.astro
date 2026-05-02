@@ -1,0 +1,204 @@
+<div class="spring-background">
+  <canvas data-spring-background></canvas>
+</div>
+
+<style>
+  .spring-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .spring-background canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-spring-background]');
+
+  if (canvas) {
+    const scene = new THREE.Scene();
+    // Fog matches the hero dark background (#1a1a18) — distant springs fade into the bg
+    scene.fog = new THREE.FogExp2(0x1a1a18, 0.018);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, 18);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: window.devicePixelRatio < 2,
+      powerPreference: 'high-performance',
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    // Lights — warm top, dark green bottom for industrial atmosphere
+    const ambient = new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.0);
+    scene.add(ambient);
+
+    const dirLight = new THREE.DirectionalLight(0xd8f0c8, 1.5);
+    dirLight.position.set(6, 8, 10);
+    scene.add(dirLight);
+
+    const accentLight = new THREE.DirectionalLight(0x428c0d, 0.8);
+    accentLight.position.set(-8, -4, 5);
+    scene.add(accentLight);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    type SpringParams = {
+      radius?: number;
+      height?: number;
+      turns?: number;
+      segments?: number;
+      tube?: number;
+      radialSegments?: number;
+    };
+
+    function makeSpring({
+      radius = 0.45,
+      height = 4,
+      turns = 9,
+      segments = 120,
+      tube = 0.08,
+      radialSegments = 10,
+    }: SpringParams) {
+      const points: THREE.Vector3[] = [];
+      for (let i = 0; i <= segments; i++) {
+        const t = i / segments;
+        const angle = t * Math.PI * 2 * turns;
+        points.push(
+          new THREE.Vector3(
+            Math.cos(angle) * radius,
+            (t - 0.5) * height,
+            Math.sin(angle) * radius,
+          ),
+        );
+      }
+      const curve = new THREE.CatmullRomCurve3(points);
+      return new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
+    }
+
+    // Three spring variants — industrial proportions
+    const geometries = [
+      makeSpring({ radius: 0.38, height: 3.2, turns: 8 }),
+      makeSpring({ radius: 0.52, height: 4.6, turns: 10 }),
+      makeSpring({ radius: 0.28, height: 2.6, turns: 7 }),
+    ];
+
+    // Brand-matched materials: soft green, steel-green, near-white steel
+    const materials = [
+      new THREE.MeshStandardMaterial({
+        color: 0x7ab340,   // soft brand green
+        metalness: 0.65,
+        roughness: 0.30,
+        transparent: true,
+        opacity: 0.62,
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0xbac9a8,   // metallic steel-green
+        metalness: 0.78,
+        roughness: 0.25,
+        transparent: true,
+        opacity: 0.50,
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0xdce8d0,   // near-white steel highlight
+        metalness: 0.35,
+        roughness: 0.50,
+        transparent: true,
+        opacity: 0.30,
+      }),
+    ];
+
+    type SpringItem = {
+      mesh: THREE.Mesh;
+      baseX: number;
+      baseY: number;
+      phase: number;
+      speed: number;
+    };
+
+    const items: SpringItem[] = [];
+    const COUNT = 16;
+
+    for (let i = 0; i < COUNT; i++) {
+      const mesh = new THREE.Mesh(
+        geometries[i % geometries.length],
+        materials[i % materials.length].clone(), // clone so each spring can differ
+      );
+
+      mesh.position.set(
+        THREE.MathUtils.randFloatSpread(24),
+        THREE.MathUtils.randFloatSpread(14),
+        THREE.MathUtils.randFloat(-8, 6),
+      );
+      mesh.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+      );
+      mesh.scale.setScalar(THREE.MathUtils.randFloat(0.7, 1.9));
+
+      group.add(mesh);
+      items.push({
+        mesh,
+        baseX: mesh.position.x,
+        baseY: mesh.position.y,
+        phase: Math.random() * Math.PI * 2,
+        speed: THREE.MathUtils.randFloat(0.22, 0.65),
+      });
+    }
+
+    const clock = new THREE.Clock();
+
+    function resize() {
+      const parent = canvas.parentElement;
+      const w = parent?.clientWidth  ?? window.innerWidth;
+      const h = parent?.clientHeight ?? window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (document.hidden) return;
+
+      const t = clock.getElapsedTime();
+
+      // Slow, organic group sway
+      group.rotation.y = Math.sin(t * 0.07) * 0.10;
+      group.rotation.x = Math.cos(t * 0.05) * 0.04;
+
+      for (const item of items) {
+        item.mesh.position.y =
+          item.baseY + Math.sin(t * item.speed + item.phase) * 0.25;
+        item.mesh.position.x =
+          item.baseX + Math.cos(t * item.speed + item.phase) * 0.12;
+        item.mesh.rotation.y += 0.0018;
+        item.mesh.rotation.x += 0.0010;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', resize);
+    if (canvas.parentElement) {
+      new ResizeObserver(resize).observe(canvas.parentElement);
+    }
+
+    resize();
+    animate();
+  }
+</script>
