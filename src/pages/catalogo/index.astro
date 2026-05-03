@@ -32,6 +32,7 @@ const whatsappUrl  = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsap
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {productsData.items.map((item) => (
             <ProductCard
+              productId={item.id}
               name={item.name}
               description={item.description}
               applications={item.applications}

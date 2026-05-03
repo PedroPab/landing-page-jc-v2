@@ -1,5 +1,6 @@
 ---
 interface Props {
+  productId?: string;
   name: string;
   description: string;
   applications: string[];
@@ -7,66 +8,171 @@ interface Props {
   class?: string;
 }
 
-const { name, description, applications, href, class: className = '' } = Astro.props;
+const { productId, name, description, href, class: className = '' } = Astro.props;
 
 const base =
-  'catalog-card group bg-white border border-muted rounded-lg p-8 relative overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-elevated transition-all duration-300';
+  'catalog-card group bg-white border border-muted rounded-lg relative overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-elevated transition-all duration-300';
 ---
 
 {href ? (
   <a href={href} class={`${base} ${className}`}>
-    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg" aria-hidden="true"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg z-10" aria-hidden="true"></div>
 
-    <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3 group-hover:text-primary transition-colors duration-200">
-      {name}
-    </h3>
+    {productId && (
+      <div class="card-spring-preview w-full bg-surface" aria-hidden="true">
+        <canvas data-card-spring data-product-id={productId}></canvas>
+      </div>
+    )}
 
-    <p class="text-[0.875rem] text-neutral leading-relaxed mb-5 flex-1">
-      {description}
-    </p>
+    <div class="p-6 flex flex-col flex-1">
+      <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3 group-hover:text-primary transition-colors duration-200">
+        {name}
+      </h3>
 
-    <div class="mb-6">
-      <p class="text-[0.6875rem] font-bold uppercase tracking-wider text-primary mb-2">Aplicaciones</p>
-      <ul class="flex flex-wrap gap-1.5">
-        {applications.slice(0, 3).map((app) => (
-          <li class="text-[0.75rem] text-neutral bg-surface border border-muted rounded px-2 py-0.5">{app}</li>
-        ))}
-        {applications.length > 3 && (
-          <li class="text-[0.75rem] text-neutral/60 px-1 py-0.5">+{applications.length - 3} más</li>
-        )}
-      </ul>
+      <p class="text-[0.875rem] text-neutral leading-relaxed flex-1 mb-5">
+        {description}
+      </p>
+
+      <span class="inline-flex items-center gap-1.5 text-[0.8125rem] font-heading font-bold uppercase tracking-wide text-primary group-hover:gap-2.5 transition-all duration-200">
+        Ver ficha técnica
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </span>
     </div>
-
-    <span class="inline-flex items-center gap-1.5 text-[0.8125rem] font-heading font-bold uppercase tracking-wide text-primary group-hover:gap-2.5 transition-all duration-200">
-      Ver ficha técnica
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </span>
   </a>
 ) : (
   <article class={`${base} ${className}`}>
-    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg" aria-hidden="true"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg z-10" aria-hidden="true"></div>
 
-    <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3">
-      {name}
-    </h3>
+    {productId && (
+      <div class="card-spring-preview w-full bg-surface" aria-hidden="true">
+        <canvas data-card-spring data-product-id={productId}></canvas>
+      </div>
+    )}
 
-    <p class="text-[0.875rem] text-neutral leading-relaxed mb-5 flex-1">
-      {description}
-    </p>
+    <div class="p-6 flex flex-col flex-1">
+      <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3">
+        {name}
+      </h3>
 
-    <div>
-      <p class="text-[0.6875rem] font-bold uppercase tracking-wider text-primary mb-2">Aplicaciones</p>
-      <ul class="flex flex-wrap gap-1.5">
-        {applications.slice(0, 3).map((app) => (
-          <li class="text-[0.75rem] text-neutral bg-surface border border-muted rounded px-2 py-0.5">{app}</li>
-        ))}
-        {applications.length > 3 && (
-          <li class="text-[0.75rem] text-neutral/60 px-1 py-0.5">+{applications.length - 3} más</li>
-        )}
-      </ul>
+      <p class="text-[0.875rem] text-neutral leading-relaxed flex-1">
+        {description}
+      </p>
     </div>
   </article>
 )}
+
+<style>
+  .card-spring-preview {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 40%, rgb(66 140 13 / 0.08), transparent 65%),
+      #f4f5f2;
+  }
+
+  .card-spring-preview canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+
+  type CardSpringConfig = {
+    radius: number;
+    height: number;
+    turns: number;
+    tube: number;
+  };
+
+  const configs: Record<string, CardSpringConfig> = {
+    compresion:    { radius: 0.50, height: 3.5, turns: 8,  tube: 0.095 },
+    tension:       { radius: 0.38, height: 5.0, turns: 13, tube: 0.070 },
+    torsion:       { radius: 0.45, height: 2.5, turns: 5,  tube: 0.085 },
+    'gran-escala': { radius: 0.65, height: 4.5, turns: 7,  tube: 0.150 },
+  };
+
+  document.querySelectorAll<HTMLCanvasElement>('[data-card-spring]').forEach((canvas) => {
+    const productId = canvas.dataset.productId ?? 'compresion';
+    const cfg = configs[productId] ?? configs['compresion'];
+    const { radius, height, turns, tube } = cfg;
+    const segments = 60;
+    const radialSegments = 8;
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, 16 / 9, 0.1, 100);
+    camera.position.set(0, 0, 9);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0); // fully transparent
+
+    // Lights
+    scene.add(new THREE.HemisphereLight(0xf0f8e8, 0x1a2e10, 1.4));
+
+    const key = new THREE.DirectionalLight(0xffffff, 2.8);
+    key.position.set(4, 6, 8);
+    scene.add(key);
+
+    const fill = new THREE.DirectionalLight(0x428c0d, 0.9);
+    fill.position.set(-5, -3, 3);
+    scene.add(fill);
+
+    // Spring geometry
+    const points: THREE.Vector3[] = [];
+    for (let i = 0; i <= segments; i++) {
+      const t     = i / segments;
+      const angle = t * Math.PI * 2 * turns;
+      points.push(new THREE.Vector3(
+        Math.cos(angle) * radius,
+        (t - 0.5) * height,
+        Math.sin(angle) * radius,
+      ));
+    }
+
+    const curve    = new THREE.CatmullRomCurve3(points);
+    const geometry = new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
+    const material = new THREE.MeshStandardMaterial({
+      color:     0xa8bca0,
+      metalness: 0.75,
+      roughness: 0.25,
+    });
+
+    const spring = new THREE.Mesh(geometry, material);
+    // Slight tilt so we see the coils clearly
+    spring.rotation.x = Math.PI * 0.18;
+    scene.add(spring);
+
+    function resize() {
+      const parent = canvas.parentElement;
+      const w = parent?.clientWidth  ?? canvas.clientWidth;
+      const h = parent?.clientHeight ?? canvas.clientHeight;
+      if (w === 0 || h === 0) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (document.hidden) return;
+      spring.rotation.y += 0.012;
+      renderer.render(scene, camera);
+    }
+
+    new ResizeObserver(resize).observe(canvas.parentElement!);
+    resize();
+    animate();
+  });
+</script>
