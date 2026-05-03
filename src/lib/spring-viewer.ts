@@ -36,13 +36,17 @@ export function createSpringMaterial(): THREE.MeshStandardMaterial {
 }
 
 // ── Procedural spring geometry ──────────────────────────────────────────────────
-export function buildProceduralGeometry(productId: string): THREE.BufferGeometry {
+export function buildProceduralGeometry(productId: string, lowDetail = false): THREE.BufferGeometry {
   const cfg = SPRING_CONFIGS[productId] ?? DEFAULT_CONFIG;
   const { radius, height, turns, tube, segments = 140, radialSegments = 10 } = cfg;
 
+  // lowDetail halves segments for small card previews (~75% fewer vertices)
+  const seg  = lowDetail ? Math.ceil(segments / 2) : segments;
+  const rSeg = lowDetail ? Math.max(6, Math.ceil(radialSegments / 2)) : radialSegments;
+
   const points: THREE.Vector3[] = [];
-  for (let i = 0; i <= segments; i++) {
-    const t     = i / segments;
+  for (let i = 0; i <= seg; i++) {
+    const t     = i / seg;
     const angle = t * Math.PI * 2 * turns;
     points.push(new THREE.Vector3(
       Math.cos(angle) * radius,
@@ -51,7 +55,7 @@ export function buildProceduralGeometry(productId: string): THREE.BufferGeometry
     ));
   }
   const curve = new THREE.CatmullRomCurve3(points);
-  return new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
+  return new THREE.TubeGeometry(curve, seg, tube, rSeg, false);
 }
 
 // ── Scene / camera / renderer / lights ─────────────────────────────────────────
@@ -135,9 +139,10 @@ export function createViewerBase(
  * Adds the resulting mesh to `scene` and calls onReady(mesh).
  */
 export function loadProductMesh(
-  scene:     THREE.Scene,
-  productId: string,
-  onReady?:  (mesh: THREE.Mesh) => void,
+  scene:      THREE.Scene,
+  productId:  string,
+  onReady?:   (mesh: THREE.Mesh) => void,
+  lowDetail = false,
 ): void {
   const material = createSpringMaterial();
   const loader   = new STLLoader();
@@ -164,7 +169,7 @@ export function loadProductMesh(
   }
 
   function useProcedural() {
-    addMesh(buildProceduralGeometry(productId));
+    addMesh(buildProceduralGeometry(productId, lowDetail));
   }
 
   function loadWithFallback(url: string, nextUrl: string | null) {

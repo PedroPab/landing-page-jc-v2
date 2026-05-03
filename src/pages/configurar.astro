@@ -532,6 +532,13 @@ const whatsappNumber = settings.whatsapp.number;
   let needsRebuild = false;
   let autoRotateY  = 0;
 
+  // ── Debounce: delay geometry rebuild 150ms after last slider move ─────────
+  let rebuildTimer = 0;
+  function scheduleRebuild() {
+    clearTimeout(rebuildTimer);
+    rebuildTimer = window.setTimeout(() => { needsRebuild = true; }, 150);
+  }
+
   // ── Params ───────────────────────────────────────────────────────────────────
   function getParams() {
     return {
@@ -579,7 +586,7 @@ const whatsappNumber = settings.whatsapp.number;
     inp.addEventListener('input', () => {
       out.value = fmt(+inp.value);
       updateSliderFill(inp);
-      needsRebuild = true;
+      scheduleRebuild();
     });
   }
 
@@ -623,17 +630,53 @@ const whatsappNumber = settings.whatsapp.number;
     camera.updateProjectionMatrix();
   }
 
-  // ── Render loop ──────────────────────────────────────────────────────────────
-  function animate() {
-    requestAnimationFrame(animate);
-    if (document.hidden) return;
-    if (needsRebuild) { rebuildSpring(); needsRebuild = false; }
-    if (currentMesh) { currentMesh.rotation.y = autoRotateY += 0.008; }
-    renderer.render(scene, camera);
+  // ── RAF loop (start/stop via IntersectionObserver) ───────────────────────
+  let rafId = 0;
+
+  function startLoop() {
+    if (rafId) return;
+    function tick() {
+      rafId = requestAnimationFrame(tick);
+      if (document.hidden) return;
+      if (needsRebuild) { rebuildSpring(); needsRebuild = false; }
+      if (currentMesh) { currentMesh.rotation.y = autoRotateY += 0.008; }
+      renderer.render(scene, camera);
+    }
+    rafId = requestAnimationFrame(tick);
   }
 
-  new ResizeObserver(resize).observe(canvas.parentElement!);
+  function stopLoop() {
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  // ── ResizeObserver ────────────────────────────────────────────────────────
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(canvas.parentElement!);
+
+  // ── IntersectionObserver: pause render when off-screen ───────────────────
+  const io = new IntersectionObserver(
+    ([entry]) => (entry.isIntersecting ? startLoop() : stopLoop()),
+    { threshold: 0 },
+  );
+  io.observe(canvas.parentElement!);
+
+  // ── Cleanup on page unload ────────────────────────────────────────────────
+  window.addEventListener(
+    'pagehide',
+    () => {
+      stopLoop();
+      clearTimeout(rebuildTimer);
+      resizeObserver.disconnect();
+      io.disconnect();
+      currentGeo?.dispose();
+      material.dispose();
+      renderer.forceContextLoss();
+      renderer.dispose();
+    },
+    { once: true },
+  );
+
   resize();
   rebuildSpring(); // initial build
-  animate();
 </script>

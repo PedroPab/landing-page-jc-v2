@@ -204,46 +204,79 @@ const { fogColor = "#1a1a18" } = Astro.props;
       }
     }
 
-    function animate() {
-      requestAnimationFrame(animate);
-      if (document.hidden) return;
+    // ── RAF loop (start/stop controlled by IntersectionObserver) ──────────────
+    let rafId = 0;
 
-      const t = clock.getElapsedTime();
+    function startLoop() {
+      if (rafId) return;
+      function tick() {
+        rafId = requestAnimationFrame(tick);
+        if (document.hidden) return;
 
-      group.rotation.y = Math.sin(t * 0.07) * 0.1;
-      group.rotation.x = Math.cos(t * 0.05) * 0.04;
+        const t = clock.getElapsedTime();
 
-      for (const item of items) {
-        // Float
-        item.mesh.position.y =
-          item.baseY + Math.sin(t * item.speed + item.phase) * 0.25;
-        item.mesh.position.x =
-          item.baseX + Math.cos(t * item.speed + item.phase) * 0.12;
+        group.rotation.y = Math.sin(t * 0.07) * 0.1;
+        group.rotation.x = Math.cos(t * 0.05) * 0.04;
 
-        // Stretch / compress along the spring axis (local Y)
-        // sin goes -1..+1: negative = compressed, positive = stretched
-        const squish = Math.sin(t * item.squishSpeed + item.squishPhase);
-        const yScale = item.baseScale * (1 + squish * item.squishAmp);
-        // Inverse coupling on radial axes — compressed → wider, stretched → narrower
-        const radialScale =
-          item.baseScale * (1 - squish * item.squishAmp * 0.2);
-        item.mesh.scale.set(radialScale, yScale, radialScale);
+        for (const item of items) {
+          item.mesh.position.y =
+            item.baseY + Math.sin(t * item.speed + item.phase) * 0.25;
+          item.mesh.position.x =
+            item.baseX + Math.cos(t * item.speed + item.phase) * 0.12;
 
-        item.mesh.rotation.y += 0.0018;
-        item.mesh.rotation.x += 0.001;
+          const squish = Math.sin(t * item.squishSpeed + item.squishPhase);
+          const yScale = item.baseScale * (1 + squish * item.squishAmp);
+          const radialScale =
+            item.baseScale * (1 - squish * item.squishAmp * 0.2);
+          item.mesh.scale.set(radialScale, yScale, radialScale);
+
+          item.mesh.rotation.y += 0.0018;
+          item.mesh.rotation.x += 0.001;
+        }
+
+        renderer.render(scene, camera);
       }
-
-      renderer.render(scene, camera);
+      rafId = requestAnimationFrame(tick);
     }
 
-    window.addEventListener("resize", resize);
+    function stopLoop() {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+
+    // ── Resize — ResizeObserver only (window.resize is redundant) ──────────
+    const resizeObserver = new ResizeObserver(resize);
     if (canvas.parentElement) {
-      new ResizeObserver(resize).observe(canvas.parentElement);
+      resizeObserver.observe(canvas.parentElement);
     }
+
+    // ── IntersectionObserver: pause render when off-screen ─────────────────
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? startLoop() : stopLoop()),
+      { threshold: 0 },
+    );
+    if (canvas.parentElement) io.observe(canvas.parentElement);
+
+    // ── Cleanup on page unload ──────────────────────────────────────────────
+    window.addEventListener(
+      "pagehide",
+      () => {
+        stopLoop();
+        resizeObserver.disconnect();
+        io.disconnect();
+        geometries.forEach((g) => g.dispose());
+        items.forEach((item) =>
+          (item.mesh.material as THREE.Material).dispose(),
+        );
+        materials.forEach((m) => m.dispose());
+        renderer.forceContextLoss();
+        renderer.dispose();
+      },
+      { once: true },
+    );
 
     resize();
     distributeItems(); // position springs after aspect ratio is known
-    animate();
   }
 
   // Initialize all spring background canvases on the page

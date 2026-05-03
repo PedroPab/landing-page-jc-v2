@@ -154,7 +154,7 @@ const base =
     .forEach((canvas) => {
       const productId = canvas.dataset.productId ?? "compresion";
 
-      const { scene, camera, renderer, resize, observeResize } =
+      const { scene, camera, renderer, resize } =
         createViewerBase(canvas, {
           transparent: true,
           cameraZ: 9,
@@ -162,23 +162,62 @@ const base =
         });
 
       let mesh: THREE.Mesh | null = null;
-      const loader = canvas.previousElementSibling as HTMLElement | null;
+      const loaderEl = canvas.previousElementSibling as HTMLElement | null;
 
+      // lowDetail=true: reduces vertices ~75% for small card preview
       loadProductMesh(scene, productId, (loaded) => {
         mesh = loaded;
         mesh.rotation.x = Math.PI * 0.18;
-        loader?.classList.add('hidden');
-      });
+        loaderEl?.classList.add('hidden');
+      }, true);
 
-      function animate() {
-        requestAnimationFrame(animate);
-        if (document.hidden) return;
-        if (mesh) mesh.rotation.y += 0.012;
-        renderer.render(scene, camera);
+      // ── RAF loop (start/stop controlled by IntersectionObserver) ──────────
+      let rafId = 0;
+
+      function startLoop() {
+        if (rafId) return;
+        function tick() {
+          rafId = requestAnimationFrame(tick);
+          if (document.hidden) return;
+          if (mesh) mesh.rotation.y += 0.012;
+          renderer.render(scene, camera);
+        }
+        rafId = requestAnimationFrame(tick);
       }
 
-      observeResize(canvas.parentElement!);
+      function stopLoop() {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+
+      // ── ResizeObserver ─────────────────────────────────────────────────────
+      const resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(canvas.parentElement!);
+
+      // ── IntersectionObserver: pause render when off-screen ─────────────────
+      const io = new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? startLoop() : stopLoop()),
+        { threshold: 0 },
+      );
+      io.observe(canvas.parentElement!);
+
+      // ── Cleanup on page unload ─────────────────────────────────────────────
+      window.addEventListener(
+        "pagehide",
+        () => {
+          stopLoop();
+          resizeObserver.disconnect();
+          io.disconnect();
+          if (mesh) {
+            mesh.geometry.dispose();
+            (mesh.material as THREE.Material).dispose();
+          }
+          renderer.forceContextLoss();
+          renderer.dispose();
+        },
+        { once: true },
+      );
+
       resize();
-      animate();
     });
 </script>

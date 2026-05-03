@@ -214,6 +214,7 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 </style>
 
 <script>
+  import * as THREE from "three";
   import { createViewerBase, loadProductMesh } from "@/lib/spring-viewer";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -228,7 +229,7 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 
       if (!canvas) return;
 
-      const { scene, camera, renderer, resize, observeResize } =
+      const { scene, camera, renderer, resize } =
         createViewerBase(canvas, {
           transparent: false,
           cameraZ: 10,
@@ -275,20 +276,65 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 
       // ── Load mesh ──────────────────────────────────────────
       const loadingEl = container.querySelector<HTMLElement>(".viewer-loading");
-      loadProductMesh(scene, productId, () => {
+      let mesh: THREE.Mesh | null = null;
+      loadProductMesh(scene, productId, (loaded) => {
+        mesh = loaded;
         loadingEl?.classList.add("hidden");
       });
 
-      // ── Render loop ────────────────────────────────────────
-      function animate() {
-        requestAnimationFrame(animate);
-        if (document.hidden) return;
-        controls.update();
-        renderer.render(scene, camera);
+      // ── Conditional controls.update ────────────────────────
+      let userInteracting = false;
+      controls.addEventListener("start", () => { userInteracting = true; });
+      controls.addEventListener("end",   () => { userInteracting = false; });
+
+      // ── RAF loop (start/stop via IntersectionObserver) ─────
+      let rafId = 0;
+
+      function startLoop() {
+        if (rafId) return;
+        function tick() {
+          rafId = requestAnimationFrame(tick);
+          if (document.hidden) return;
+          if (controls.autoRotate || userInteracting) controls.update();
+          renderer.render(scene, camera);
+        }
+        rafId = requestAnimationFrame(tick);
       }
 
-      observeResize(container);
+      function stopLoop() {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+
+      // ── ResizeObserver ─────────────────────────────────────
+      const resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(container);
+
+      // ── IntersectionObserver: pause when off-screen ────────
+      const io = new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? startLoop() : stopLoop()),
+        { threshold: 0 },
+      );
+      io.observe(container);
+
+      // ── Cleanup on page unload ─────────────────────────────
+      window.addEventListener(
+        "pagehide",
+        () => {
+          stopLoop();
+          resizeObserver.disconnect();
+          io.disconnect();
+          controls.dispose();
+          if (mesh) {
+            mesh.geometry.dispose();
+            (mesh.material as THREE.Material).dispose();
+          }
+          renderer.forceContextLoss();
+          renderer.dispose();
+        },
+        { once: true },
+      );
+
       resize();
-      animate();
     });
 </script>
