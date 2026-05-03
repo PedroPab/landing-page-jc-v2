@@ -1,5 +1,13 @@
+---
+interface Props {
+  /** CSS hex color that matches the section background — used for fog so distant springs fade naturally */
+  fogColor?: string;
+}
+const { fogColor = "#1a1a18" } = Astro.props;
+---
+
 <div class="spring-background">
-  <canvas data-spring-background></canvas>
+  <canvas data-spring-background data-fog-color={fogColor}></canvas>
 </div>
 
 <style>
@@ -21,14 +29,12 @@
 <script>
   import * as THREE from "three";
 
-  const canvas = document.querySelector<HTMLCanvasElement>(
-    "[data-spring-background]",
-  );
+  function initSpringBackground(canvas: HTMLCanvasElement) {
+    const fogColorStr = canvas.dataset.fogColor ?? "#1a1a18";
+    const fogColorHex = parseInt(fogColorStr.replace("#", ""), 16);
 
-  if (canvas) {
     const scene = new THREE.Scene();
-    // Fog matches the hero dark background (#1a1a18) — distant springs fade into the bg
-    scene.fog = new THREE.FogExp2(0x1a1a18, 0.018);
+    scene.fog = new THREE.FogExp2(fogColorHex, 0.018);
 
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, 0, 18);
@@ -71,7 +77,7 @@
       radius = 0.45,
       height = 4,
       turns = 9,
-      segments = 120,
+      segments = 200,
       tube = 0.08,
       radialSegments = 30,
     }: SpringParams) {
@@ -143,7 +149,7 @@
     for (let i = 0; i < COUNT; i++) {
       const mesh = new THREE.Mesh(
         geometries[i % geometries.length],
-        materials[i % materials.length].clone(), // clone so each spring can differ
+        materials[i % materials.length].clone(),
       );
 
       mesh.position.set(
@@ -185,7 +191,6 @@
 
       const t = clock.getElapsedTime();
 
-      // Slow, organic group sway
       group.rotation.y = Math.sin(t * 0.07) * 0.1;
       group.rotation.x = Math.cos(t * 0.05) * 0.04;
 
@@ -209,4 +214,9 @@
     resize();
     animate();
   }
+
+  // Initialize all spring background canvases on the page
+  document
+    .querySelectorAll<HTMLCanvasElement>("[data-spring-background]")
+    .forEach(initSpringBackground);
 </script>

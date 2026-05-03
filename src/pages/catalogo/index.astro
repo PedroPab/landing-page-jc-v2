@@ -2,10 +2,11 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getHomePageData, getProductsData, buildWhatsAppUrl } from '@/lib/content';
 
-import Header     from '@/components/sections/Header.astro';
-import PageHero   from '@/components/ui/PageHero.astro';
-import CtaContact from '@/components/sections/CtaContact.astro';
-import Footer     from '@/components/sections/Footer.astro';
+import Header      from '@/components/sections/Header.astro';
+import PageHero    from '@/components/ui/PageHero.astro';
+import ProductCard from '@/components/ui/ProductCard.astro';
+import CtaContact  from '@/components/sections/CtaContact.astro';
+import Footer      from '@/components/sections/Footer.astro';
 
 const { settings, contact } = await getHomePageData();
 const productsData = await getProductsData();
@@ -30,51 +31,12 @@ const whatsappUrl  = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsap
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {productsData.items.map((item) => (
-            <a
+            <ProductCard
+              name={item.name}
+              description={item.description}
+              applications={item.applications}
               href={`/catalogo/${item.id}`}
-              class="catalog-card group bg-white border border-muted rounded-lg p-8 relative overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-elevated transition-all duration-300"
-            >
-              <!-- Left accent bar -->
-              <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg" aria-hidden="true"></div>
-
-              <!-- Product name -->
-              <h2 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3 group-hover:text-primary transition-colors duration-200">
-                {item.name}
-              </h2>
-
-              <!-- Description -->
-              <p class="text-[0.875rem] text-neutral leading-relaxed mb-5 flex-1">
-                {item.description}
-              </p>
-
-              <!-- Applications preview (first 3) -->
-              <div class="mb-6">
-                <p class="text-[0.6875rem] font-bold uppercase tracking-wider text-primary mb-2">
-                  Aplicaciones
-                </p>
-                <ul class="flex flex-wrap gap-1.5">
-                  {item.applications.slice(0, 3).map((app) => (
-                    <li class="text-[0.75rem] text-neutral bg-surface border border-muted rounded px-2 py-0.5">
-                      {app}
-                    </li>
-                  ))}
-                  {item.applications.length > 3 && (
-                    <li class="text-[0.75rem] text-neutral/60 px-1 py-0.5">
-                      +{item.applications.length - 3} más
-                    </li>
-                  )}
-                </ul>
-              </div>
-
-              <!-- CTA link -->
-              <span class="inline-flex items-center gap-1.5 text-[0.8125rem] font-heading font-bold uppercase tracking-wide text-primary group-hover:gap-2.5 transition-all duration-200">
-                Ver ficha técnica
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                  <polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </span>
-            </a>
+            />
           ))}
         </div>
 
