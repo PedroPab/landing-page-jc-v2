@@ -92,16 +92,6 @@
           }
         },
         {
-          "title": "Soluciones metalmecánicas complementarias",
-          "description": "Fabricamos piezas especiales y desarrollamos adaptaciones metalmecánicas cuando el proyecto así lo requiere, integrando la solución completa.",
-          "icon": "cog",
-          "image": {
-            "type": "image",
-            "src": "/media/services/piezas-especiales.jpg",
-            "alt": "Piezas metalmecánicas especiales fabricadas en JC Resortes"
-          }
-        },
-        {
           "title": "Templado y tratamiento de dureza",
           "description": "Aplicamos tratamientos térmicos de templado y ajuste de dureza para garantizar la resistencia y vida útil del resorte en condiciones de operación exigente.",
           "icon": "layers",

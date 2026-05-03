@@ -4,8 +4,8 @@
  * Replaces the full home Hero on secondary routes.
  * Shows breadcrumb + H1 + optional subtitle + spring divider.
  */
-import SpringDivider from '@/components/ui/SpringDivider.astro';
-import SpringBackground from '@/components/SpringBackground.astro';
+import SpringDivider from "@/components/ui/SpringDivider.astro";
+import SpringBackground from "@/components/SpringBackground.astro";
 
 interface BreadcrumbItem {
   label: string;
@@ -17,78 +17,103 @@ interface Props {
   title: string;
   subtitle?: string;
   breadcrumbs?: BreadcrumbItem[];
-  align?: 'left' | 'center';
+  align?: "left" | "center";
 }
 
-const {
-  eyebrow,
-  title,
-  subtitle,
-  breadcrumbs,
-  align = 'left',
-} = Astro.props;
+const { eyebrow, title, subtitle, breadcrumbs, align = "left" } = Astro.props;
 
-const alignClass = align === 'center' ? 'items-center text-center' : 'items-start text-left';
+const alignClass =
+  align === "center" ? "items-center text-center" : "items-start text-left";
 ---
 
 <section class="relative bg-foreground text-white overflow-hidden">
   <!-- Top accent -->
-  <div class="absolute top-0 left-0 right-0 h-1 bg-primary" aria-hidden="true"></div>
+  <div class="absolute top-0 left-0 right-0 h-1 bg-primary" aria-hidden="true">
+  </div>
   <!-- 3D floating springs background -->
   <SpringBackground />
 
   <div class="container-jc relative z-10 py-12 lg:py-16">
     <div class={`flex flex-col gap-4 max-w-3xl ${alignClass}`}>
-
       <!-- Breadcrumb -->
-      {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav aria-label="Breadcrumb">
-          <ol class="flex items-center gap-2 text-[0.7rem] text-white/40 font-heading uppercase tracking-widest">
-            <li>
-              <a href="/" class="hover:text-white/70 transition-colors">Inicio</a>
-            </li>
-            {breadcrumbs.map((crumb, i) => (
-              <>
-                <li aria-hidden="true">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="9 18 15 12 9 6"/>
-                  </svg>
-                </li>
-                <li>
-                  {crumb.href && i < breadcrumbs.length - 1
-                    ? <a href={crumb.href} class="hover:text-white/70 transition-colors">{crumb.label}</a>
-                    : <span class="text-white/60" aria-current="page">{crumb.label}</span>
-                  }
-                </li>
-              </>
-            ))}
-          </ol>
-        </nav>
-      )}
+      {
+        breadcrumbs && breadcrumbs.length > 0 && (
+          <nav aria-label="Breadcrumb">
+            <ol class="flex items-center gap-2 text-[0.7rem] text-white/40 font-heading uppercase tracking-widest">
+              <li>
+                <a href="/" class="hover:text-white/70 transition-colors">
+                  Inicio
+                </a>
+              </li>
+              {breadcrumbs.map((crumb, i) => (
+                <>
+                  <li aria-hidden="true">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10"
+                      height="10"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </li>
+                  <li>
+                    {crumb.href && i < breadcrumbs.length - 1 ? (
+                      <a
+                        href={crumb.href}
+                        class="hover:text-white/70 transition-colors"
+                      >
+                        {crumb.label}
+                      </a>
+                    ) : (
+                      <span class="text-white/60" aria-current="page">
+                        {crumb.label}
+                      </span>
+                    )}
+                  </li>
+                </>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
 
       <!-- Eyebrow label -->
-      {eyebrow && !breadcrumbs && (
-        <p class="font-heading text-primary-soft text-[0.7rem] font-bold uppercase tracking-widest">
-          {eyebrow}
-        </p>
-      )}
+      {
+        eyebrow && !breadcrumbs && (
+          <p class="font-heading text-primary-soft text-[0.7rem] font-bold uppercase tracking-widest">
+            {eyebrow}
+          </p>
+        )
+      }
 
       <!-- Page title -->
-      <h1 class="font-heading text-h1 font-bold uppercase leading-tight text-white">
+      <h1
+        class="font-heading text-h1 font-bold uppercase leading-tight text-white"
+      >
         {title}
       </h1>
 
-      <SpringDivider width={70} coils={5} class="opacity-60" />
-
       <!-- Subtitle -->
-      {subtitle && (
-        <p class="text-subtitle text-white/70 leading-relaxed max-w-xl">
-          {subtitle}
-        </p>
-      )}
-
+      {
+        subtitle && (
+          <p class="text-subtitle text-white/70 leading-relaxed max-w-xl">
+            {subtitle}
+          </p>
+        )
+      }
     </div>
   </div>
 
-  <div class="absolute bottom-0 left-0 right-0 h-px bg-white/10" aria-hidden="true"></div>
+  <div
+    class="absolute bottom-0 left-0 right-0 h-px bg-white/10"
+    aria-hidden="true"
+  >
+  </div>
 </section>

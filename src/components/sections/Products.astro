@@ -1,8 +1,8 @@
 ---
-import SectionHeading from '@/components/ui/SectionHeading.astro';
-import SpringDivider from '@/components/ui/SpringDivider.astro';
-import RealisticSpring from '@/components/ui/RealisticSpring.astro';
-import ProductCard from '@/components/ui/ProductCard.astro';
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import SpringDivider from "@/components/ui/SpringDivider.astro";
+import RealisticSpring from "@/components/ui/RealisticSpring.astro";
+import ProductCard from "@/components/ui/ProductCard.astro";
 
 interface ProductItem {
   id: string;
@@ -27,12 +27,16 @@ interface Props {
 }
 
 const { data, linkBase } = Astro.props;
+const linkBaseDefault = linkBase ?? "/catalogo";
 ---
 
 <section id="productos" class="section-pad bg-surface relative overflow-hidden">
   <div class="container-jc">
     <!-- Decorative spring (desktop only) -->
-    <div class="absolute top-4 right-0 opacity-[0.03] pointer-events-none select-none hidden lg:block animate-float-slow" aria-hidden="true">
+    <div
+      class="absolute top-4 right-0 opacity-[0.03] pointer-events-none select-none hidden lg:block animate-float-slow"
+      aria-hidden="true"
+    >
       <RealisticSpring width={260} height={340} coils={9} />
     </div>
 
@@ -45,30 +49,42 @@ const { data, linkBase } = Astro.props;
     <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {data.items.map((item) => (
-        <ProductCard
-          name={item.name}
-          description={item.description}
-          applications={item.applications}
-          href={linkBase ? `${linkBase}/${item.id}` : undefined}
-        />
-      ))}
+      {
+        data.items
+          .slice(0, 2)
+          .map((item) => (
+            <ProductCard
+              name={item.name}
+              description={item.description}
+              applications={item.applications}
+              href={`${linkBaseDefault}/${item.id}`}
+            />
+          ))
+      }
     </div>
 
-    {linkBase && (
-      <div class="mt-10 flex justify-center">
-        <a
-          href={linkBase}
-          class="inline-flex items-center gap-2 border-2 border-primary text-primary font-heading font-bold uppercase text-[0.8125rem] tracking-wide px-6 py-3 rounded hover:bg-primary hover:text-white transition-colors duration-200"
+    <div class="mt-10 flex justify-center">
+      <a
+        href={linkBaseDefault}
+        class="inline-flex items-center gap-2 border-2 border-primary text-primary font-heading font-bold uppercase text-[0.8125rem] tracking-wide px-6 py-3 rounded hover:bg-primary hover:text-white transition-colors duration-200"
+      >
+        Ver catálogo completo
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
         >
-          Ver catálogo completo
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </a>
-      </div>
-    )}
-
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
   </div>
 </section>

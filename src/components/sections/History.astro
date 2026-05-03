@@ -1,11 +1,11 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
-import SectionHeading from '@/components/ui/SectionHeading.astro';
-import SpringDivider from '@/components/ui/SpringDivider.astro';
-import SectionMedia from '@/components/ui/SectionMedia.astro';
+import { render, type CollectionEntry } from "astro:content";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import SpringDivider from "@/components/ui/SpringDivider.astro";
+import SectionMedia from "@/components/ui/SectionMedia.astro";
 
 interface Props {
-  story: CollectionEntry<'stories'>;
+  story: CollectionEntry<"stories">;
 }
 
 const { story } = Astro.props;
@@ -14,7 +14,6 @@ const { Content } = await render(story);
 
 <section id="historia" class="section-pad bg-surface">
   <div class="container-jc">
-
     <div class="max-w-3xl mx-auto">
       <SectionHeading
         eyebrow={story.data.sectionTitle}
@@ -29,26 +28,27 @@ const { Content } = await render(story);
     </div>
 
     <!-- Two-column layout when media is provided -->
-    <div class={`${story.data.media ? 'grid lg:grid-cols-3 gap-10 lg:gap-16 items-start' : 'max-w-3xl mx-auto'}`}>
-
+    <div
+      class={`${story.data.media ? "grid lg:grid-cols-3 gap-10 lg:gap-16 items-start" : "max-w-3xl mx-auto"}`}
+    >
       <!-- Prose content -->
-      <article class={`prose-jc ${story.data.media ? 'lg:col-span-2' : ''}`}>
+      <article class={`prose-jc ${story.data.media ? "lg:col-span-2" : ""}`}>
         <Content />
       </article>
 
       <!-- Media column -->
-      {story.data.media && (
-        <aside>
-          <SectionMedia
-            media={story.data.media}
-            aspect="portrait"
-            label="Foto de la historia"
-            class="rounded-lg overflow-hidden shadow-card sticky top-20"
-          />
-        </aside>
-      )}
-
+      {
+        story.data.media && (
+          <aside>
+            <SectionMedia
+              media={story.data.media}
+              aspect="portrait"
+              label="Foto de la historia"
+              class="rounded-lg overflow-hidden shadow-card sticky top-20"
+            />
+          </aside>
+        )
+      }
     </div>
-
   </div>
 </section>

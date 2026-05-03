@@ -2,31 +2,83 @@
 interface Props {
   productId: string;
   label?: string;
+  title?: string;
 }
 
-const { productId, label = 'Visor 3D del resorte' } = Astro.props;
+const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 ---
 
-<div
-  class="spring-product-viewer"
-  data-product-viewer
-  data-product-id={productId}
-  role="img"
-  aria-label={label}
->
-  <canvas></canvas>
-  <p class="viewer-hint" aria-hidden="true">Arrastra para rotar</p>
+<div class="spring-viewer-wrap">
+  <div
+    class="spring-product-viewer"
+    data-product-viewer
+    data-product-id={productId}
+    role="img"
+    aria-label={label}
+  >
+    <canvas></canvas>
+
+    <!-- Touch gate: visible only on touch devices (pointer: coarse).
+         Controls are locked until the user taps this overlay. -->
+    <button
+      class="viewer-touch-gate"
+      aria-label="Activar visor 3D para rotar el modelo"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"></path>
+        <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"></path>
+        <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"></path>
+        <path
+          d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"
+        ></path>
+      </svg>
+      <span>Mover</span>
+    </button>
+
+    <p class="viewer-hint" aria-hidden="true">Arrastra para rotar</p>
+  </div>
 </div>
 
 <style>
+  .spring-viewer-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .viewer-title {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-foreground);
+    line-height: 1.3;
+  }
+
   .spring-product-viewer {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1 / 1;
     border-radius: 1.5rem;
     overflow: hidden;
     position: relative;
     background:
-      radial-gradient(circle at 50% 35%, rgb(66 140 13 / 0.12), transparent 65%),
+      radial-gradient(
+        circle at 50% 35%,
+        rgb(66 140 13 / 0.12),
+        transparent 65%
+      ),
       #0e160b;
     cursor: grab;
   }
@@ -41,6 +93,68 @@ const { productId, label = 'Visor 3D del resorte' } = Astro.props;
     display: block;
   }
 
+  /* ── Touch gate overlay ───────────────────────────────── */
+  .viewer-touch-gate {
+    display: none; /* hidden on desktop (fine pointer) */
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    background: rgba(14, 22, 11, 0.55);
+    backdrop-filter: blur(2px);
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    transition: opacity 0.35s ease;
+    z-index: 10;
+  }
+
+  .viewer-touch-gate span {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Pulse ring around the hand icon */
+  .viewer-touch-gate::before {
+    content: "";
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(66, 140, 13, 0.6);
+    animation: gate-pulse 1.8s ease-out infinite;
+  }
+
+  @keyframes gate-pulse {
+    0% {
+      transform: scale(0.85);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1.55);
+      opacity: 0;
+    }
+  }
+
+  /* Show only on touch devices */
+  @media (pointer: coarse) {
+    .viewer-touch-gate {
+      display: flex;
+    }
+  }
+
+  .viewer-touch-gate.dismissed {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ── Drag hint ────────────────────────────────────────── */
   .viewer-hint {
     position: absolute;
     bottom: 1.25rem;
@@ -52,7 +166,7 @@ const { productId, label = 'Visor 3D del resorte' } = Astro.props;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.30);
+    color: rgba(255, 255, 255, 0.3);
     pointer-events: none;
     user-select: none;
     transition: opacity 0.4s ease;
@@ -64,8 +178,8 @@ const { productId, label = 'Visor 3D del resorte' } = Astro.props;
 </style>
 
 <script>
-  import * as THREE from 'three';
-  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+  import * as THREE from "three";
+  import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
   type SpringConfig = {
     radius: number;
@@ -78,124 +192,181 @@ const { productId, label = 'Visor 3D del resorte' } = Astro.props;
 
   // Parametric spring geometry per product type
   const springConfigs: Record<string, SpringConfig> = {
-    compresion:    { radius: 0.50, height: 3.5, turns: 8,  tube: 0.095, radialSegments: 12 },
-    tension:       { radius: 0.38, height: 5.0, turns: 13, tube: 0.070, radialSegments: 10 },
-    torsion:       { radius: 0.45, height: 2.5, turns: 5,  tube: 0.085, radialSegments: 10 },
-    'gran-escala': { radius: 0.65, height: 4.5, turns: 7,  tube: 0.160, radialSegments: 14 },
+    compresion: {
+      radius: 0.5,
+      height: 3.5,
+      turns: 8,
+      tube: 0.095,
+      radialSegments: 12,
+    },
+    tension: {
+      radius: 0.38,
+      height: 5.0,
+      turns: 13,
+      tube: 0.07,
+      radialSegments: 10,
+    },
+    torsion: {
+      radius: 0.45,
+      height: 2.5,
+      turns: 5,
+      tube: 0.085,
+      radialSegments: 10,
+    },
+    "gran-escala": {
+      radius: 0.65,
+      height: 4.5,
+      turns: 7,
+      tube: 0.16,
+      radialSegments: 14,
+    },
   };
 
-  document.querySelectorAll<HTMLElement>('[data-product-viewer]').forEach((container) => {
-    const canvas    = container.querySelector<HTMLCanvasElement>('canvas');
-    const hintEl    = container.querySelector<HTMLElement>('.viewer-hint');
-    const productId = container.dataset.productId ?? 'compresion';
+  document
+    .querySelectorAll<HTMLElement>("[data-product-viewer]")
+    .forEach((container) => {
+      const canvas = container.querySelector<HTMLCanvasElement>("canvas");
+      const hintEl = container.querySelector<HTMLElement>(".viewer-hint");
+      const touchGate =
+        container.querySelector<HTMLButtonElement>(".viewer-touch-gate");
+      const productId = container.dataset.productId ?? "compresion";
 
-    if (!canvas) return;
+      if (!canvas) return;
 
-    const cfg = springConfigs[productId] ?? springConfigs['compresion'];
-    const {
-      radius,
-      height,
-      turns,
-      tube,
-      segments = 140,
-      radialSegments = 10,
-    } = cfg;
+      const cfg = springConfigs[productId] ?? springConfigs["compresion"];
+      const {
+        radius,
+        height,
+        turns,
+        tube,
+        segments = 140,
+        radialSegments = 10,
+      } = cfg;
 
-    // ── Scene ──────────────────────────────────────────────────
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-    camera.position.set(0, 0, 10);
+      // ── Scene ──────────────────────────────────────────────────
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+      camera.position.set(0, 0, 10);
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance",
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    // ── Lights ─────────────────────────────────────────────────
-    scene.add(new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.1));
+      // ── Lights ─────────────────────────────────────────────────
+      scene.add(new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.1));
 
-    const key = new THREE.DirectionalLight(0xffffff, 2.5);
-    key.position.set(4, 6, 8);
-    scene.add(key);
+      const key = new THREE.DirectionalLight(0xffffff, 2.5);
+      key.position.set(4, 6, 8);
+      scene.add(key);
 
-    const fill = new THREE.DirectionalLight(0x428c0d, 0.7);
-    fill.position.set(-5, -3, 3);
-    scene.add(fill);
+      const fill = new THREE.DirectionalLight(0x428c0d, 0.7);
+      fill.position.set(-5, -3, 3);
+      scene.add(fill);
 
-    const rim = new THREE.DirectionalLight(0x9cd7ff, 0.4);
-    rim.position.set(0, -6, -4);
-    scene.add(rim);
+      const rim = new THREE.DirectionalLight(0x9cd7ff, 0.4);
+      rim.position.set(0, -6, -4);
+      scene.add(rim);
 
-    // ── Spring geometry ────────────────────────────────────────
-    const points: THREE.Vector3[] = [];
-    for (let i = 0; i <= segments; i++) {
-      const t     = i / segments;
-      const angle = t * Math.PI * 2 * turns;
-      points.push(
-        new THREE.Vector3(
-          Math.cos(angle) * radius,
-          (t - 0.5) * height,
-          Math.sin(angle) * radius,
-        ),
-      );
-    }
-
-    const curve    = new THREE.CatmullRomCurve3(points);
-    const geometry = new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
-
-    const material = new THREE.MeshStandardMaterial({
-      color:     0xb8c8a8,   // steel with subtle green tint
-      metalness: 0.80,
-      roughness: 0.22,
-    });
-
-    const spring = new THREE.Mesh(geometry, material);
-    scene.add(spring);
-
-    // ── OrbitControls ──────────────────────────────────────────
-    const controls = new OrbitControls(camera, canvas);
-    controls.enableDamping    = true;
-    controls.dampingFactor    = 0.06;
-    controls.autoRotate       = true;
-    controls.autoRotateSpeed  = 1.5;
-    controls.enableZoom       = false;
-    controls.enablePan        = false;
-    controls.minPolarAngle    = Math.PI * 0.20;  // 36°
-    controls.maxPolarAngle    = Math.PI * 0.80;  // 144°
-
-    // Hide the drag hint on first interaction
-    let hintHidden = false;
-    controls.addEventListener('start', () => {
-      if (!hintHidden && hintEl) {
-        hintHidden = true;
-        hintEl.classList.add('hidden');
+      // ── Spring geometry ────────────────────────────────────────
+      const points: THREE.Vector3[] = [];
+      for (let i = 0; i <= segments; i++) {
+        const t = i / segments;
+        const angle = t * Math.PI * 2 * turns;
+        points.push(
+          new THREE.Vector3(
+            Math.cos(angle) * radius,
+            (t - 0.5) * height,
+            Math.sin(angle) * radius,
+          ),
+        );
       }
+
+      const curve = new THREE.CatmullRomCurve3(points);
+      const geometry = new THREE.TubeGeometry(
+        curve,
+        segments,
+        tube,
+        radialSegments,
+        false,
+      );
+
+      const material = new THREE.MeshStandardMaterial({
+        color: 0xb8c8a8,
+        metalness: 0.8,
+        roughness: 0.22,
+      });
+
+      const spring = new THREE.Mesh(geometry, material);
+      scene.add(spring);
+
+      // ── OrbitControls ──────────────────────────────────────────
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 1.5;
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.minPolarAngle = Math.PI * 0.2;
+      controls.maxPolarAngle = Math.PI * 0.8;
+
+      // ── Touch gate logic ───────────────────────────────────────
+      const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+
+      if (isTouchDevice) {
+        // Disable orbit on touch devices until the user unlocks it.
+        // Override the 'touch-action: none' that OrbitControls sets so that
+        // the page can still be scrolled while the gate is visible.
+        controls.enabled = false;
+        canvas.style.touchAction = "auto";
+
+        touchGate?.addEventListener(
+          "click",
+          () => {
+            controls.enabled = true;
+            canvas.style.touchAction = "none";
+            touchGate.classList.add("dismissed");
+            // Show drag hint briefly after unlocking
+            if (hintEl) hintEl.classList.remove("hidden");
+          },
+          { once: true },
+        );
+      }
+
+      // Hide the drag hint on first interaction
+      let hintHidden = false;
+      controls.addEventListener("start", () => {
+        if (!hintHidden && hintEl) {
+          hintHidden = true;
+          hintEl.classList.add("hidden");
+        }
+      });
+
+      // ── Resize ─────────────────────────────────────────────────
+      function resize() {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        if (w === 0 || h === 0) return;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+
+      // ── Render loop ────────────────────────────────────────────
+      function animate() {
+        requestAnimationFrame(animate);
+        if (document.hidden) return;
+        controls.update();
+        renderer.render(scene, camera);
+      }
+
+      new ResizeObserver(resize).observe(container);
+      resize();
+      animate();
     });
-
-    // ── Resize ─────────────────────────────────────────────────
-    function resize() {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      if (w === 0 || h === 0) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-
-    // ── Render loop ────────────────────────────────────────────
-    function animate() {
-      requestAnimationFrame(animate);
-      if (document.hidden) return;
-      controls.update();
-      renderer.render(scene, camera);
-    }
-
-    new ResizeObserver(resize).observe(container);
-    resize();
-    animate();
-  });
 </script>

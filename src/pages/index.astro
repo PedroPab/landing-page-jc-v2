@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import BaseLayout from "@/layouts/BaseLayout.astro";
 import {
   getHomePageData,
   getHistoryStory,
@@ -7,38 +7,39 @@ import {
   getProductsData,
   getClientsData,
   buildWhatsAppUrl,
-} from '@/lib/content';
+} from "@/lib/content";
 
 // Section components
-import Header        from '@/components/sections/Header.astro';
-import Hero          from '@/components/sections/Hero.astro';
-import TrustStrip    from '@/components/sections/TrustStrip.astro';
-import About         from '@/components/sections/About.astro';
-import History       from '@/components/sections/History.astro';
-import Services      from '@/components/sections/Services.astro';
-import Products      from '@/components/sections/Products.astro';
-import Differentials from '@/components/sections/Differentials.astro';
-import Industries    from '@/components/sections/Industries.astro';
-import Clients       from '@/components/sections/Clients.astro';
-import CaseStudy     from '@/components/sections/CaseStudy.astro';
-import Workshop      from '@/components/sections/Workshop.astro';
-import WorkValues    from '@/components/sections/WorkValues.astro';
-import CtaContact    from '@/components/sections/CtaContact.astro';
-import Footer        from '@/components/sections/Footer.astro';
+import Header from "@/components/sections/Header.astro";
+import Hero from "@/components/sections/Hero.astro";
+import TrustStrip from "@/components/sections/TrustStrip.astro";
+import About from "@/components/sections/About.astro";
+import History from "@/components/sections/History.astro";
+import Services from "@/components/sections/Services.astro";
+import Products from "@/components/sections/Products.astro";
+import Differentials from "@/components/sections/Differentials.astro";
+import Industries from "@/components/sections/Industries.astro";
+import Clients from "@/components/sections/Clients.astro";
+import CaseStudy from "@/components/sections/CaseStudy.astro";
+import Workshop from "@/components/sections/Workshop.astro";
+import WorkValues from "@/components/sections/WorkValues.astro";
+import CtaContact from "@/components/sections/CtaContact.astro";
+import Footer from "@/components/sections/Footer.astro";
 
 // Load all content in parallel at build time
 const { settings, home, contact } = await getHomePageData();
-const [historyStory, featuredCase, productsData, clientsData] = await Promise.all([
-  getHistoryStory(),
-  getFeaturedCaseStudy(),
-  getProductsData(),
-  getClientsData(),
-]);
+const [historyStory, featuredCase, productsData, clientsData] =
+  await Promise.all([
+    getHistoryStory(),
+    getFeaturedCaseStudy(),
+    getProductsData(),
+    getClientsData(),
+  ]);
 
 // Build WhatsApp URL once — reused by all sections that need it
 const whatsappUrl = buildWhatsAppUrl(
   settings.whatsapp.number,
-  settings.whatsapp.defaultMessage
+  settings.whatsapp.defaultMessage,
 );
 
 // Section visibility flags — toggle in src/content/site/settings.json
@@ -55,17 +56,17 @@ const sections = settings.sections;
   <main id="main-content">
     <Hero data={home.hero} whatsappUrl={whatsappUrl} />
 
-    {sections.trustStrip    && <TrustStrip    items={home.trustStrip.items} />}
-    {sections.about         && <About         data={home.about} />}
-    {sections.history       && <History       story={historyStory} />}
-    {sections.services      && <Services      data={home.services} />}
-    {sections.products      && <Products      data={productsData} />}
+    {sections.trustStrip && <TrustStrip items={home.trustStrip.items} />}
+    <!-- {sections.about         && <About         data={home.about} />} -->
+    {sections.history && <History story={historyStory} />}
+    <!-- {sections.services && <Services data={home.services} />} -->
+    {sections.products && <Products data={productsData} />}
     {sections.differentials && <Differentials data={home.differentials} />}
-    {sections.industries    && <Industries    data={home.industries} />}
-    {sections.clients       && <Clients       data={clientsData} />}
-    {sections.caseStudy     && <CaseStudy     entry={featuredCase} />}
-    {sections.workshop      && <Workshop      data={home.workshop} />}
-    {sections.workValues    && <WorkValues    data={home.workValues} />}
+    {sections.industries && <Industries data={home.industries} />}
+    {sections.clients && <Clients data={clientsData} />}
+    {sections.caseStudy && <CaseStudy entry={featuredCase} />}
+    {sections.workshop && <Workshop data={home.workshop} />}
+    {sections.workValues && <WorkValues data={home.workValues} />}
 
     <CtaContact
       contact={contact}
