@@ -4,8 +4,9 @@ import { getHomePageData, getProductsData, buildWhatsAppUrl } from '@/lib/conten
 
 import Header      from '@/components/sections/Header.astro';
 import PageHero    from '@/components/ui/PageHero.astro';
-import ProductCard from '@/components/ui/ProductCard.astro';
-import CtaContact  from '@/components/sections/CtaContact.astro';
+import ProductCard       from '@/components/ui/ProductCard.astro';
+import ConfiguratorCard  from '@/components/ui/ConfiguratorCard.astro';
+import CtaContact        from '@/components/sections/CtaContact.astro';
 import Footer      from '@/components/sections/Footer.astro';
 
 const { settings, contact } = await getHomePageData();
@@ -39,6 +40,7 @@ const whatsappUrl  = buildWhatsAppUrl(settings.whatsapp.number, settings.whatsap
               href={`/catalogo/${item.id}`}
             />
           ))}
+          <ConfiguratorCard />
         </div>
 
       </div>

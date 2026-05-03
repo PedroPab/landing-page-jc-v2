@@ -1,0 +1,639 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/sections/Header.astro';
+import SpringDivider from '@/components/ui/SpringDivider.astro';
+import CtaContact from '@/components/sections/CtaContact.astro';
+import Footer from '@/components/sections/Footer.astro';
+import { getHomePageData, buildWhatsAppUrl } from '@/lib/content';
+
+const { settings, contact } = await getHomePageData();
+const defaultMsg = 'Hola, quiero cotizar un resorte a medida';
+const whatsappUrl = buildWhatsAppUrl(settings.whatsapp.number, defaultMsg);
+const whatsappNumber = settings.whatsapp.number;
+---
+
+<BaseLayout
+  title="Configurador de resortes — JC Resortes | Crea tu resorte a medida"
+  description="Diseña tu resorte industrial personalizado: define altura, diámetro de alambre, radio y espiras. Visualización 3D en tiempo real y descarga directa del modelo STL."
+>
+  <Header settings={settings} whatsappUrl={whatsappUrl} />
+
+  <main>
+    <!-- Hero ─────────────────────────────────────────────── -->
+    <section class="relative bg-foreground text-white overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-primary" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 70% 50% at 50% 110%, rgb(66 140 13 / 0.20) 0%, transparent 70%);" aria-hidden="true"></div>
+
+      <div class="container-jc relative z-10 py-12 lg:py-16">
+        <div class="flex flex-col items-start gap-4 max-w-2xl">
+          <p class="font-heading text-primary-soft text-[0.7rem] font-bold uppercase tracking-widest">
+            Herramienta de diseño
+          </p>
+          <h1 class="font-heading text-h1 font-bold uppercase leading-tight text-white">
+            Configura tu Resorte
+          </h1>
+          <SpringDivider width={70} coils={5} class="opacity-60" />
+          <p class="text-subtitle text-white/70 leading-relaxed max-w-xl">
+            Define los parámetros técnicos, visualiza el modelo en 3D en tiempo real y descarga tu archivo STL listo para fabricación.
+          </p>
+        </div>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-white/10" aria-hidden="true"></div>
+    </section>
+
+    <!-- Configurator ─────────────────────────────────────── -->
+    <section
+      class="bg-foreground text-white section-pad"
+      id="configurador"
+      data-whatsapp={whatsappNumber}
+    >
+      <div class="container-jc">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+
+          <!-- 3D Canvas ──────────────────────── -->
+          <div class="lg:sticky lg:top-8">
+            <div class="canvas-wrap">
+              <canvas id="spring-configurator"></canvas>
+              <div class="canvas-loader" id="canvas-loader" aria-hidden="true">
+                <span class="canvas-spinner"></span>
+              </div>
+              <!-- Live dimensions badge -->
+              <div class="canvas-badge" id="canvas-badge" aria-live="polite">
+                <span id="badge-text">Ø — × — mm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls Panel ──────────────────── -->
+          <div class="flex flex-col gap-8">
+
+            <div>
+              <h2 class="font-heading text-h2 font-bold uppercase leading-tight text-white mb-4">
+                Parámetros
+              </h2>
+              <SpringDivider width={60} coils={5} class="opacity-40" />
+            </div>
+
+            <form class="flex flex-col gap-7" id="spring-form" novalidate>
+
+              <!-- Altura total -->
+              <div class="config-param">
+                <div class="config-param-header">
+                  <label class="config-label" for="inp-height">Altura total</label>
+                  <span class="config-value"><output id="out-height">80</output> mm</span>
+                </div>
+                <input type="range" id="inp-height" class="config-slider"
+                       min="10" max="500" step="1" value="80">
+                <div class="config-range-labels"><span>10 mm</span><span>500 mm</span></div>
+              </div>
+
+              <!-- Diámetro del alambre -->
+              <div class="config-param">
+                <div class="config-param-header">
+                  <label class="config-label" for="inp-wire">Diámetro del alambre</label>
+                  <span class="config-value"><output id="out-wire">3</output> mm</span>
+                </div>
+                <input type="range" id="inp-wire" class="config-slider"
+                       min="0.5" max="15" step="0.5" value="3">
+                <div class="config-range-labels"><span>0.5 mm</span><span>15 mm</span></div>
+              </div>
+
+              <!-- Radio del resorte -->
+              <div class="config-param">
+                <div class="config-param-header">
+                  <label class="config-label" for="inp-radius">Radio del resorte</label>
+                  <span class="config-value"><output id="out-radius">20</output> mm</span>
+                </div>
+                <input type="range" id="inp-radius" class="config-slider"
+                       min="3" max="100" step="1" value="20">
+                <div class="config-range-labels"><span>3 mm</span><span>100 mm</span></div>
+              </div>
+
+              <!-- Cantidad de espiras -->
+              <div class="config-param">
+                <div class="config-param-header">
+                  <label class="config-label" for="inp-turns">Cantidad de espiras</label>
+                  <span class="config-value"><output id="out-turns">8</output></span>
+                </div>
+                <input type="range" id="inp-turns" class="config-slider"
+                       min="2" max="50" step="1" value="8">
+                <div class="config-range-labels"><span>2</span><span>50</span></div>
+              </div>
+
+            </form>
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+              <button id="btn-download" type="button" class="btn-download">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Descargar STL
+              </button>
+
+              <a id="btn-whatsapp" href={whatsappUrl} target="_blank" rel="noopener noreferrer"
+                 class="btn-whatsapp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"
+                     fill="currentColor" aria-hidden="true">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Solicitar cotización
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marketing ────────────────────────────────────────── -->
+    <section class="section-pad bg-surface">
+      <div class="container-jc">
+
+        <div class="max-w-2xl mx-auto text-center mb-14">
+          <p class="font-heading text-primary text-[0.7rem] font-bold uppercase tracking-widest mb-3">
+            Nuestra promesa
+          </p>
+          <h2 class="font-heading text-h2 font-bold uppercase leading-tight text-foreground mb-5">
+            Creamos tu solución<br/>a tu medida
+          </h2>
+          <SpringDivider width={60} coils={5} class="mx-auto mb-5 opacity-40" />
+          <p class="text-subtitle text-neutral leading-relaxed">
+            Cada proyecto industrial tiene requerimientos únicos. En JC Resortes entendemos que no
+            existen soluciones estándar para todos los desafíos. Nos especializamos en fabricar
+            resortes con las especificaciones exactas que tu aplicación necesita.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+          {[
+            {
+              icon: `<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>`,
+              title: 'Especificaciones exactas',
+              desc: 'Fabricamos según tus planos y tolerancias técnicas.',
+            },
+            {
+              icon: `<circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>`,
+              title: 'Materiales de calidad',
+              desc: 'Acero inoxidable, al carbono y aleaciones especiales.',
+            },
+            {
+              icon: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+              title: 'Asesoría técnica',
+              desc: 'Te ayudamos a definir los parámetros óptimos para tu aplicación.',
+            },
+            {
+              icon: `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`,
+              title: 'Entrega rápida',
+              desc: 'Tiempos competitivos para producción en serie o bajo pedido.',
+            },
+          ].map(({ icon, title, desc }) => (
+            <div class="feature-card">
+              <div class="feature-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="1.75"
+                     stroke-linecap="round" stroke-linejoin="round" set:html={icon}/>
+              </div>
+              <h3 class="feature-title">{title}</h3>
+              <p class="feature-desc">{desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="max-w-xl mx-auto text-center bg-foreground rounded-xl p-8 border border-primary/20">
+          <p class="font-heading text-[0.7rem] font-bold uppercase tracking-widest text-primary mb-3">
+            Nos adaptamos a tus requerimientos
+          </p>
+          <p class="text-white/70 text-[0.9375rem] leading-relaxed mb-6">
+            ¿Tienes un proyecto fuera de los rangos estándar? Contáctanos —
+            más de 25 años de experiencia nos permiten afrontar cualquier desafío de ingeniería.
+          </p>
+          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 bg-primary text-white font-heading font-bold
+                    uppercase text-[0.8125rem] tracking-wide px-6 py-3 rounded
+                    hover:bg-primary/90 transition-colors duration-200">
+            Hablar con un especialista
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <CtaContact contact={contact} settings={settings} whatsappUrl={whatsappUrl} />
+  </main>
+
+  <Footer settings={settings} whatsappUrl={whatsappUrl} />
+</BaseLayout>
+
+<style>
+  /* ── Canvas ─────────────────────────────────── */
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 35%, rgb(66 140 13 / 0.14), transparent 65%),
+      #0e160b;
+  }
+
+  .canvas-wrap canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .canvas-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+
+  .canvas-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .canvas-spinner {
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2.5px solid rgba(66, 140, 13, 0.2);
+    border-top-color: #428c0d;
+    border-radius: 50%;
+    animation: cfg-spin 0.8s linear infinite;
+  }
+
+  @keyframes cfg-spin { to { transform: rotate(360deg); } }
+
+  .canvas-badge {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(14, 22, 11, 0.75);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(66, 140, 13, 0.3);
+    border-radius: 2rem;
+    padding: 0.3rem 0.9rem;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* ── Sliders ─────────────────────────────────── */
+  .config-param {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .config-param-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .config-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+  }
+
+  .config-value {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #428c0d;
+    letter-spacing: 0.04em;
+  }
+
+  .config-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .config-slider:focus-visible {
+    outline: 2px solid #428c0d;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .config-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #428c0d;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 0 rgba(66, 140, 13, 0);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .config-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 5px rgba(66, 140, 13, 0.25);
+  }
+
+  .config-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #428c0d;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .config-range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.25);
+    text-transform: uppercase;
+    margin-top: -0.125rem;
+  }
+
+  /* ── Action buttons ──────────────────────────── */
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #428c0d;
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    flex: 1;
+  }
+
+  .btn-download:hover { background: #3a7a0b; }
+  .btn-download:active { transform: scale(0.98); }
+
+  .btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #25d366;
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    flex: 1;
+    text-align: center;
+  }
+
+  .btn-whatsapp:hover { background: #1ebe5b; }
+
+  /* ── Marketing features ──────────────────────── */
+  .feature-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid var(--color-muted, #e0e0e0);
+    border-radius: 0.5rem;
+  }
+
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgb(66 140 13 / 0.08);
+    border-radius: 0.5rem;
+    color: #428c0d;
+  }
+
+  .feature-title {
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-foreground);
+  }
+
+  .feature-desc {
+    font-size: 0.875rem;
+    color: #666;
+    line-height: 1.55;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+  function buildSpringGeo(
+    height: number, radius: number, tube: number, turns: number,
+    segments = 120, radialSegs = 12,
+  ): THREE.BufferGeometry {
+    const pts: THREE.Vector3[] = [];
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      const a = t * Math.PI * 2 * turns;
+      pts.push(new THREE.Vector3(Math.cos(a) * radius, (t - 0.5) * height, Math.sin(a) * radius));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts);
+    return new THREE.TubeGeometry(curve, segments, tube, radialSegs, false);
+  }
+
+  function updateSliderFill(slider: HTMLInputElement) {
+    const pct = ((+slider.value - +slider.min) / (+slider.max - +slider.min)) * 100;
+    slider.style.background =
+      `linear-gradient(to right, #428c0d ${pct}%, rgba(255,255,255,0.12) ${pct}%)`;
+  }
+
+  // ── DOM refs ─────────────────────────────────────────────────────────────────
+  const canvas   = document.getElementById('spring-configurator') as HTMLCanvasElement;
+  const loaderEl = document.getElementById('canvas-loader') as HTMLElement;
+  const badgeEl  = document.getElementById('badge-text') as HTMLElement;
+  const section  = document.getElementById('configurador') as HTMLElement;
+  const wNum     = section?.dataset.whatsapp ?? '';
+
+  const inpHeight = document.getElementById('inp-height') as HTMLInputElement;
+  const inpWire   = document.getElementById('inp-wire')   as HTMLInputElement;
+  const inpRadius = document.getElementById('inp-radius') as HTMLInputElement;
+  const inpTurns  = document.getElementById('inp-turns')  as HTMLInputElement;
+
+  const outHeight = document.getElementById('out-height') as HTMLOutputElement;
+  const outWire   = document.getElementById('out-wire')   as HTMLOutputElement;
+  const outRadius = document.getElementById('out-radius') as HTMLOutputElement;
+  const outTurns  = document.getElementById('out-turns')  as HTMLOutputElement;
+
+  const btnDl  = document.getElementById('btn-download') as HTMLButtonElement;
+  const btnWa  = document.getElementById('btn-whatsapp') as HTMLAnchorElement;
+
+  if (!canvas) throw new Error('Configurator canvas not found');
+
+  // ── THREE setup ──────────────────────────────────────────────────────────────
+  const scene    = new THREE.Scene();
+  const camera   = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
+  camera.position.set(0, 0, 15);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  scene.add(new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.1));
+  const key = new THREE.DirectionalLight(0xffffff, 2.8); key.position.set(4, 6, 8); scene.add(key);
+  const fill = new THREE.DirectionalLight(0x428c0d, 0.8); fill.position.set(-5, -3, 3); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0x9cd7ff, 0.5); rim.position.set(0, -6, -4); scene.add(rim);
+
+  const material = new THREE.MeshStandardMaterial({ color: 0xb8c8a8, metalness: 0.80, roughness: 0.22 });
+
+  let currentMesh: THREE.Mesh | null = null;
+  let currentGeo:  THREE.BufferGeometry | null = null;
+  let needsRebuild = false;
+  let autoRotateY  = 0;
+
+  // ── Params ───────────────────────────────────────────────────────────────────
+  function getParams() {
+    return {
+      height: +inpHeight.value,   // mm
+      wire:   +inpWire.value,     // mm (diameter)
+      radius: +inpRadius.value,   // mm
+      turns:  +inpTurns.value,
+    };
+  }
+
+  // Display scale: divide by 10 so 100mm = 10 THREE units
+  const SCALE = 10;
+
+  function rebuildSpring() {
+    const { height, wire, radius, turns } = getParams();
+    if (currentGeo) currentGeo.dispose();
+    if (currentMesh) scene.remove(currentMesh);
+
+    const geo = buildSpringGeo(height / SCALE, radius / SCALE, wire / (SCALE * 2), turns);
+    currentGeo  = geo;
+    currentMesh = new THREE.Mesh(geo, material);
+    scene.add(currentMesh);
+
+    // Fit camera to spring height
+    camera.position.z = Math.max(10, (height / SCALE) * 1.7);
+    camera.updateProjectionMatrix();
+
+    // Badge
+    badgeEl.textContent = `Ø ${radius * 2} × ${height} mm`;
+
+    // WhatsApp dynamic message
+    const msg = `Hola, quiero cotizar un resorte con estos parámetros:\n- Altura: ${height} mm\n- Diámetro alambre: ${wire} mm\n- Radio: ${radius} mm\n- Espiras: ${turns}`;
+    btnWa.href = `https://wa.me/${wNum}?text=${encodeURIComponent(msg)}`;
+
+    loaderEl.classList.add('hidden');
+  }
+
+  // ── Slider wiring ────────────────────────────────────────────────────────────
+  function wireSlider(
+    inp: HTMLInputElement,
+    out: HTMLOutputElement,
+    fmt: (v: number) => string = (v) => String(v),
+  ) {
+    updateSliderFill(inp);
+    inp.addEventListener('input', () => {
+      out.value = fmt(+inp.value);
+      updateSliderFill(inp);
+      needsRebuild = true;
+    });
+  }
+
+  wireSlider(inpHeight, outHeight);
+  wireSlider(inpWire,   outWire,   (v) => String(v));
+  wireSlider(inpRadius, outRadius);
+  wireSlider(inpTurns,  outTurns);
+
+  // ── STL download ─────────────────────────────────────────────────────────────
+  btnDl.addEventListener('click', () => {
+    const { height, wire, radius, turns } = getParams();
+    // Export at 1:1 mm scale
+    const exportGeo = buildSpringGeo(height, radius, wire / 2, turns, 200, 16);
+    const exportMesh = new THREE.Mesh(exportGeo);
+    exportMesh.updateMatrixWorld();
+
+    const exporter = new STLExporter();
+    const result = exporter.parse(exportMesh, { binary: true });
+    const buffer = result instanceof DataView ? result.buffer : (result as unknown as ArrayBuffer);
+    const blob = new Blob([buffer], { type: 'application/octet-stream' });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `resorte-jc-${height}x${radius}mm.stl`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    exportGeo.dispose();
+  });
+
+  // ── Resize ───────────────────────────────────────────────────────────────────
+  function resize() {
+    const parent = canvas.parentElement!;
+    const w = parent.clientWidth;
+    const h = parent.clientHeight;
+    if (w === 0 || h === 0) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  // ── Render loop ──────────────────────────────────────────────────────────────
+  function animate() {
+    requestAnimationFrame(animate);
+    if (document.hidden) return;
+    if (needsRebuild) { rebuildSpring(); needsRebuild = false; }
+    if (currentMesh) { currentMesh.rotation.y = autoRotateY += 0.008; }
+    renderer.render(scene, camera);
+  }
+
+  new ResizeObserver(resize).observe(canvas.parentElement!);
+  resize();
+  rebuildSpring(); // initial build
+  animate();
+</script>

@@ -8,68 +8,98 @@ interface Props {
   class?: string;
 }
 
-const { productId, name, description, href, class: className = '' } = Astro.props;
+const {
+  productId,
+  name,
+  description,
+  href,
+  class: className = "",
+} = Astro.props;
 
 const base =
-  'catalog-card group bg-white border border-muted rounded-lg relative overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-elevated transition-all duration-300';
+  "catalog-card group bg-white border border-muted rounded-lg relative overflow-hidden flex flex-col hover:border-primary/40 hover:shadow-elevated transition-all duration-300";
 ---
 
-{href ? (
-  <a href={href} class={`${base} ${className}`}>
-    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg z-10" aria-hidden="true"></div>
+{
+  href ? (
+    <a href={href} class={`${base} ${className}`}>
+      <div
+        class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg z-10"
+        aria-hidden="true"
+      />
 
-    {productId && (
-      <div class="card-spring-preview w-full" aria-hidden="true">
-        <canvas data-card-spring data-product-id={productId}></canvas>
+      {productId && (
+        <div class="card-spring-preview w-full" aria-hidden="true">
+          <canvas data-card-spring data-product-id={productId} />
+        </div>
+      )}
+
+      <div class="p-6 flex flex-col flex-1">
+        <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3 group-hover:text-primary transition-colors duration-200">
+          {name}
+        </h3>
+
+        <p class="text-[0.875rem] text-neutral leading-relaxed flex-1 mb-5">
+          {description}
+        </p>
+
+        <span class="inline-flex items-center gap-1.5 text-[0.8125rem] font-heading font-bold uppercase tracking-wide text-primary group-hover:gap-2.5 transition-all duration-200">
+          Ver ficha técnica
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </span>
       </div>
-    )}
+    </a>
+  ) : (
+    <article class={`${base} ${className}`}>
+      <div
+        class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg z-10"
+        aria-hidden="true"
+      />
 
-    <div class="p-6 flex flex-col flex-1">
-      <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3 group-hover:text-primary transition-colors duration-200">
-        {name}
-      </h3>
+      {productId && (
+        <div class="card-spring-preview w-full" aria-hidden="true">
+          <canvas data-card-spring data-product-id={productId} />
+        </div>
+      )}
 
-      <p class="text-[0.875rem] text-neutral leading-relaxed flex-1 mb-5">
-        {description}
-      </p>
+      <div class="p-6 flex flex-col flex-1">
+        <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3">
+          {name}
+        </h3>
 
-      <span class="inline-flex items-center gap-1.5 text-[0.8125rem] font-heading font-bold uppercase tracking-wide text-primary group-hover:gap-2.5 transition-all duration-200">
-        Ver ficha técnica
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="5" y1="12" x2="19" y2="12"/>
-          <polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </span>
-    </div>
-  </a>
-) : (
-  <article class={`${base} ${className}`}>
-    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg z-10" aria-hidden="true"></div>
-
-    {productId && (
-      <div class="card-spring-preview w-full" aria-hidden="true">
-        <canvas data-card-spring data-product-id={productId}></canvas>
+        <p class="text-[0.875rem] text-neutral leading-relaxed flex-1">
+          {description}
+        </p>
       </div>
-    )}
-
-    <div class="p-6 flex flex-col flex-1">
-      <h3 class="font-heading text-[0.875rem] font-bold uppercase tracking-wide text-foreground mb-3">
-        {name}
-      </h3>
-
-      <p class="text-[0.875rem] text-neutral leading-relaxed flex-1">
-        {description}
-      </p>
-    </div>
-  </article>
-)}
+    </article>
+  )
+}
 
 <style>
   .card-spring-preview {
     aspect-ratio: 16 / 9;
     overflow: hidden;
+    position: relative;
     background:
-      radial-gradient(circle at 50% 40%, rgb(66 140 13 / 0.08), transparent 65%),
+      radial-gradient(
+        circle at 50% 40%,
+        rgb(66 140 13 / 0.08),
+        transparent 65%
+      ),
       #f4f5f2;
   }
 
@@ -81,35 +111,38 @@ const base =
 </style>
 
 <script>
-  import { createViewerBase, loadProductMesh } from '@/lib/spring-viewer';
-  import * as THREE from 'three';
+  import { createViewerBase, loadProductMesh } from "@/lib/spring-viewer";
+  import * as THREE from "three";
 
-  document.querySelectorAll<HTMLCanvasElement>('[data-card-spring]').forEach((canvas) => {
-    const productId = canvas.dataset.productId ?? 'compresion';
+  document
+    .querySelectorAll<HTMLCanvasElement>("[data-card-spring]")
+    .forEach((canvas) => {
+      const productId = canvas.dataset.productId ?? "compresion";
 
-    const { scene, camera, renderer, resize, observeResize } = createViewerBase(canvas, {
-      transparent: true,
-      cameraZ: 9,
-      fov: 40,
+      const { scene, camera, renderer, resize, observeResize } =
+        createViewerBase(canvas, {
+          transparent: true,
+          cameraZ: 9,
+          fov: 40,
+        });
+
+      let mesh: THREE.Mesh | null = null;
+      const loader = canvas.previousElementSibling as HTMLElement | null;
+
+      loadProductMesh(scene, productId, (loaded) => {
+        mesh = loaded;
+        mesh.rotation.x = Math.PI * 0.18;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (document.hidden) return;
+        if (mesh) mesh.rotation.y += 0.012;
+        renderer.render(scene, camera);
+      }
+
+      observeResize(canvas.parentElement!);
+      resize();
+      animate();
     });
-
-    let mesh: THREE.Mesh | null = null;
-
-    loadProductMesh(scene, productId, (loaded) => {
-      mesh = loaded;
-      // Slight tilt so coils are clearly visible in 16:9 landscape view
-      mesh.rotation.x = Math.PI * 0.18;
-    });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      if (document.hidden) return;
-      if (mesh) mesh.rotation.y += 0.012;
-      renderer.render(scene, camera);
-    }
-
-    observeResize(canvas.parentElement!);
-    resize();
-    animate();
-  });
 </script>

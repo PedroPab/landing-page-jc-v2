@@ -3,6 +3,7 @@ import SectionHeading from "@/components/ui/SectionHeading.astro";
 import SpringDivider from "@/components/ui/SpringDivider.astro";
 import RealisticSpring from "@/components/ui/RealisticSpring.astro";
 import ProductCard from "@/components/ui/ProductCard.astro";
+import ConfiguratorCard from "@/components/ui/ConfiguratorCard.astro";
 
 interface ProductItem {
   id: string;
@@ -62,6 +63,7 @@ const linkBaseDefault = linkBase ?? "/catalogo";
             />
           ))
       }
+      <ConfiguratorCard />
     </div>
 
     <div class="mt-10 flex justify-center">
