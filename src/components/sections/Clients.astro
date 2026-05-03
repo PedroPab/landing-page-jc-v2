@@ -2,12 +2,18 @@
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import SpringDivider from "@/components/ui/SpringDivider.astro";
 
+interface ClientLogo {
+  type: string;
+  src: string;
+  alt: string;
+}
+
 interface ClientItem {
   id: string;
   name: string;
   sector: string;
   description?: string;
-  logo?: { type: string; src: string; alt: string } | null;
+  logo?: ClientLogo | null;
 }
 
 interface ClientsData {
@@ -21,40 +27,266 @@ interface Props {
 }
 
 const { data } = Astro.props;
+
+const clients = data.items ?? [];
+
+/**
+ * Repetimos varias veces para que el carrusel no quede vacío
+ * en pantallas grandes o cuando hay pocos clientes.
+ */
+const repeatCount =
+  clients.length > 0 ? Math.max(4, Math.ceil(16 / clients.length)) : 0;
+const track = Array.from({ length: repeatCount }, () => clients).flat();
+
+const duration = Math.max(28, clients.length * 6);
 ---
 
 <section id="clientes" class="section-pad bg-surface">
-  <div class="container-jc">
+  <div class="container-jc mb-10 md:mb-12">
     <SectionHeading
       eyebrow="Clientes"
       title={data.title}
       subtitle={data.subtitle}
+      align="center"
     />
-
-    <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {
-        data.items.map((client) => (
-          <article class="flex flex-col items-center justify-center text-center gap-2 p-6 bg-white border border-muted rounded-lg min-h-[120px]">
-            {client.logo ? (
-              <img
-                src={client.logo.src}
-                alt={client.logo.alt}
-                class="max-h-12 max-w-[120px] object-contain"
-                loading="lazy"
-              />
-            ) : (
-              <p class="font-heading text-[0.875rem] font-bold text-foreground leading-snug">
-                {client.name}
-              </p>
-            )}
-            <p class="text-[0.75rem] text-neutral/70 uppercase tracking-wide">
-              {client.sector}
-            </p>
-          </article>
-        ))
-      }
-    </div>
+    <SpringDivider width={80} coils={6} class="mt-5 mx-auto" />
   </div>
+
+  {
+    clients.length > 0 && (
+      <div
+        class="jc-clients-strip"
+        aria-label="Empresas clientes de JC Resortes"
+        style={`--jc-duration: ${duration}s;`}
+      >
+        <div class="jc-clients-track">
+          <div class="jc-clients-row">
+            {track.map((client, i) => (
+              <figure class="jc-client-item">
+                <div class="jc-client-logo-wrap">
+                  {client.logo?.src ? (
+                    <>
+                      <img
+                        src={client.logo.src}
+                        alt={client.logo.alt}
+                        class="jc-client-logo"
+                        loading={i < clients.length ? "eager" : "lazy"}
+                        decoding="async"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false"
+                      />
+                      <span class="jc-client-initial" hidden>
+                        {client.name.charAt(0)}
+                      </span>
+                    </>
+                  ) : (
+                    <span class="jc-client-initial">
+                      {client.name.charAt(0)}
+                    </span>
+                  )}
+                </div>
+
+                <figcaption class="jc-client-name">{client.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div class="jc-clients-row" aria-hidden="true">
+            {track.map((client) => (
+              <figure class="jc-client-item">
+                <div class="jc-client-logo-wrap">
+                  {client.logo?.src ? (
+                    <>
+                      <img
+                        src={client.logo.src}
+                        alt=""
+                        class="jc-client-logo"
+                        loading="lazy"
+                        decoding="async"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false"
+                      />
+                      <span class="jc-client-initial" hidden>
+                        {client.name.charAt(0)}
+                      </span>
+                    </>
+                  ) : (
+                    <span class="jc-client-initial">
+                      {client.name.charAt(0)}
+                    </span>
+                  )}
+                </div>
+
+                <figcaption class="jc-client-name">{client.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
 </section>
+
+<style is:global>
+  @keyframes jc-clients-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .jc-clients-strip {
+    --jc-surface: var(--color-surface, #f7f7f5);
+
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-block: clamp(1rem, 2vw, 1.75rem);
+  }
+
+  .jc-clients-strip::before,
+  .jc-clients-strip::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(2.5rem, 9vw, 8rem);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .jc-clients-strip::before {
+    left: 0;
+    background: linear-gradient(to right, var(--jc-surface), transparent);
+  }
+
+  .jc-clients-strip::after {
+    right: 0;
+    background: linear-gradient(to left, var(--jc-surface), transparent);
+  }
+
+  .jc-clients-track {
+    display: flex;
+    width: max-content;
+    animation: jc-clients-scroll var(--jc-duration, 36s) linear infinite;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .jc-clients-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex: 0 0 auto;
+    gap: clamp(2.25rem, 5vw, 5.5rem);
+    padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  .jc-client-item {
+    width: clamp(12rem, 20vw, 17rem);
+    min-width: clamp(12rem, 20vw, 17rem);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /*
+      Importante:
+      Esto evita que en móvil se vuelva cuadrícula.
+    */
+    flex-shrink: 0;
+  }
+
+  .jc-client-logo-wrap {
+    height: clamp(6rem, 12vw, 9rem);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .jc-client-logo {
+    display: block;
+    max-width: 100%;
+    max-height: clamp(5rem, 11vw, 8rem);
+    object-fit: contain;
+    opacity: 1;
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .jc-client-name {
+    margin-top: 0.65rem;
+    font-family: var(--font-heading);
+    font-size: clamp(0.7rem, 1.3vw, 0.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--color-foreground, #151515);
+    opacity: 0.78;
+  }
+
+  .jc-client-initial {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-primary, #428c0d);
+    background: var(--color-primary-soft, rgba(66, 140, 13, 0.12));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .jc-clients-strip:hover .jc-clients-track {
+      animation-play-state: paused;
+    }
+
+    .jc-client-item:hover .jc-client-logo {
+      transform: scale(1.06);
+    }
+
+    .jc-client-item:hover .jc-client-name {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .jc-clients-strip {
+      padding-block: 1rem;
+    }
+
+    .jc-clients-row {
+      gap: 2.5rem;
+      padding-inline: 1.25rem;
+    }
+
+    .jc-client-item {
+      width: 11rem;
+      min-width: 11rem;
+    }
+
+    .jc-client-logo-wrap {
+      height: 6rem;
+    }
+
+    .jc-client-logo {
+      max-height: 5rem;
+    }
+
+    .jc-client-name {
+      font-size: 0.72rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jc-clients-track {
+      animation-duration: 80s;
+    }
+  }
+</style>

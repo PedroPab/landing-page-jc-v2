@@ -8,25 +8,29 @@
         "id": "zenu",
         "name": "Zenú",
         "sector": "Industria de alimentos",
-        "description": "Suministro de resortes para líneas de producción del sector cárnico."
+        "description": "Suministro de resortes para líneas de producción del sector cárnico.",
+        "logo": { "type": "image", "src": "/media/clients/logos/zenu.png", "alt": "Logo Zenú" }
       },
       {
-        "id": "motos",
-        "name": "Sector motocicletas",
-        "sector": "Motocicletas",
-        "description": "Fabricación de resortes de precisión para ensamble y mantenimiento."
+        "id": "noel",
+        "name": "Noel",
+        "sector": "Industria de galletas",
+        "description": "Resortes para maquinaria de producción de galletas y productos horneados.",
+        "logo": { "type": "image", "src": "/media/clients/logos/noel.png", "alt": "Logo Noel" }
       },
       {
-        "id": "chocolates",
-        "name": "Industria de chocolates",
-        "sector": "Confitería",
-        "description": "Resortes para equipos de producción en la industria de confitería."
+        "id": "haceb",
+        "name": "Haceb",
+        "sector": "Manufactura",
+        "description": "Resortes para ensamble de electrodomésticos y equipos de línea blanca.",
+        "logo": { "type": "image", "src": "/media/clients/logos/haceb.png", "alt": "Logo Haceb" }
       },
       {
-        "id": "galletas",
-        "name": "Industria de galletas",
-        "sector": "Industria de alimentos",
-        "description": "Suministro de piezas para maquinaria de producción de alimentos."
+        "id": "osaka",
+        "name": "Osaka",
+        "sector": "Industria de motocicletas",
+        "description": "Suministro de resortes para partes de motocicletas.",
+        "logo": { "type": "image", "src": "/media/clients/logos/osaka.png", "alt": "Logo Osaka" }
       }
     ]
   }

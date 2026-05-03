@@ -30,6 +30,9 @@ const base =
 
       {productId && (
         <div class="card-spring-preview w-full" aria-hidden="true">
+          <div class="card-loader" data-card-loader>
+            <span class="card-spinner"></span>
+          </div>
           <canvas data-card-spring data-product-id={productId} />
         </div>
       )}
@@ -72,6 +75,9 @@ const base =
 
       {productId && (
         <div class="card-spring-preview w-full" aria-hidden="true">
+          <div class="card-loader" data-card-loader>
+            <span class="card-spinner"></span>
+          </div>
           <canvas data-card-spring data-product-id={productId} />
         </div>
       )}
@@ -108,6 +114,35 @@ const base =
     height: 100%;
     display: block;
   }
+
+  .card-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .card-spinner {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid rgba(66, 140, 13, 0.2);
+    border-top-color: #428c0d;
+    border-radius: 50%;
+    animation: card-spin 0.7s linear infinite;
+  }
+
+  @keyframes card-spin {
+    to { transform: rotate(360deg); }
+  }
 </style>
 
 <script>
@@ -132,6 +167,7 @@ const base =
       loadProductMesh(scene, productId, (loaded) => {
         mesh = loaded;
         mesh.rotation.x = Math.PI * 0.18;
+        loader?.classList.add('hidden');
       });
 
       function animate() {

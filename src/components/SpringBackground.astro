@@ -77,9 +77,9 @@ const { fogColor = "#1a1a18" } = Astro.props;
       radius = 0.45,
       height = 4,
       turns = 9,
-      segments = 200,
+      segments = 130,
       tube = 0.08,
-      radialSegments = 30,
+      radialSegments = 10,
     }: SpringParams) {
       const points: THREE.Vector3[] = [];
       for (let i = 0; i <= segments; i++) {
@@ -148,7 +148,7 @@ const { fogColor = "#1a1a18" } = Astro.props;
     };
 
     const items: SpringItem[] = [];
-    const COUNT = 10;
+    const COUNT = 7;
 
     for (let i = 0; i < COUNT; i++) {
       const mesh = new THREE.Mesh(

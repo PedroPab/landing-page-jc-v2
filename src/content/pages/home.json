@@ -145,15 +145,42 @@
       "title": "Sectores industriales que atendemos",
       "subtitle": "JC Resortes suministra soluciones a empresas de distintos sectores productivos, donde la precisión y confiabilidad del resorte son factores críticos para la continuidad operativa.",
       "items": [
-        { "name": "Agroindustria" },
-        { "name": "Industria de alimentos" },
-        { "name": "Manufactura" },
-        { "name": "Minería" },
-        { "name": "Motocicletas" },
-        { "name": "Talleres especializados" },
-        { "name": "Metalmecánica" },
-        { "name": "Construcción" },
-        { "name": "Eléctrico e industrial" }
+        {
+          "name": "Agroindustria",
+          "description": "Resortes de compresión, tracción y torsión para sembradoras, cosechadoras, equipos de riego y maquinaria de procesamiento de cultivos. Fabricados para soportar ciclos de trabajo exigentes en campo."
+        },
+        {
+          "name": "Industria de alimentos",
+          "description": "Soluciones en acero inoxidable y materiales aptos para entornos húmedos en líneas de empaque, dosificadoras y equipos de procesamiento, donde la higiene y la resistencia a la corrosión son prioritarias."
+        },
+        {
+          "name": "Manufactura",
+          "description": "Resortes para prensas, troqueles, matrices y sistemas de automatización industrial. Alta repetibilidad dimensional y larga vida cíclica para mantener la productividad de sus líneas de producción."
+        },
+        {
+          "name": "Minería",
+          "description": "Resortes de alta resistencia para vibradores industriales, cribas, equipos de extracción y maquinaria pesada. Diseñados para operar bajo cargas extremas y condiciones de alta vibración continua."
+        },
+        {
+          "name": "Motocicletas",
+          "description": "Resortes de suspensión, embrague y válvulas para motos de trabajo, recreativas y de competición. Fabricados con tolerancias ajustadas a especificación para garantizar rendimiento y seguridad."
+        },
+        {
+          "name": "Talleres especializados",
+          "description": "Fabricación por pedido de resortes de reemplazo y piezas difíciles de conseguir en el mercado. Ideales para mantenimiento correctivo y preventivo con tiempos de entrega optimizados."
+        },
+        {
+          "name": "Metalmecánica",
+          "description": "Resortes para herramientas de corte, punzonadoras, dobladoras y centros de mecanizado. La precisión dimensional garantiza el funcionamiento correcto de cada ciclo de su proceso."
+        },
+        {
+          "name": "Construcción",
+          "description": "Resortes para vibradores de concreto, compactadoras y maquinaria de obra. Fabricados para resistir alta carga y vibración continua en condiciones de trabajo severas en campo."
+        },
+        {
+          "name": "Eléctrico e industrial",
+          "description": "Resortes para contactores, relés, interruptores automáticos y tableros eléctricos. Fuerza calibrada y alto número de ciclos de vida para garantizar la confiabilidad del sistema eléctrico."
+        }
       ],
       "closing": "Nuestros productos están presentes en maquinaria, equipos y líneas de producción de empresas reconocidas en Colombia. Contáctenos para discutir su necesidad específica."
     },
