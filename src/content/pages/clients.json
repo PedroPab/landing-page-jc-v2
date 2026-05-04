@@ -31,6 +31,55 @@
         "sector": "Industria de motocicletas",
         "description": "Suministro de resortes para partes de motocicletas.",
         "logo": { "type": "image", "src": "/media/clients/logos/osaka.png", "alt": "Logo Osaka" }
+      },
+      {
+        "id": "epm",
+        "name": "EPM",
+        "sector": "Servicios públicos",
+        "description": "Resortes para equipos y sistemas de generación, distribución y acueducto.",
+        "logo": { "type": "image", "src": "/media/clients/logos/epm.png", "alt": "Logo EPM" }
+      },
+      {
+        "id": "nacional_de_chocolates",
+        "name": "Nacional de Chocolates",
+        "sector": "Industria de alimentos",
+        "description": "Suministro de resortes para maquinaria de producción de chocolates y confitería.",
+        "logo": { "type": "image", "src": "/media/clients/logos/nacional_de_chocolates.png", "alt": "Logo Nacional de Chocolates" }
+      },
+      {
+        "id": "familia",
+        "name": "Familia",
+        "sector": "Productos de higiene y cuidado personal",
+        "description": "Resortes para procesos de fabricación de papel higiénico y productos de cuidado personal.",
+        "logo": { "type": "image", "src": "/media/clients/logos/familia.png", "alt": "Logo Familia" }
+      },
+      {
+        "id": "colcafe",
+        "name": "Colcafé",
+        "sector": "Industria del café",
+        "description": "Resortes para equipos de producción y envasado de café instantáneo.",
+        "logo": { "type": "image", "src": "/media/clients/logos/colcafe.png", "alt": "Logo Colcafé" }
+      },
+      {
+        "id": "isagen",
+        "name": "ISAGEN",
+        "sector": "Energía",
+        "description": "Resortes para maquinaria en plantas de generación y sistemas de transmisión eléctrica.",
+        "logo": { "type": "image", "src": "/media/clients/logos/isagen.png", "alt": "Logo ISAGEN" }
+      },
+      {
+        "id": "landers",
+        "name": "Landers",
+        "sector": "Manufactura de utensilios de cocina",
+        "description": "Resortes para mecanismos de utensilios y accesorios de cocina y hogar.",
+        "logo": { "type": "image", "src": "/media/clients/logos/landers.png", "alt": "Logo Landers" }
+      },
+      {
+        "id": "oviedo",
+        "name": "Centro Comercial Oviedo",
+        "sector": "Retail y centros comerciales",
+        "description": "Resortes para infraestructuras y equipamiento de instalaciones comerciales.",
+        "logo": { "type": "image", "src": "/media/clients/logos/oviedo.png", "alt": "Logo Centro Comercial Oviedo" }
       }
     ]
   }
