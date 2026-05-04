@@ -31,7 +31,7 @@ const base =
       {productId && (
         <div class="card-spring-preview w-full" aria-hidden="true">
           <div class="card-loader" data-card-loader>
-            <span class="card-spinner"></span>
+            <span class="card-spinner" />
           </div>
           <canvas data-card-spring data-product-id={productId} />
         </div>
@@ -76,7 +76,7 @@ const base =
       {productId && (
         <div class="card-spring-preview w-full" aria-hidden="true">
           <div class="card-loader" data-card-loader>
-            <span class="card-spinner"></span>
+            <span class="card-spinner" />
           </div>
           <canvas data-card-spring data-product-id={productId} />
         </div>
@@ -102,11 +102,11 @@ const base =
     position: relative;
     background:
       radial-gradient(
-        circle at 50% 40%,
-        rgb(66 140 13 / 0.08),
+        circle at 50% 48%,
+        rgb(66 140 13 / 0.14),
         transparent 65%
       ),
-      #f4f5f2;
+      linear-gradient(180deg, #f7f8f5 0%, #eef2ea 100%);
   }
 
   .card-spring-preview canvas {
@@ -141,7 +141,9 @@ const base =
   }
 
   @keyframes card-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>
 
@@ -154,22 +156,28 @@ const base =
     .forEach((canvas) => {
       const productId = canvas.dataset.productId ?? "compresion";
 
-      const { scene, camera, renderer, resize } =
-        createViewerBase(canvas, {
-          transparent: true,
-          cameraZ: 9,
-          fov: 40,
-        });
+      const { scene, camera, renderer, resize } = createViewerBase(canvas, {
+        transparent: true,
+        cameraZ: 1,
+        fov: 40,
+      });
 
       let mesh: THREE.Mesh | null = null;
       const loaderEl = canvas.previousElementSibling as HTMLElement | null;
 
       // lowDetail=true: reduces vertices ~75% for small card preview
-      loadProductMesh(scene, productId, (loaded) => {
-        mesh = loaded;
-        mesh.rotation.x = Math.PI * 0.18;
-        loaderEl?.classList.add('hidden');
-      }, true);
+      loadProductMesh(
+        scene,
+        productId,
+        (loaded) => {
+          mesh = loaded;
+          mesh.scale.multiplyScalar(1.18);
+          mesh.rotation.x = Math.PI * 0.18;
+          mesh.position.y = -0.15;
+          loaderEl?.classList.add("hidden");
+        },
+        true,
+      );
 
       // ── RAF loop (start/stop controlled by IntersectionObserver) ──────────
       let rafId = 0;

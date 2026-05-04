@@ -208,9 +208,10 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
   }
 
   @keyframes viewer-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
-
 </style>
 
 <script>
@@ -229,12 +230,11 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 
       if (!canvas) return;
 
-      const { scene, camera, renderer, resize } =
-        createViewerBase(canvas, {
-          transparent: false,
-          cameraZ: 10,
-          fov: 40,
-        });
+      const { scene, camera, renderer, resize } = createViewerBase(canvas, {
+        transparent: false,
+        cameraZ: 1,
+        fov: 40,
+      });
 
       // ── OrbitControls ──────────────────────────────────────
       const controls = new OrbitControls(camera, canvas);
@@ -287,8 +287,12 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 
       // ── Conditional controls.update ────────────────────────
       let userInteracting = false;
-      controls.addEventListener("start", () => { userInteracting = true; });
-      controls.addEventListener("end",   () => { userInteracting = false; });
+      controls.addEventListener("start", () => {
+        userInteracting = true;
+      });
+      controls.addEventListener("end", () => {
+        userInteracting = false;
+      });
 
       // ── RAF loop (start/stop via IntersectionObserver) ─────
       let rafId = 0;
