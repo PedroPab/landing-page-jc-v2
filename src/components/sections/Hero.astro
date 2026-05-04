@@ -37,7 +37,16 @@ const primaryExternal = primaryHref.startsWith('https://wa.me');
 const hasMedia = data.media != null;
 ---
 
-<section class="relative bg-foreground text-white overflow-hidden">
+<section class="relative bg-depth-foreground text-white overflow-hidden">
+  <!-- Static fallback background: keeps text readable if the 3D canvas fails -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background:
+      radial-gradient(ellipse 85% 60% at 50% 120%, rgb(66 140 13 / 0.28) 0%, transparent 70%),
+      linear-gradient(135deg, #11130f 0%, #1a1a18 46%, #21350f 100%);"
+    aria-hidden="true"
+  ></div>
+
   <!-- Three.js 3D spring background -->
   <SpringBackground />
   <!-- Radial green ambient glow (CSS overlay above canvas) -->
