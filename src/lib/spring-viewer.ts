@@ -6,6 +6,10 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
+const STL_CACHE_NAME = 'jc-resortes-stl-v1';
+const stlGeometryCache = new Map<string, Promise<THREE.BufferGeometry>>();
+const stlLoader = new STLLoader();
+
 // ── Per-product parametric configs ─────────────────────────────────────────────
 export type SpringConfig = {
   radius: number;
@@ -132,6 +136,50 @@ export function createViewerBase(
   return { scene, camera, renderer, resize, observeResize };
 }
 
+async function fetchStlArrayBuffer(url: string): Promise<ArrayBuffer> {
+  let cache: Cache | null = null;
+  try {
+    cache = 'caches' in window ? await caches.open(STL_CACHE_NAME) : null;
+  } catch {
+    cache = null;
+  }
+
+  const cached = await cache?.match(url);
+
+  if (cached) return cached.arrayBuffer();
+
+  const response = await fetch(url, { cache: 'force-cache' });
+  if (!response.ok) {
+    throw new Error(`Failed to load STL ${url}: ${response.status}`);
+  }
+
+  try {
+    await cache?.put(url, response.clone());
+  } catch {
+    // Cache storage is an optimization only; rendering must not depend on it.
+  }
+
+  return response.arrayBuffer();
+}
+
+export function loadStlGeometry(url: string): Promise<THREE.BufferGeometry> {
+  const absoluteUrl = new URL(url, window.location.origin).toString();
+  const cachedGeometry = stlGeometryCache.get(absoluteUrl);
+  if (cachedGeometry) return cachedGeometry;
+
+  const geometryPromise = fetchStlArrayBuffer(absoluteUrl).then((buffer) => {
+    const geometry = stlLoader.parse(buffer);
+    geometry.computeVertexNormals();
+    return geometry;
+  }).catch((error) => {
+    stlGeometryCache.delete(absoluteUrl);
+    throw error;
+  });
+
+  stlGeometryCache.set(absoluteUrl, geometryPromise);
+  return geometryPromise;
+}
+
 // ── Mesh loading: STL → fallback STL → procedural ──────────────────────────────
 /**
  * Loads /models/{productId}.stl. If not found, falls back to /models/default.stl.
@@ -145,9 +193,9 @@ export function loadProductMesh(
   lowDetail = false,
 ): void {
   const material = createSpringMaterial();
-  const loader   = new STLLoader();
 
   function addMesh(geometry: THREE.BufferGeometry) {
+    geometry = geometry.clone();
     geometry.computeVertexNormals();
 
     // Normalize size: scale so the largest axis fits in ~targetSize units
@@ -172,20 +220,17 @@ export function loadProductMesh(
     addMesh(buildProceduralGeometry(productId, lowDetail));
   }
 
-  function loadWithFallback(url: string, nextUrl: string | null) {
-    loader.load(
-      url,
-      (geo) => addMesh(geo),
-      undefined,
-      () => {
-        // This URL failed — try nextUrl or use procedural
-        if (nextUrl) {
-          loadWithFallback(nextUrl, null);
-        } else {
-          useProcedural();
-        }
-      },
-    );
+  async function loadWithFallback(url: string, nextUrl: string | null) {
+    try {
+      addMesh(await loadStlGeometry(url));
+    } catch {
+      // This URL failed — try nextUrl or use procedural
+      if (nextUrl) {
+        loadWithFallback(nextUrl, null);
+      } else {
+        useProcedural();
+      }
+    }
   }
 
   loadWithFallback(`/models/${productId}.stl`, '/models/default.stl');

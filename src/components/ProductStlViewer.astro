@@ -69,7 +69,7 @@ const { src = '/models/resorte.stl', label = 'Modelo 3D del producto' } = Astro.
 
 <script>
   import * as THREE from 'three';
-  import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+  import { loadStlGeometry } from '@/lib/spring-viewer';
 
   document.querySelectorAll<HTMLElement>('[data-stl-viewer]').forEach((viewer) => {
     const canvas  = viewer.querySelector<HTMLCanvasElement>('canvas');
@@ -103,12 +103,11 @@ const { src = '/models/resorte.stl', label = 'Modelo 3D del producto' } = Astro.
     fillLight.position.set(-6, -3, 4);
     scene.add(fillLight);
 
-    const loader = new STLLoader();
     let mesh: THREE.Mesh | null = null;
 
-    loader.load(
-      modelUrl,
-      (geometry) => {
+    loadStlGeometry(modelUrl)
+      .then((cachedGeometry) => {
+        const geometry = cachedGeometry.clone();
         geometry.computeVertexNormals();
         geometry.computeBoundingBox();
 
@@ -137,13 +136,11 @@ const { src = '/models/resorte.stl', label = 'Modelo 3D del producto' } = Astro.
 
         // Hide loading indicator
         loading?.classList.add('hidden');
-      },
-      undefined,
-      (err) => {
+      })
+      .catch((err) => {
         console.warn('[ProductStlViewer] Failed to load model:', err);
         loading?.classList.add('hidden');
-      },
-    );
+      });
 
     function resize() {
       const w = viewer.clientWidth;
