@@ -29,16 +29,8 @@ interface Props {
 const { data } = Astro.props;
 
 const clients = data.items ?? [];
-
-/**
- * Repetimos varias veces para que el carrusel no quede vacío
- * en pantallas grandes o cuando hay pocos clientes.
- */
-const repeatCount =
-  clients.length > 0 ? Math.max(4, Math.ceil(16 / clients.length)) : 0;
-const track = Array.from({ length: repeatCount }, () => clients).flat();
-
-const duration = Math.max(28, clients.length * 6);
+const loopClients = [...clients, ...clients];
+const autoSpeed = 500;
 ---
 
 <section id="clientes" class="section-pad bg-surface">
@@ -57,67 +49,49 @@ const duration = Math.max(28, clients.length * 6);
       <div
         class="jc-clients-strip"
         aria-label="Empresas clientes de JC Resortes"
-        style={`--jc-duration: ${duration}s;`}
+        data-clients-carousel
+        style={`--jc-auto-speed: ${autoSpeed};`}
       >
-        <div class="jc-clients-track">
-          <div class="jc-clients-row">
-            {track.map((client, i) => (
-              <figure class="jc-client-item">
-                <div class="jc-client-logo-wrap">
-                  {client.logo?.src ? (
-                    <>
-                      <img
-                        src={client.logo.src}
-                        alt={client.logo.alt}
-                        class="jc-client-logo"
-                        loading={i < clients.length ? "eager" : "lazy"}
-                        decoding="async"
-                        onerror="this.hidden=true;this.nextElementSibling.hidden=false"
-                      />
-                      <span class="jc-client-initial" hidden>
+        <div class="jc-clients-viewport" data-clients-viewport tabindex="0">
+          <div class="jc-clients-track" data-clients-track>
+            {loopClients.map((client, i) => {
+              const isClone = i >= clients.length;
+
+              return (
+                <figure class="jc-client-item" aria-hidden={isClone}>
+                  <div class="jc-client-logo-wrap">
+                    {client.logo?.src ? (
+                      <>
+                        <img
+                          src={client.logo.src}
+                          alt={isClone ? "" : client.logo.alt}
+                          class="jc-client-logo"
+                          loading={i < clients.length ? "eager" : "lazy"}
+                          decoding="async"
+                          draggable="false"
+                          onerror="this.hidden=true;this.nextElementSibling.hidden=false"
+                        />
+                        <span
+                          class="jc-client-initial"
+                          hidden
+                          aria-hidden={isClone}
+                        >
+                          {client.name.charAt(0)}
+                        </span>
+                      </>
+                    ) : (
+                      <span class="jc-client-initial" aria-hidden={isClone}>
                         {client.name.charAt(0)}
                       </span>
-                    </>
-                  ) : (
-                    <span class="jc-client-initial">
-                      {client.name.charAt(0)}
-                    </span>
-                  )}
-                </div>
+                    )}
+                  </div>
 
-                <figcaption class="jc-client-name">{client.name}</figcaption>
-              </figure>
-            ))}
-          </div>
-
-          <div class="jc-clients-row" aria-hidden="true">
-            {track.map((client) => (
-              <figure class="jc-client-item">
-                <div class="jc-client-logo-wrap">
-                  {client.logo?.src ? (
-                    <>
-                      <img
-                        src={client.logo.src}
-                        alt=""
-                        class="jc-client-logo"
-                        loading="lazy"
-                        decoding="async"
-                        onerror="this.hidden=true;this.nextElementSibling.hidden=false"
-                      />
-                      <span class="jc-client-initial" hidden>
-                        {client.name.charAt(0)}
-                      </span>
-                    </>
-                  ) : (
-                    <span class="jc-client-initial">
-                      {client.name.charAt(0)}
-                    </span>
-                  )}
-                </div>
-
-                <figcaption class="jc-client-name">{client.name}</figcaption>
-              </figure>
-            ))}
+                  <figcaption class="jc-client-name" aria-hidden={isClone}>
+                    {client.name}
+                  </figcaption>
+                </figure>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -126,22 +100,11 @@ const duration = Math.max(28, clients.length * 6);
 </section>
 
 <style is:global>
-  @keyframes jc-clients-scroll {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-
-    to {
-      transform: translate3d(-50%, 0, 0);
-    }
-  }
-
   .jc-clients-strip {
     --jc-surface: var(--color-surface, #f7f7f5);
 
     position: relative;
     width: 100%;
-    overflow: hidden;
     padding-block: clamp(1rem, 2vw, 1.75rem);
   }
 
@@ -168,19 +131,31 @@ const duration = Math.max(28, clients.length * 6);
 
   .jc-clients-track {
     display: flex;
-    width: max-content;
-    animation: jc-clients-scroll var(--jc-duration, 36s) linear infinite;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-  }
-
-  .jc-clients-row {
-    display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    flex: 0 0 auto;
+    width: max-content;
     gap: clamp(2.25rem, 5vw, 5.5rem);
     padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+    will-change: scroll-position;
+  }
+
+  .jc-clients-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    cursor: grab;
+    user-select: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x;
+  }
+
+  .jc-clients-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .jc-clients-viewport.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
   }
 
   .jc-client-item {
@@ -243,10 +218,6 @@ const duration = Math.max(28, clients.length * 6);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .jc-clients-strip:hover .jc-clients-track {
-      animation-play-state: paused;
-    }
-
     .jc-client-item:hover .jc-client-logo {
       transform: scale(1.06);
     }
@@ -261,7 +232,7 @@ const duration = Math.max(28, clients.length * 6);
       padding-block: 1rem;
     }
 
-    .jc-clients-row {
+    .jc-clients-track {
       gap: 2.5rem;
       padding-inline: 1.25rem;
     }
@@ -285,8 +256,160 @@ const duration = Math.max(28, clients.length * 6);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .jc-clients-track {
-      animation-duration: 80s;
+    .jc-clients-viewport {
+      scroll-behavior: auto;
     }
   }
 </style>
+
+<script>
+  const carousels = document.querySelectorAll("[data-clients-carousel]");
+
+  carousels.forEach((carousel) => {
+    const viewport = carousel.querySelector("[data-clients-viewport]");
+    const track = carousel.querySelector("[data-clients-track]");
+
+    if (!(viewport instanceof HTMLElement) || !(track instanceof HTMLElement)) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let animationFrame = 0;
+    let dragging = false;
+    let paused = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+    let resumeTimer = 0;
+    let lastTimestamp = 0;
+
+    const getLoopWidth = () => track.scrollWidth / 2;
+    const getSpeed = () =>
+      Number.parseFloat(
+        getComputedStyle(carousel).getPropertyValue("--jc-auto-speed"),
+      ) || 20;
+
+    const normalizeScroll = () => {
+      const loopWidth = getLoopWidth();
+
+      if (!loopWidth) return;
+
+      if (viewport.scrollLeft >= loopWidth) {
+        viewport.scrollLeft -= loopWidth;
+      } else if (viewport.scrollLeft <= 0) {
+        viewport.scrollLeft += loopWidth;
+      }
+    };
+
+    const pauseTemporarily = (delay = 1800) => {
+      paused = true;
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => {
+        paused = false;
+      }, delay);
+    };
+
+    const tick = (timestamp) => {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+
+      const delta = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+
+      if (!paused && !dragging && !prefersReducedMotion) {
+        viewport.scrollLeft += (delta / 1000) * getSpeed();
+        normalizeScroll();
+      }
+
+      animationFrame = window.requestAnimationFrame(tick);
+    };
+
+    const startDrag = (clientX) => {
+      dragging = true;
+      paused = true;
+      startX = clientX;
+      startScrollLeft = viewport.scrollLeft;
+      viewport.classList.add("is-dragging");
+    };
+
+    const moveDrag = (clientX) => {
+      if (!dragging) return;
+
+      const delta = clientX - startX;
+      viewport.scrollLeft = startScrollLeft - delta;
+      normalizeScroll();
+    };
+
+    const endDrag = () => {
+      if (!dragging) return;
+
+      dragging = false;
+      viewport.classList.remove("is-dragging");
+      pauseTemporarily();
+    };
+
+    const initializePosition = () => {
+      const loopWidth = getLoopWidth();
+
+      if (!loopWidth) return;
+
+      viewport.scrollLeft = Math.min(loopWidth, viewport.scrollWidth);
+    };
+
+    initializePosition();
+
+    viewport.addEventListener("pointerdown", (event) => {
+      startDrag(event.clientX);
+      viewport.setPointerCapture(event.pointerId);
+    });
+
+    viewport.addEventListener("pointermove", (event) => {
+      moveDrag(event.clientX);
+    });
+
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
+    viewport.addEventListener("pointerleave", endDrag);
+
+    viewport.addEventListener("focusin", () => {
+      pauseTemporarily(1200);
+    });
+
+    viewport.addEventListener(
+      "wheel",
+      (event) => {
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+        event.preventDefault();
+        viewport.scrollLeft += event.deltaY;
+        normalizeScroll();
+        pauseTemporarily();
+      },
+      { passive: false },
+    );
+
+    viewport.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+
+      event.preventDefault();
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      viewport.scrollLeft += direction * 180;
+      normalizeScroll();
+      pauseTemporarily();
+    });
+
+    animationFrame = window.requestAnimationFrame(tick);
+
+    window.addEventListener("resize", () => {
+      normalizeScroll();
+      if (viewport.scrollLeft <= 0) {
+        initializePosition();
+      }
+    });
+    window.addEventListener("beforeunload", () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(resumeTimer);
+    });
+  });
+</script>
