@@ -21,12 +21,66 @@
       "locale": "es_CO"
     },
     "nav": [
-      { "label": "Nosotros",       "href": "/nosotros" },
-      { "label": "Qué hacemos",    "href": "/que-hacemos" },
-      { "label": "Catálogo",       "href": "/catalogo" },
-      { "label": "Industrias",     "href": "/industrias" },
-      { "label": "Caso destacado", "href": "/caso" },
-      { "label": "Contacto",       "href": "/contacto" }
+      { "label": "Inicio", "href": "/" },
+      {
+        "label": "Empresa",
+        "href": "/nosotros",
+        "children": [
+          { "label": "Nosotros",              "href": "/nosotros" },
+          { "label": "Historia y trayectoria","href": "/nosotros#historia" },
+          { "label": "Valores y cultura",     "href": "/nosotros#valores" }
+        ]
+      },
+      {
+        "label": "Servicios",
+        "href": "/que-hacemos",
+        "children": [
+          { "label": "Qué hacemos",            "href": "/que-hacemos" },
+          { "label": "Catálogo de productos",  "href": "/catalogo" },
+          { "label": "Configurador",           "href": "/configurar" }
+        ]
+      },
+      {
+        "label": "Sectores",
+        "href": "/industrias",
+        "children": [
+          { "label": "Industrias que atendemos", "href": "/industrias" },
+          { "label": "Casos destacados",         "href": "/caso" }
+        ]
+      },
+      { "label": "Contacto", "href": "/contacto" }
+    ],
+    "navSitemap": [
+      {
+        "category": "Empresa",
+        "items": [
+          { "label": "Inicio",                "href": "/" },
+          { "label": "Nosotros",              "href": "/nosotros" },
+          { "label": "Historia y trayectoria","href": "/nosotros#historia" },
+          { "label": "Valores y cultura",     "href": "/nosotros#valores" }
+        ]
+      },
+      {
+        "category": "Servicios",
+        "items": [
+          { "label": "Qué hacemos",           "href": "/que-hacemos" },
+          { "label": "Catálogo de productos", "href": "/catalogo" },
+          { "label": "Configurador",          "href": "/configurar" }
+        ]
+      },
+      {
+        "category": "Sectores",
+        "items": [
+          { "label": "Industrias",            "href": "/industrias" },
+          { "label": "Casos destacados",      "href": "/caso" }
+        ]
+      },
+      {
+        "category": "Contacto",
+        "items": [
+          { "label": "Contáctanos",           "href": "/contacto" }
+        ]
+      }
     ],
     "sections": {
       "trustStrip":    true,

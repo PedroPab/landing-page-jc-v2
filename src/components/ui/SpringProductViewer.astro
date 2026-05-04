@@ -9,7 +9,7 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 ---
 
 <div class="spring-viewer-wrap">
-  {title && <p class="viewer-title lg:hidden">{title}</p>}
+  <!-- {title && <p class="viewer-title lg:hidden">{title}</p>} -->
 
   <div
     class="spring-product-viewer"
@@ -232,7 +232,7 @@ const { productId, label = "Visor 3D del resorte", title } = Astro.props;
 
       const { scene, camera, renderer, resize } = createViewerBase(canvas, {
         transparent: false,
-        cameraZ: 1,
+        cameraZ: 7,
         fov: 40,
       });
 

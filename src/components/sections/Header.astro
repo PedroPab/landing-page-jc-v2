@@ -1,11 +1,21 @@
 ---
 import Button from '@/components/ui/Button.astro';
-import SpringDivider from '@/components/ui/SpringDivider.astro';
+
+interface NavChild {
+  label: string;
+  href: string;
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  children?: NavChild[];
+}
 
 interface Props {
   settings: {
     name: string;
-    nav: Array<{ label: string; href: string }>;
+    nav: NavItem[];
   };
   whatsappUrl: string;
 }
@@ -25,14 +35,57 @@ const { settings, whatsappUrl } = Astro.props;
     </a>
 
     <!-- Desktop navigation -->
-    <nav class="hidden md:flex items-center gap-6" aria-label="Navegación principal">
+    <nav class="hidden md:flex items-center gap-1" aria-label="Navegación principal">
       {settings.nav.map((item) => (
-        <a
-          href={item.href}
-          class="text-[0.8125rem] text-neutral hover:text-primary font-medium transition-colors uppercase tracking-wide"
-        >
-          {item.label}
-        </a>
+        item.children ? (
+          <div class="relative group/nav">
+            <button
+              class="flex items-center gap-1 px-3 py-2 text-[0.8125rem] text-neutral hover:text-primary font-medium transition-colors uppercase tracking-wide rounded-md hover:bg-surface"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {item.label}
+              <svg
+                class="w-3 h-3 opacity-60 transition-transform duration-150 group-hover/nav:rotate-180"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <!-- Dropdown panel -->
+            <div
+              class="absolute top-full left-0 mt-1 min-w-[200px] bg-white border border-muted rounded-lg shadow-lg
+                     opacity-0 invisible translate-y-1
+                     group-hover/nav:opacity-100 group-hover/nav:visible group-hover/nav:translate-y-0
+                     transition-all duration-150 z-50"
+              role="menu"
+            >
+              <div class="py-1.5">
+                {item.children.map((child) => (
+                  <a
+                    href={child.href}
+                    role="menuitem"
+                    class="block px-4 py-2 text-[0.8125rem] text-neutral hover:text-primary hover:bg-surface transition-colors"
+                  >
+                    {child.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <a
+            href={item.href}
+            class="px-3 py-2 text-[0.8125rem] text-neutral hover:text-primary font-medium transition-colors uppercase tracking-wide rounded-md hover:bg-surface"
+          >
+            {item.label}
+          </a>
+        )
       ))}
     </nav>
 
@@ -77,14 +130,50 @@ const { settings, whatsappUrl } = Astro.props;
     role="navigation"
     aria-label="Navegación móvil"
   >
-    <div class="container-jc py-4 flex flex-col gap-1">
-      {settings.nav.map((item) => (
-        <a
-          href={item.href}
-          class="px-3 py-3 text-sm text-neutral hover:text-primary hover:bg-surface font-medium uppercase tracking-wide rounded-md transition-colors"
-        >
-          {item.label}
-        </a>
+    <div class="container-jc py-3 flex flex-col gap-0.5">
+      {settings.nav.map((item, i) => (
+        item.children ? (
+          <div class="mobile-accordion">
+            <button
+              type="button"
+              data-target={`mobile-sub-${i}`}
+              class="mobile-acc-btn w-full flex items-center justify-between px-3 py-3 text-sm text-neutral hover:text-primary font-medium uppercase tracking-wide rounded-md hover:bg-surface transition-colors"
+              aria-expanded="false"
+            >
+              <span>{item.label}</span>
+              <svg
+                class="acc-chevron w-4 h-4 opacity-50 transition-transform duration-150"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div id={`mobile-sub-${i}`} class="mobile-sub hidden overflow-hidden">
+              <div class="pl-3 pb-1 flex flex-col gap-0.5 border-l border-muted ml-3">
+                {item.children.map((child) => (
+                  <a
+                    href={child.href}
+                    class="nav-link block px-3 py-2 text-[0.8125rem] text-neutral/70 hover:text-primary transition-colors rounded-md"
+                  >
+                    {child.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <a
+            href={item.href}
+            class="nav-link px-3 py-3 text-sm text-neutral hover:text-primary hover:bg-surface font-medium uppercase tracking-wide rounded-md transition-colors"
+          >
+            {item.label}
+          </a>
+        )
       ))}
       <div class="pt-3 border-t border-muted mt-2">
         <Button href={whatsappUrl} variant="primary" size="md" external class="w-full justify-center">
@@ -96,21 +185,37 @@ const { settings, whatsappUrl } = Astro.props;
 </header>
 
 <script>
-  const btn = document.getElementById('menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  const iconOpen = document.getElementById('icon-open');
+  // ── Hamburger toggle ────────────────────────────────────────────
+  const btn      = document.getElementById('menu-toggle');
+  const menu     = document.getElementById('mobile-menu');
+  const iconOpen  = document.getElementById('icon-open');
   const iconClose = document.getElementById('icon-close');
 
   btn?.addEventListener('click', () => {
-    const isOpen = menu?.classList.toggle('hidden');
-    const expanded = !isOpen;
+    const isNowHidden = menu?.classList.toggle('hidden');
+    const expanded = !isNowHidden;
     btn.setAttribute('aria-expanded', String(expanded));
     iconOpen?.classList.toggle('hidden', expanded);
     iconClose?.classList.toggle('hidden', !expanded);
   });
 
-  // Close menu on nav link click
-  menu?.querySelectorAll('a').forEach((link) => {
+  // ── Mobile accordion ────────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>('.mobile-acc-btn').forEach((accBtn) => {
+    accBtn.addEventListener('click', () => {
+      const targetId = accBtn.dataset.target;
+      if (!targetId) return;
+      const sub = document.getElementById(targetId);
+      if (!sub) return;
+
+      const isOpen = !sub.classList.contains('hidden');
+      sub.classList.toggle('hidden', isOpen);
+      accBtn.setAttribute('aria-expanded', String(!isOpen));
+      accBtn.querySelector<SVGElement>('.acc-chevron')?.classList.toggle('rotate-180', !isOpen);
+    });
+  });
+
+  // ── Close menu on nav link click ────────────────────────────────
+  menu?.querySelectorAll('a.nav-link').forEach((link) => {
     link.addEventListener('click', () => {
       menu.classList.add('hidden');
       btn?.setAttribute('aria-expanded', 'false');

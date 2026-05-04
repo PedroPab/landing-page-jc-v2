@@ -52,7 +52,18 @@ const siteSettings = defineCollection({
     nav: z.array(z.object({
       label: z.string(),
       href: z.string(),
+      children: z.array(z.object({
+        label: z.string(),
+        href: z.string(),
+      })).optional(),
     })),
+    navSitemap: z.array(z.object({
+      category: z.string(),
+      items: z.array(z.object({
+        label: z.string(),
+        href: z.string(),
+      })),
+    })).optional(),
     sections: z.object({
       trustStrip:    z.boolean().default(true),
       about:         z.boolean().default(true),
