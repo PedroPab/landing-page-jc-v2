@@ -17,7 +17,7 @@
       "secondaryCta": { "label": "Ver ubicación", "href": "#contacto" },
       "media": {
         "type": "image",
-        "src": "/media/hero/taller-principal.jpg",
+        "src": "/media/hero/taller-principal.png",
         "alt": "Maquinaria especializada de JC Resortes para fabricación de resortes industriales",
         "caption": "JC Resortes — Medellín",
         "priority": true
@@ -238,7 +238,7 @@
         ],
         "media": {
           "type": "image",
-          "src": "/media/about/equipo-trabajo.jpg",
+          "src": "/media/about/equipo-trabajo.png",
           "alt": "Equipo de JC Resortes trabajando en fabricación de resortes industriales"
         }
       },

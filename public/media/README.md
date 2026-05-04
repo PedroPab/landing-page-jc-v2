@@ -8,11 +8,11 @@ reemplazarán automáticamente los placeholders visibles durante desarrollo.
 ```
 public/media/
 ├── hero/
-│   └── taller-principal.jpg        ← Foto principal del taller (16:9, ≥1400px)
+│   └── taller-principal.png        ← Foto principal del taller (16:9, ≥1400px)
 │
 ├── about/
 │   ├── equipo-familia.jpg          ← Foto del equipo / familia (3:4 o 4:3)
-│   └── equipo-trabajo.jpg          ← Personas trabajando en el taller
+│   └── equipo-trabajo.png          ← Personas trabajando en el taller
 │
 ├── history/
 │   └── taller-espacio.jpg          ← Espacio de trabajo / foto documental
@@ -44,6 +44,7 @@ public/media/
 ## Recomendaciones técnicas
 
 ### Imágenes
+
 - Formato: JPG para fotos (calidad 80-85), WebP si es posible
 - Tamaño: máximo 400-600KB por imagen después de optimizar
 - Hero: mínimo 1400×788px (16:9)
@@ -52,13 +53,16 @@ public/media/
 - Herramienta recomendada: [Squoosh](https://squoosh.app) o imagemin
 
 ### Videos
+
 - Formato: MP4 (H.264) — máximo 5-10MB
 - Para loops ambientales: sin audio, `autoplay muted loop`
 - Siempre incluir un poster JPG del primer frame
 
 ### Sustitución de placeholders
+
 Al agregar un archivo real, el componente lo usará automáticamente
 siempre que la ruta coincida con lo definido en los archivos de contenido:
+
 - `src/content/pages/home.json`
 - `src/content/sections/contact.json`
 - `src/content/case-studies/mineria.mdx`
