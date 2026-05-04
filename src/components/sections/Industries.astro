@@ -1,9 +1,10 @@
 ---
-import SectionHeading from '@/components/ui/SectionHeading.astro';
-import SpringDivider from '@/components/ui/SpringDivider.astro';
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import SpringDivider from "@/components/ui/SpringDivider.astro";
 
 interface IndustryItem {
   name: string;
+  icon?: string;
 }
 
 interface IndustriesData {
@@ -18,11 +19,76 @@ interface Props {
 }
 
 const { data } = Astro.props;
+
+const normalizeText = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const industryIconRules = [
+  {
+    icon: "🍽️",
+    keywords: [
+      "alimento",
+      "carnico",
+      "galleta",
+      "chocolate",
+      "bebida",
+      "panaderia",
+    ],
+  },
+  {
+    icon: "🏍️",
+    keywords: ["moto", "automotriz", "vehiculo", "transporte", "repuesto"],
+  },
+  {
+    icon: "🏭",
+    keywords: [
+      "industrial",
+      "industria",
+      "produccion",
+      "manufactura",
+      "planta",
+    ],
+  },
+  {
+    icon: "⚙️",
+    keywords: ["maquinaria", "mecanica", "equipo", "ensamble"],
+  },
+  {
+    icon: "🔩",
+    keywords: ["metal", "metalmecanica", "ferreteria", "acero"],
+  },
+  {
+    icon: "📦",
+    keywords: ["empaque", "logistica", "distribucion"],
+  },
+  {
+    icon: "🧵",
+    keywords: ["textil", "confeccion", "moda"],
+  },
+  {
+    icon: "🏗️",
+    keywords: ["construccion", "obra", "infraestructura"],
+  },
+];
+
+const getIndustryIcon = (item: IndustryItem) => {
+  if (item.icon) return item.icon;
+
+  const name = normalizeText(item.name);
+
+  const match = industryIconRules.find((rule) =>
+    rule.keywords.some((keyword) => name.includes(keyword)),
+  );
+
+  return match?.icon ?? "🔧";
+};
 ---
 
 <section id="industrias" class="section-pad bg-surface">
   <div class="container-jc">
-
     <SectionHeading
       eyebrow="Sectores atendidos"
       title={data.title}
@@ -31,29 +97,112 @@ const { data } = Astro.props;
 
     <SpringDivider width={80} coils={6} class="mt-5 mb-10" />
 
-    <!-- Industry tags -->
-    <ul class="flex flex-wrap gap-3" aria-label="Industrias y sectores atendidos">
-      {data.items.map((item) => (
-        <li>
-          <span class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-white border border-muted text-foreground text-[0.8125rem] font-medium hover:border-primary hover:text-primary transition-colors cursor-default">
-            <!-- Small spring icon accent -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 6" width="16" height="6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" class="text-primary-soft opacity-60" aria-hidden="true">
-              <path d="M0 3 C1 0, 3 6, 4 3 C5 0, 7 6, 8 3 C9 0, 11 6, 12 3 C13 0, 15 6, 16 3"/>
+    <details
+      class="group rounded-2xl border border-muted bg-white shadow-sm overflow-hidden"
+    >
+      <summary
+        class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5 hover:bg-surface transition-colors"
+        aria-label="Mostrar u ocultar sectores atendidos"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 19V8"></path>
+              <path d="M4 8l8-4 8 4v11"></path>
+              <path d="M8 19v-6h8v6"></path>
+              <path d="M2 19h20"></path>
             </svg>
-            {item.name}
           </span>
-        </li>
-      ))}
-    </ul>
 
-    <!-- Closing statement -->
-    {data.closing && (
-      <div class="mt-10 pt-8 border-t border-muted max-w-2xl">
-        <p class="text-body text-neutral leading-relaxed">
-          {data.closing}
-        </p>
+          <div>
+            <h3 class="text-base sm:text-lg font-semibold text-foreground">
+              Sectores atendidos
+            </h3>
+            <p class="text-sm text-neutral">
+              Ver industrias donde aplicamos nuestras soluciones
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span
+            class="hidden sm:inline-flex rounded-full bg-surface px-3 py-1 text-xs font-medium text-neutral"
+          >
+            {data.items.length} sectores
+          </span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-neutral transition-transform duration-300 group-open:rotate-180"
+            aria-hidden="true"
+          >
+            <path d="M5 7.5L10 12.5L15 7.5"></path>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="border-t border-muted px-5 py-5 sm:px-6 sm:py-6">
+        <ul
+          class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+          aria-label="Industrias y sectores atendidos"
+        >
+          {
+            data.items.map((item) => (
+              <li>
+                <article class="flex h-full items-center gap-3 rounded-xl border border-muted bg-surface/60 px-4 py-3 transition-colors hover:border-primary hover:bg-white">
+                  <span
+                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-xl shadow-sm"
+                    aria-hidden="true"
+                  >
+                    {getIndustryIcon(item)}
+                  </span>
+
+                  <span class="text-sm font-medium leading-snug text-foreground">
+                    {item.name}
+                  </span>
+                </article>
+              </li>
+            ))
+          }
+        </ul>
+
+        {
+          data.closing && (
+            <div class="mt-6 rounded-xl border border-muted bg-white px-4 py-4">
+              <p class="text-body text-neutral leading-relaxed">
+                {data.closing}
+              </p>
+            </div>
+          )
+        }
       </div>
-    )}
-
+    </details>
   </div>
 </section>
+
+<style>
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

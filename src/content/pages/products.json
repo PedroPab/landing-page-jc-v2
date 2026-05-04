@@ -2,44 +2,130 @@
   {
     "id": "default",
     "title": "Catálogo de productos",
-    "subtitle": "Fabricamos resortes industriales a la medida según especificación técnica. A continuación, los principales tipos de resorte que producimos.",
+    "subtitle": "Fabricamos resortes industriales a la medida según especificación técnica, muestra física o necesidad del cliente. A continuación, los principales tipos de resortes y piezas especiales que producimos.",
     "items": [
       {
-        "id": "compresion",
-        "name": "Resortes de compresión",
-        "description": "Absorben carga axial y resisten la compresión. Aplicaciones en maquinaria industrial, equipos de ensamble y mecanismos de retorno.",
-        "applications": ["Maquinaria industrial", "Equipos de prensado", "Mecanismos de retorno", "Válvulas"],
-        "materials": ["Acero al carbono", "Acero inoxidable", "Acero SAE 9254"],
-        "notes": "Disponible en distintos diámetros de alambre, longitud libre y paso según requerimiento.",
+        "id": "resortes-bandas-motos",
+        "name": "Resortes para bandas de motos",
+        "description": "Resortes diseñados para sistemas de tensión, retorno o ajuste en mecanismos asociados a bandas, transmisión y componentes de motocicletas. Se fabrican según muestra, medida o requerimiento específico.",
+        "applications": [
+          "Motocicletas",
+          "Bandas y sistemas de tensión",
+          "Mecanismos de retorno",
+          "Repuestos personalizados",
+          "Sistemas mecánicos pequeños"
+        ],
+        "materials": [
+          "Acero al carbono",
+          "Acero para resortes",
+          "Acero inoxidable según aplicación"
+        ],
+        "notes": "Se recomienda definir diámetro del alambre, largo total, tipo de gancho, distancia entre puntos de anclaje y nivel de tensión requerido.",
         "image": {
           "type": "image",
-          "src": "/media/products/resorte-compresion.jpg",
-          "alt": "Resorte de compresión industrial fabricado por JC Resortes"
+          "src": "/media/products/resorte-bandas-motos.jpg",
+          "alt": "Resorte para bandas de motos fabricado por JC Resortes"
         }
       },
       {
-        "id": "tension",
-        "name": "Resortes de tensión (extensión)",
-        "description": "Trabajan bajo carga de tracción axial. Usados en mecanismos donde se requiere fuerza de retorno o sujeción continua.",
-        "applications": ["Mecanismos de apertura y cierre", "Equipos de estampado", "Líneas de producción automatizadas"],
-        "materials": ["Acero al carbono", "Acero inoxidable"],
-        "notes": "Con gancho estándar o extremos personalizados según la aplicación."
+        "id": "tension-gancho-movible",
+        "name": "Resortes de tensión con gancho movible",
+        "description": "Resortes que trabajan bajo carga de tracción axial. Son utilizados cuando se necesita fuerza de retorno, sujeción o recuperación de posición entre dos puntos de anclaje. El gancho puede adaptarse según el montaje.",
+        "applications": [
+          "Mecanismos de apertura y cierre",
+          "Puertas y compuertas",
+          "Maquinaria industrial",
+          "Equipos agrícolas",
+          "Motocicletas",
+          "Sistemas de retorno"
+        ],
+        "materials": [
+          "Acero al carbono",
+          "Acero inoxidable",
+          "Acero para resortes"
+        ],
+        "notes": "Puede fabricarse con gancho estándar, gancho movible, argolla o extremos personalizados según la necesidad del cliente.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorte-tension-gancho-movible.jpg",
+          "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
+        }
       },
       {
         "id": "torsion",
         "name": "Resortes de torsión",
-        "description": "Almacenan y liberan energía rotacional. Presentes en bisagras industriales, mecanismos de cierre y sistemas de accionamiento.",
-        "applications": ["Bisagras de equipos", "Mecanismos de cierre automático", "Sistemas de accionamiento"],
-        "materials": ["Acero al carbono", "Acero para resortes"],
-        "notes": "Brazo de palanca configurado según montaje específico del cliente."
+        "description": "Resortes diseñados para almacenar y liberar energía rotacional. Trabajan mediante giro o torque, siendo ideales para mecanismos que requieren movimiento controlado, retorno angular o cierre automático.",
+        "applications": [
+          "Bisagras industriales",
+          "Mecanismos de cierre",
+          "Sistemas de accionamiento",
+          "Palancas",
+          "Tapas",
+          "Equipos mecánicos"
+        ],
+        "materials": [
+          "Acero al carbono",
+          "Acero para resortes",
+          "Acero inoxidable según requerimiento"
+        ],
+        "notes": "Se fabrican con brazos, patas, ángulos y sentido de enrollado según el montaje específico del cliente.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorte-torsion.jpg",
+          "alt": "Resorte de torsión industrial fabricado por JC Resortes"
+        }
       },
       {
-        "id": "gran-escala",
-        "name": "Resortes de gran escala",
-        "description": "Diámetro de alambre mayor a 20 mm para aplicaciones de alta carga en minería, construcción y maquinaria pesada.",
-        "applications": ["Maquinaria vibradora", "Equipos mineros", "Suspensiones industriales"],
-        "materials": ["Acero SAE 9254", "Acero especial según carga"],
-        "notes": "Incluye tratamiento térmico como parte del proceso estándar de fabricación."
+        "id": "formas-especiales",
+        "name": "Formas especiales, clips y grapas",
+        "description": "Piezas especiales fabricadas en alambre o acero según diseño, muestra o necesidad funcional. Incluye clips, grapas, seguros, ganchos, abrazaderas, retenedores y formas no estándar.",
+        "applications": [
+          "Ensambles industriales",
+          "Sistemas de sujeción",
+          "Maquinaria",
+          "Motocicletas",
+          "Muebles",
+          "Electrodomésticos",
+          "Piezas personalizadas"
+        ],
+        "materials": [
+          "Acero al carbono",
+          "Acero inoxidable",
+          "Alambre acerado",
+          "Material especial según función"
+        ],
+        "notes": "Ideal para desarrollos personalizados. Se recomienda entregar muestra física, plano, medidas generales, función de la pieza y cantidad requerida.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/formas-especiales-clips-grapas.jpg",
+          "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+        }
+      },
+      {
+        "id": "resorteria-pesada",
+        "name": "Resortería pesada",
+        "description": "Resortes de alta resistencia fabricados para soportar cargas exigentes, vibración, impacto o condiciones de trabajo severas. Son utilizados en maquinaria pesada, minería, construcción e industria.",
+        "applications": [
+          "Maquinaria vibradora",
+          "Equipos mineros",
+          "Maquinaria pesada",
+          "Construcción",
+          "Equipos agrícolas",
+          "Suspensiones industriales",
+          "Prensas y sistemas de carga"
+        ],
+        "materials": [
+          "Acero SAE 9254",
+          "Acero al carbono de alta resistencia",
+          "Acero especial según carga",
+          "Material tratado térmicamente"
+        ],
+        "notes": "Disponible para desarrollos de gran diámetro, alta carga y condiciones industriales exigentes. Puede incluir tratamiento térmico según el tipo de trabajo requerido.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorteria-pesada.jpg",
+          "alt": "Resorte industrial pesado fabricado por JC Resortes"
+        }
       }
     ]
   }
