@@ -466,6 +466,7 @@ const whatsappNumber = settings.whatsapp.number;
 
 <script>
   import * as THREE from 'three';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -520,6 +521,19 @@ const whatsappNumber = settings.whatsapp.number;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.2;
+  controls.enableZoom = true;
+  controls.enablePan = false;
+  controls.zoomSpeed = 0.9;
+  controls.minDistance = 6;
+  controls.maxDistance = 28;
+  controls.minPolarAngle = Math.PI * 0.18;
+  controls.maxPolarAngle = Math.PI * 0.82;
+
   scene.add(new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.1));
   const key = new THREE.DirectionalLight(0xffffff, 2.8); key.position.set(4, 6, 8); scene.add(key);
   const fill = new THREE.DirectionalLight(0x428c0d, 0.8); fill.position.set(-5, -3, 3); scene.add(fill);
@@ -530,7 +544,10 @@ const whatsappNumber = settings.whatsapp.number;
   let currentMesh: THREE.Mesh | null = null;
   let currentGeo:  THREE.BufferGeometry | null = null;
   let needsRebuild = false;
-  let autoRotateY  = 0;
+  let userInteracting = false;
+
+  controls.addEventListener('start', () => { userInteracting = true; });
+  controls.addEventListener('end', () => { userInteracting = false; });
 
   // ── Debounce: delay geometry rebuild 150ms after last slider move ─────────
   let rebuildTimer = 0;
@@ -562,9 +579,14 @@ const whatsappNumber = settings.whatsapp.number;
     currentMesh = new THREE.Mesh(geo, material);
     scene.add(currentMesh);
 
-    // Fit camera to spring height
-    camera.position.z = Math.max(10, (height / SCALE) * 1.7);
+    // Fit zoom limits and reset camera framing to the current spring size.
+    const fitDistance = Math.max(10, (height / SCALE) * 1.7, (radius / SCALE) * 4);
+    controls.target.set(0, 0, 0);
+    controls.minDistance = Math.max(4.5, fitDistance * 0.5);
+    controls.maxDistance = Math.max(controls.minDistance + 4, fitDistance * 1.9);
+    camera.position.set(0, 0, fitDistance);
     camera.updateProjectionMatrix();
+    controls.update();
 
     // Badge
     badgeEl.textContent = `Ø ${radius * 2} × ${height} mm`;
@@ -639,7 +661,7 @@ const whatsappNumber = settings.whatsapp.number;
       rafId = requestAnimationFrame(tick);
       if (document.hidden) return;
       if (needsRebuild) { rebuildSpring(); needsRebuild = false; }
-      if (currentMesh) { currentMesh.rotation.y = autoRotateY += 0.008; }
+      if (controls.autoRotate || userInteracting) controls.update();
       renderer.render(scene, camera);
     }
     rafId = requestAnimationFrame(tick);
@@ -669,6 +691,7 @@ const whatsappNumber = settings.whatsapp.number;
       clearTimeout(rebuildTimer);
       resizeObserver.disconnect();
       io.disconnect();
+      controls.dispose();
       currentGeo?.dispose();
       material.dispose();
       renderer.forceContextLoss();
