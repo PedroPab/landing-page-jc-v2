@@ -4,7 +4,11 @@ interface SitemapGroup { category: string; items: SitemapItem[] }
 
 interface SettingsData {
   name: string;
+  legalName?: string;
+  nit?: string;
   tagline: string;
+  phone?: string;
+  email?: string;
   nav: Array<{ label: string; href: string; children?: SitemapItem[] }>;
   navSitemap?: SitemapGroup[];
   address: { street: string; city: string; country: string; mapsUrl: string };
@@ -65,8 +69,14 @@ const sitemapGroups: SitemapGroup[] = settings.navSitemap ?? [
         </svg>
 
         <address class="not-italic flex flex-col gap-1 text-[0.8125rem] text-white/40">
-          <span>{settings.address.city}</span>
-          <span>{settings.address.country}</span>
+          <span>{settings.address.street}</span>
+          <span>{settings.address.city}, {settings.address.country}</span>
+          {settings.legalName && (
+            <span class="mt-1 text-[0.75rem] text-white/25">
+              {settings.legalName}
+              {settings.nit && <> · NIT {settings.nit}</>}
+            </span>
+          )}
         </address>
       </div>
 
@@ -104,6 +114,31 @@ const sitemapGroups: SitemapGroup[] = settings.navSitemap ?? [
           </svg>
           WhatsApp
         </a>
+
+        {settings.phone && (
+          <a
+            href={`tel:${settings.phone}`}
+            class="inline-flex items-center gap-2 text-[0.8125rem] text-white/60 hover:text-white transition-colors w-fit"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            {settings.phone}
+          </a>
+        )}
+
+        {settings.email && (
+          <a
+            href={`mailto:${settings.email}`}
+            class="inline-flex items-center gap-2 text-[0.8125rem] text-white/60 hover:text-white transition-colors w-fit"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,12 2,6"/>
+            </svg>
+            {settings.email}
+          </a>
+        )}
 
         <a
           href={settings.address.mapsUrl}

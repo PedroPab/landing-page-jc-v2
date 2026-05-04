@@ -8,6 +8,8 @@ interface Props {
   ogImage?: string;
   canonical?: string;
   noindex?: boolean;
+  /** JSON-LD adicional por página (FAQ, Product, BreadcrumbList, etc.) */
+  additionalSchemas?: object[];
 }
 
 const settings = await getEntry('siteSettings', 'default');
@@ -20,6 +22,7 @@ const {
   ogImage = s.seo.defaultImage,
   canonical,
   noindex = false,
+  additionalSchemas = [],
 } = Astro.props;
 
 const siteUrl = s.seo.siteUrl;
@@ -28,24 +31,92 @@ const canonicalUrl = canonical
   : new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteUrl).href;
 
-// Schema.org structured data — LocalBusiness / ManufacturingBusiness
-const schema = {
+// Horario de atención para schema.org
+const openingHours = s.businessHours?.map((h) => ({
+  '@type': 'OpeningHoursSpecification',
+  dayOfWeek: h.days.split(','),
+  opens: h.opens,
+  closes: h.closes,
+})) ?? [];
+
+// Schema.org — LocalBusiness + ManufacturingBusiness completo
+const businessSchema = {
   '@context': 'https://schema.org',
-  '@type': 'ManufacturingBusiness',
+  '@type': ['LocalBusiness', 'ManufacturingBusiness'],
+  '@id': `${siteUrl}/#business`,
   name: s.name,
+  legalName: s.legalName ?? s.name,
+  alternateName: 'JC Resortes Medellín',
+  identifier: s.nit ? { '@type': 'PropertyValue', name: 'NIT', value: s.nit } : undefined,
   description: s.seo.defaultDescription,
   url: siteUrl,
-  telephone: `+${s.whatsapp.number}`,
+  telephone: s.phone ?? `+${s.whatsapp.number}`,
+  email: s.email,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${siteUrl}/favicon.svg`,
+    contentUrl: `${siteUrl}/favicon.svg`,
+  },
+  image: ogImageUrl,
   address: {
     '@type': 'PostalAddress',
     streetAddress: s.address.street,
     addressLocality: s.address.city,
+    addressRegion: s.address.region ?? 'Antioquia',
+    postalCode: s.address.postalCode ?? '050001',
     addressCountry: 'CO',
   },
+  geo: s.geo
+    ? {
+        '@type': 'GeoCoordinates',
+        latitude: s.geo.lat,
+        longitude: s.geo.lng,
+      }
+    : undefined,
+  hasMap: s.address.mapsUrl,
+  openingHoursSpecification: openingHours,
+  priceRange: '$$',
+  currenciesAccepted: 'COP',
+  paymentAccepted: 'Efectivo, Transferencia bancaria',
+  areaServed: [
+    { '@type': 'City',    name: 'Medellín' },
+    { '@type': 'State',   name: 'Antioquia' },
+    { '@type': 'Country', name: 'Colombia' },
+  ],
   foundingDate: '1999',
-  areaServed: 'Colombia',
-  knowsAbout: ['resortes industriales', 'fabricación de resortes a la medida', 'soluciones metalmecánicas'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Catálogo de Resortes Industriales JC Resortes',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Resortes de Compresión a la Medida',     url: `${siteUrl}/catalogo` } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Resortes de Tensión a la Medida',        url: `${siteUrl}/catalogo` } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Resortes de Torsión a la Medida',        url: `${siteUrl}/catalogo` } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Tratamiento Térmico de Resortes',        url: `${siteUrl}/que-hacemos` } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Resortes y Piezas Especiales a Medida',  url: `${siteUrl}/catalogo` } },
+    ],
+  },
+  knowsAbout: [
+    'resortes industriales',
+    'fabricación de resortes a la medida',
+    'resortes de compresión',
+    'resortes de tensión',
+    'resortes de torsión',
+    'tratamiento térmico de resortes',
+    'soluciones metalmecánicas',
+    'resortes para industria alimentaria',
+    'resortes para minería',
+    'resortes para motocicletas',
+    'resortes industriales Medellín',
+    'proveedor de resortes Colombia',
+  ],
+  sameAs: [
+    s.address.mapsUrl,
+    ...(s.reviewUrl ? [s.reviewUrl] : []),
+  ].filter(Boolean),
 };
+
+// Keywords para meta tag
+const keywords = s.seo.keywords?.join(', ') ?? '';
 ---
 
 <!DOCTYPE html>
@@ -53,12 +124,26 @@ const schema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Language" content="es" />
 
     <!-- Primary Meta -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="author" content={s.name} />
     <link rel="canonical" href={canonicalUrl} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Robots -->
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    }
+
+    <!-- Geo / Local SEO -->
+    <meta name="geo.region" content="CO-ANT" />
+    <meta name="geo.placename" content="Medellín, Antioquia, Colombia" />
+    {s.geo && <meta name="geo.position" content={`${s.geo.lat};${s.geo.lng}`} />}
+    {s.geo && <meta name="ICBM" content={`${s.geo.lat}, ${s.geo.lng}`} />}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -66,11 +151,14 @@ const schema = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={s.seo.locale} />
     <meta property="og:site_name" content={s.name} />
 
-    <!-- Twitter Card -->
+    <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    {s.seo.twitterSite && <meta name="twitter:site" content={s.seo.twitterSite} />}
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
@@ -89,8 +177,13 @@ const schema = {
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap"
     />
 
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <!-- Schema.org JSON-LD — LocalBusiness / ManufacturingBusiness -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+
+    <!-- Schema.org JSON-LD adicional por página (FAQ, Product, BreadcrumbList…) -->
+    {additionalSchemas.map((schema) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
   </head>
   <body class="bg-white text-foreground font-body antialiased">
     <slot />

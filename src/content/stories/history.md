@@ -7,10 +7,10 @@ media:
   type: "image"
   src: "/media/history/taller-espacio.jpg"
   alt: "El espacio de trabajo de JC Resortes, donde comenzó todo en 1999"
-  caption: "Centro Empresarial Caribe — donde nació JC Resortes"
+  caption: "Donde nació JC Resortes"
 ---
 
-## Los primeros pasos en el centro empresarial Caribe
+## Los primeros pasos
 
 JC Resortes comenzó su camino en Medellín, en el reconocido centro empresarial Caribe, donde dio sus primeros pasos en la fabricación de resortes. Desde sus inicios fue una empresa familiar, fundada por los padres de la familia, y con el tiempo ese legado pasó a los hijos, que hoy continúan desarrollando y fortaleciendo el proyecto.
 
@@ -20,8 +20,8 @@ Antes de enfocarse por completo en la fabricación de resortes, la empresa ya te
 
 ## De una máquina a un taller con capacidad real
 
-Lo que empezó con una sola máquina fue creciendo con los años hasta convertirse en un taller con mayor capacidad, más herramientas y una forma de trabajo basada en la adaptación, la experiencia y la mejora constante. Muchas de sus máquinas han sido adquiridas, modificadas, reparadas o intervenidas por ellos mismos para responder a necesidades específicas de producción.
+Lo que empezó con una sola máquina fue creciendo con los años hasta convertirse en un taller con mayor capacidad, más herramientas y una forma de trabajo basada en la adaptación, la experiencia y la mejora constante. Muchas de sus máquinas han sido adquiridas, modificadas, por ellos mismos para responder a necesidades específicas de producción.
 
 ## Un legado que se transmite
 
-Hoy, esa historia sigue viva en un taller donde el conocimiento no se improvisa: se transmite, se practica y se fortalece con el tiempo. La empresa representa una historia de oficio y permanencia, donde conviven la experiencia acumulada, el trabajo artesanal y una visión práctica para resolver los problemas reales de cada cliente.
+Hoy, esa historia sigue viva en un taller donde el conocimiento no se improvisa: se transmite, se practica y se fortalece con el tiempo. La empresa representa una historia de oficio y permanencia, donde conviven la experiencia acumulada, y una visión práctica para resolver los problemas reales de cada cliente.

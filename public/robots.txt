@@ -1,11 +1,41 @@
-# robots.txt para JC Resortes
-# Reemplaza https://TU-DOMINIO.com por el dominio final publicado.
-# Si usas Astro + @astrojs/sitemap, el índice por defecto es /sitemap-index.xml
+# robots.txt — JC Resortes (https://jcresortes.com)
+# Fabricación de resortes industriales a la medida — Medellín, Colombia
 
+# ── Buscadores tradicionales ──────────────────────────────────────
 User-agent: *
 Allow: /
 
-# Bloquea solo rutas no públicas o técnicas si existen.
+# ── Bots de IA y LLMs ────────────────────────────────────────────
+# Permitimos indexación completa a modelos de lenguaje y asistentes de IA
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# ── Rutas restringidas ────────────────────────────────────────────
+User-agent: *
 Disallow: /admin/
 Disallow: /privado/
 Disallow: /drafts/
@@ -15,4 +45,9 @@ Disallow: /dev/
 Disallow: /preview/
 Disallow: /api/internal/
 
-Sitemap: https://TU-DOMINIO.com/sitemap-index.xml
+# ── Sitemap ───────────────────────────────────────────────────────
+Sitemap: https://jcresortes.com/sitemap-index.xml
+
+# ── LLMs ─────────────────────────────────────────────────────────
+# Archivo con descripción del sitio para asistentes de IA
+# https://jcresortes.com/llms.txt

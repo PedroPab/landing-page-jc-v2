@@ -44,12 +44,87 @@ const whatsappUrl = buildWhatsAppUrl(
 
 // Section visibility flags — toggle in src/content/site/settings.json
 const sections = settings.sections;
+
+const siteUrl = settings.seo.siteUrl;
+
+// Schema.org — FAQPage con preguntas comerciales de alta intención
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '¿Dónde puedo comprar resortes industriales en Medellín?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'JC Resortes está ubicado en el Centro Empresarial Caribe, Medellín, Antioquia. Fabricamos resortes industriales a la medida desde 1999. Puedes contactarnos por WhatsApp para solicitar cotización sin costo.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Fabrican resortes a la medida en Colombia?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sí. En JC Resortes diseñamos y fabricamos resortes industriales completamente a la medida en Medellín, Colombia. Manejamos resortes de compresión, tensión, torsión y formas especiales según los requerimientos técnicos de cada cliente.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Qué tipos de resortes industriales fabrican?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Fabricamos resortes de compresión, tensión con gancho móvil, torsión, resortes para bandas de motocicletas, resortes de gran escala, clips, abrazaderas y formas especiales en alambre. Todos fabricados a medida en acero al carbono, acero inoxidable o materiales especiales.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿A qué industrias atienden en Medellín y Antioquia?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Atendemos manufactura, industria de alimentos, minería, motocicletas, talleres metalmecánicos, construcción, agroindustria y electricidad. Clientes como Zenú, Noel, Haceb, EPM, ISAGEN y Nacional de Chocolates confían en nuestros resortes.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Realizan tratamiento térmico de resortes?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sí. Ofrecemos tratamiento térmico completo: templado, revenido y alivio de tensiones, garantizando la dureza, resistencia y vida útil óptima de cada resorte industrial.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cómo solicito una cotización de resortes industriales?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Puedes contactarnos directamente por WhatsApp desde nuestra página de contacto, usar el configurador 3D online para diseñar tu resorte, o visitarnos en el Centro Empresarial Caribe en Medellín. Atendemos de lunes a viernes 7:00–17:00 y sábados 7:00–12:00.',
+      },
+    },
+  ],
+};
+
+// Schema.org — WebSite con SearchAction (Sitelinks Searchbox)
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${siteUrl}/#website`,
+  name: settings.name,
+  url: siteUrl,
+  description: settings.seo.defaultDescription,
+  inLanguage: 'es-CO',
+  publisher: {
+    '@type': 'Organization',
+    '@id': `${siteUrl}/#business`,
+    name: settings.name,
+  },
+};
 ---
 
 <BaseLayout
   title={settings.seo.defaultTitle}
   description={settings.seo.defaultDescription}
   ogImage={settings.seo.defaultImage}
+  additionalSchemas={[faqSchema, websiteSchema]}
 >
   <Header settings={settings} whatsappUrl={whatsappUrl} />
 

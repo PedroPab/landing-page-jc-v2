@@ -2,23 +2,57 @@
   {
     "id": "default",
     "name": "JC Resortes",
+    "legalName": "JC RESORTES SAS",
+    "nit": "901100249",
     "tagline": "Fabricación de resortes industriales de alta calidad desde 1999",
+    "phone": "+573014225648",
+    "email": "jcresortes@gmail.com",
+    "reviewUrl": "https://g.page/r/CezOL6Ov9W8PEBM/review",
     "whatsapp": {
-      "number": "573XXXXXXXXX",
-      "defaultMessage": "Hola, necesito cotización para fabricación de resortes industriales"
+      "number": "573014225648",
+      "defaultMessage": "Hola, necesito cotización para fabricación de resortes"
     },
     "address": {
-      "street": "Centro Empresarial Caribe",
-      "city": "Medellín, Antioquia",
+      "street": "Cr 65 # 93-155, Barrio Castilla",
+      "city": "Medellín",
+      "region": "Antioquia",
       "country": "Colombia",
-      "mapsUrl": "https://maps.google.com/?q=JC+Resortes+Medellin+Colombia"
+      "postalCode": "050042",
+      "mapsUrl": "https://maps.app.goo.gl/hssK3rWCQvN5KkgE9"
     },
+    "geo": {
+      "lat": 6.2878,
+      "lng": -75.5630
+    },
+    "businessHours": [
+      { "days": "Monday,Tuesday,Wednesday,Thursday,Friday", "opens": "07:00", "closes": "17:00" }
+    ],
     "seo": {
       "siteUrl": "https://jcresortes.com",
-      "defaultTitle": "JC Resortes — Fabricación de Resortes Industriales de Alta Calidad en Medellín",
-      "defaultDescription": "Diseño y fabricación de resortes industriales a la medida desde 1999 en Medellín, Colombia. Compresión, tensión, torsión, templado y tratamiento de dureza para manufactura, alimentos, minería y más.",
+      "defaultTitle": "JC Resortes — Resortes Industriales a la Medida en Medellín, Colombia",
+      "defaultDescription": "Fabricamos resortes industriales a la medida desde 1999 en Medellín. Compresión, tensión, torsión, tratamiento térmico y piezas especiales para manufactura, alimentos, minería y más. Cotiza por WhatsApp.",
       "defaultImage": "/og-image.jpg",
-      "locale": "es_CO"
+      "locale": "es_CO",
+      "keywords": [
+        "resortes",
+        "medellín",
+        "tratamiento térmico",
+        "resortes a la medida",
+        "taller de resortes Medellín",
+        "resortes industriales Medellín",
+        "fabricación de resortes Colombia",
+        "resortes a la medida Antioquia",
+        "resortes de compresión",
+        "resortes de tensión",
+        "resortes de torsión",
+        "tratamiento térmico resortes",
+        "proveedor resortes industriales Colombia",
+        "resortes para motocicletas Colombia",
+        "metalmecánica Medellín",
+        "resortes industriales Antioquia",
+        "fabricante de resortes Colombia"
+      ],
+      "twitterSite": "@jcresortes"
     },
     "nav": [
       { "label": "Inicio", "href": "/" },

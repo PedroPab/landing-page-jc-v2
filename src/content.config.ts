@@ -31,7 +31,10 @@ const siteSettings = defineCollection({
   schema: z.object({
     id: z.string(),
     name: z.string(),
+    legalName: z.string().optional(),
+    nit: z.string().optional(),
     tagline: z.string(),
+    reviewUrl: z.string().optional(),
     whatsapp: z.object({
       number: z.string(),
       defaultMessage: z.string(),
@@ -41,13 +44,28 @@ const siteSettings = defineCollection({
       city: z.string(),
       country: z.string(),
       mapsUrl: z.string(),
+      postalCode: z.string().optional(),
+      region: z.string().optional(),
     }),
+    phone: z.string().optional(),
+    email: z.string().optional(),
+    geo: z.object({
+      lat: z.number(),
+      lng: z.number(),
+    }).optional(),
+    businessHours: z.array(z.object({
+      days: z.string(),
+      opens: z.string(),
+      closes: z.string(),
+    })).optional(),
     seo: z.object({
       siteUrl: z.string(),
       defaultTitle: z.string(),
       defaultDescription: z.string(),
       defaultImage: z.string(),
       locale: z.string().default('es_CO'),
+      keywords: z.array(z.string()).optional(),
+      twitterSite: z.string().optional(),
     }),
     nav: z.array(z.object({
       label: z.string(),
