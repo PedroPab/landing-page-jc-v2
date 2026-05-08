@@ -5,6 +5,73 @@
     "subtitle": "Fabricamos resortes industriales a la medida según especificación técnica, muestra física o necesidad del cliente. A continuación, los principales tipos de resortes y piezas especiales que producimos.",
     "items": [
       {
+        "id": "resorte-conico",
+        "name": "Resortes cónicos",
+        "description": "Resortes diseñados con forma cónica para aplicaciones que requieren compresión progresiva, espacio reducido o características de amortiguación específicas. Son ideales para sistemas de suspensión, amortiguadores y mecanismos que necesitan una respuesta variable a la carga.",
+        "applications": [
+          "Suspensiones industriales",
+          "Amortiguadores",
+          "Sistemas de absorción de impacto",
+          "Equipos agrícolas",
+          "Maquinaria pesada",
+          "Sistemas de retorno progresivo"
+        ],
+        "materials": [
+          "Acero al carbono",
+          "Acero para resortes",
+          "Acero inoxidable según aplicación"
+        ],
+        "notes": "Se recomienda definir diámetro del alambre, diámetro mayor y menor, largo total, número de vueltas y nivel de carga requerido para un diseño óptimo.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorte-conico.jpg",
+          "alt": "Resorte cónico industrial fabricado por JC Resortes"
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-conico-1.png",
+            "alt": "Resorte cónico fabricado por JC Resortes"
+          }
+        ]
+      },
+      {
+        "id": "resorte-torsion-doble",
+        "name": "Resortes de torsión doble",
+        "description": "Resortes de torsión con dos brazos o patas diseñados para aplicaciones que requieren un movimiento de giro o torque en ambos sentidos. Son ideales para mecanismos de cierre, bisagras industriales y sistemas de accionamiento que necesitan una respuesta equilibrada en ambos lados.",
+        "applications": [
+          "Bisagras industriales",
+          "Mecanismos de cierre",
+          "Sistemas de accionamiento",
+          "Palancas",
+          "Tapas",
+          "Equipos mecánicos"
+        ],
+        "materials": [
+          "Acero al carbono",
+          "Acero para resortes",
+          "Acero inoxidable según requerimiento"
+        ],
+        "notes": "Se fabrican con brazos, patas, ángulos y sentido de enrollado según el montaje específico del cliente.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorte-torsion-doble.png",
+          "alt": "Resorte de torsión doble industrial fabricado por JC Resortes"
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-torsion-doble.png",
+            "alt": "Resorte de torsión doble fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorte-torsion-doble-02.png",
+            "alt": "Resorte de torsión doble fabricado por JC Resortes"
+          }
+        ]
+      },
+      {
         "id": "resortes-bandas-motos",
         "name": "Resortes para bandas de motos",
         "description": "Resortes diseñados para sistemas de tensión, retorno o ajuste en mecanismos asociados a bandas, transmisión y componentes de motocicletas. Se fabrican según muestra, medida o requerimiento específico.",
@@ -25,7 +92,19 @@
           "type": "image",
           "src": "/media/products/resorte-bandas-motos.jpg",
           "alt": "Resorte para bandas de motos fabricado por JC Resortes"
-        }
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-bandas-motos-01.png",
+            "alt": "Resorte para bandas de motos fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorte-bandas-motos-02.jpg",
+            "alt": "Resorte para bandas de motos fabricado por JC Resortes"
+          }
+        ]
       },
       {
         "id": "tension-gancho-movible",
@@ -49,7 +128,14 @@
           "type": "image",
           "src": "/media/products/resorte-tension-gancho-movible.jpg",
           "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
-        }
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-tension-gancho-movible.png",
+            "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
+          }
+        ]
       },
       {
         "id": "torsion",
@@ -73,7 +159,14 @@
           "type": "image",
           "src": "/media/products/resorte-torsion.jpg",
           "alt": "Resorte de torsión industrial fabricado por JC Resortes"
-        }
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-torsion.png",
+            "alt": "Resorte de torsión fabricado por JC Resortes"
+          }
+]
       },
       {
         "id": "formas-especiales",
@@ -99,7 +192,24 @@
           "type": "image",
           "src": "/media/products/formas-especiales-clips-grapas.jpg",
           "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
-        }
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/formas-especiales-01.png",
+            "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/formas-especiales-02.png",
+            "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/formas-especiales-03.png",
+            "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+          }
+        ]
       },
       {
         "id": "resorteria-pesada",
@@ -125,7 +235,24 @@
           "type": "image",
           "src": "/media/products/resorteria-pesada.jpg",
           "alt": "Resorte industrial pesado fabricado por JC Resortes"
-        }
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada.png",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-01.png",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-02.png",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          }
+        ]
       }
     ]
   }

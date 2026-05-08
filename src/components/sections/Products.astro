@@ -4,6 +4,7 @@ import SpringDivider from "@/components/ui/SpringDivider.astro";
 import RealisticSpring from "@/components/ui/RealisticSpring.astro";
 import ProductCard from "@/components/ui/ProductCard.astro";
 import ConfiguratorCard from "@/components/ui/ConfiguratorCard.astro";
+import CatalogCard from "@/components/ui/CatalogCard.astro";
 
 interface ProductItem {
   id: string;
@@ -64,30 +65,7 @@ const linkBaseDefault = linkBase ?? "/catalogo";
           ))
       }
       <ConfiguratorCard />
-    </div>
-
-    <div class="mt-10 flex justify-center">
-      <a
-        href={linkBaseDefault}
-        class="inline-flex items-center gap-2 border-2 border-primary text-primary font-heading font-bold uppercase text-[0.8125rem] tracking-wide px-6 py-3 rounded hover:bg-primary hover:text-white transition-colors duration-200"
-      >
-        Ver catálogo completo
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </a>
+      <CatalogCard href={linkBaseDefault} />
     </div>
   </div>
 </section>

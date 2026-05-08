@@ -61,9 +61,17 @@
       ],
       "media": {
         "type": "image",
-        "src": "/media/about/equipo-familia.jpg",
+        "src": "/media/about/equipo-familia.png",
         "alt": "Equipo de JC Resortes en planta de fabricación de resortes industriales",
-        "caption": "JC Resortes — Equipo de fabricación"
+        "caption": "JC Resortes — Equipo de fabricación",
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/about/equipo-en-resorte.png",
+            "alt": "Equipo de JC Resortes en planta de fabricación de resortes industriales"
+          }
+
+        ]
       }
     },
 
@@ -97,10 +105,20 @@
           "icon": "layers",
           "image": {
             "type": "image",
-            "src": "/media/workshop/horno-tratamiento.jpg",
+            "src": "/media/workshop/horno-tratamiento.png",
             "alt": "Horno de tratamiento térmico para templado de resortes industriales"
           }
-        }
+        },
+          {
+            "title": "Asesoría técnica especializada",
+            "description": "Brindamos asesoría técnica directa para seleccionar el tipo de resorte, material y tratamiento más adecuado según las condiciones de carga, temperatura y ambiente de cada aplicación.",
+            "icon": "headset",
+            "image": {
+              "type": "image",
+              "src": "/media/services/asesoria-tecnica.jpg",
+              "alt": "Asesoría técnica especializada en fabricación de resortes industriales"
+            }
+          }
       ],
       "closing": "Atendemos proyectos de distinta escala, desde lotes pequeños de alta especificación hasta producciones de mayor volumen con control de calidad en cada etapa."
     },
@@ -203,7 +221,7 @@
         "items": [
           {
             "type": "image",
-            "src": "/media/workshop/maquinaria-01.jpg",
+            "src": "/media/workshop/maquinaria-01.png",
             "alt": "Maquinaria especializada para fabricación de resortes industriales en JC Resortes"
           },
           {
@@ -219,7 +237,7 @@
           },
           {
             "type": "image",
-            "src": "/media/workshop/horno-tratamiento.jpg",
+            "src": "/media/workshop/horno-tratamiento.png",
             "alt": "Horno para tratamiento térmico de resortes industriales"
           }
         ]

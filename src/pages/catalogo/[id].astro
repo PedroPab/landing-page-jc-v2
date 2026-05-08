@@ -22,6 +22,14 @@ export async function getStaticPaths() {
   }));
 }
 
+interface MediaItem {
+  type: string;
+  src: string;
+  alt: string;
+  caption?: string;
+  poster?: string;
+}
+
 interface ProductItem {
   id: string;
   name: string;
@@ -29,6 +37,7 @@ interface ProductItem {
   applications: string[];
   materials: string[];
   notes?: string;
+  photos?: MediaItem[];
 }
 
 interface Props {
@@ -114,13 +123,93 @@ const breadcrumbSchema = {
         <div
           class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start"
         >
-          <!-- Left: 3D viewer -->
-          <div class="top-8">
-            <SpringProductViewer
-              productId={product.id}
-              label={`Visor 3D — ${product.name}`}
-              title={product.name}
-            />
+          <!-- Left: visor principal + strip de miniaturas -->
+          <div class="flex flex-col gap-3 lg:sticky lg:top-8">
+
+            <!-- Área principal: canvas 3D + overlay de foto -->
+            <div class="relative" id={`main-${product.id}`}>
+              <SpringProductViewer
+                productId={product.id}
+                label={`Visor 3D — ${product.name}`}
+                title={product.name}
+              />
+
+              <!-- Overlay de foto — se muestra sobre el canvas al seleccionar una miniatura -->
+              {product.photos && product.photos.length > 0 && (
+                <div
+                  id={`overlay-${product.id}`}
+                  class="absolute inset-0 rounded-3xl overflow-hidden bg-white flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+                  aria-hidden="true"
+                >
+                  <img
+                    id={`overlay-img-${product.id}`}
+                    src=""
+                    alt=""
+                    class="w-full h-full object-contain select-none"
+                    draggable="false"
+                  />
+                </div>
+              )}
+            </div>
+
+            <!-- Strip de miniaturas (3D + fotos) -->
+            {product.photos && product.photos.length > 0 && (
+              <div
+                class="jc-thumb-strip flex gap-2 overflow-x-auto py-1 px-0.5"
+                role="list"
+                aria-label="Seleccionar vista del producto"
+              >
+                <!-- Miniatura del modelo 3D — activa por defecto -->
+                <button
+                  type="button"
+                  role="listitem"
+                  class="jc-thumb jc-thumb-active shrink-0 w-[4.5rem] h-[4.5rem] rounded-xl overflow-hidden relative border-2 border-muted bg-[#0e160b] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  aria-label="Ver modelo 3D"
+                  aria-pressed="true"
+                  data-for={product.id}
+                  data-type="3d"
+                >
+                  <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 40 16"
+                      width="38" height="15"
+                      fill="none"
+                      stroke="#428c0d"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M0 8 C3 0,7 16,10 8 C13 0,17 16,20 8 C23 0,27 16,30 8 C33 0,37 16,40 8"/>
+                    </svg>
+                    <span class="text-[0.5rem] text-white/40 font-heading uppercase tracking-widest leading-none">3D</span>
+                  </div>
+                </button>
+
+                <!-- Miniaturas de fotos -->
+                {product.photos.map((photo, i) => (
+                  <button
+                    type="button"
+                    role="listitem"
+                    class="jc-thumb shrink-0 w-[4.5rem] h-[4.5rem] rounded-xl overflow-hidden relative group border-2 border-muted outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-[border-color] duration-150"
+                    aria-label={`Vista ${i + 1}: ${photo.alt}`}
+                    aria-pressed="false"
+                    data-for={product.id}
+                    data-type="photo"
+                    data-src={photo.src}
+                    data-alt={photo.alt}
+                  >
+                    <img
+                      src={photo.src}
+                      alt=""
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.08]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <!-- Right: Specs -->
@@ -219,7 +308,7 @@ const breadcrumbSchema = {
     </section>
 
     <!-- Related products -->
-    <section class="section-pad bg-white border-t border-muted">
+    <section class="section-pad bg-surface border-t border-muted">
       <div class="container-jc">
         <h2
           class="font-heading text-[0.75rem] font-bold uppercase tracking-widest text-primary mb-2"
@@ -268,3 +357,64 @@ const breadcrumbSchema = {
 
   <Footer settings={settings} whatsappUrl={whatsappUrl} />
 </BaseLayout>
+
+<!-- ── Estilos del visor con miniaturas ─────────────────────── -->
+<style is:global>
+  /* Miniatura activa: borde primary */
+  .jc-thumb-active {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+
+  /* Ocultar scrollbar del strip manteniendo el scroll funcional */
+  .jc-thumb-strip {
+    scrollbar-width: none;
+  }
+  .jc-thumb-strip::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<!-- ── Script de interacción: cambio entre 3D y fotos ──────── -->
+<script is:inline define:vars={{ productId: product.id, productPhotos: product.photos ?? [] }}>
+  (function () {
+    if (!productPhotos || productPhotos.length === 0) return;
+
+    var overlay    = document.getElementById('overlay-' + productId);
+    var overlayImg = document.getElementById('overlay-img-' + productId);
+    var thumbs     = document.querySelectorAll('.jc-thumb[data-for="' + productId + '"]');
+
+    function setActive(activeBtn) {
+      thumbs.forEach(function (t) {
+        t.classList.remove('jc-thumb-active');
+        t.setAttribute('aria-pressed', 'false');
+      });
+      activeBtn.classList.add('jc-thumb-active');
+      activeBtn.setAttribute('aria-pressed', 'true');
+    }
+
+    thumbs.forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        setActive(thumb);
+
+        if (thumb.dataset.type === '3d') {
+          // ── Volver al canvas 3D
+          if (overlay) {
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            overlay.setAttribute('aria-hidden', 'true');
+          }
+        } else {
+          // ── Mostrar foto sobre el canvas
+          var src = thumb.dataset.src;
+          var alt = thumb.dataset.alt || '';
+          if (overlay && overlayImg && src) {
+            overlayImg.src = src;
+            overlayImg.alt = alt;
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            overlay.setAttribute('aria-hidden', 'false');
+          }
+        }
+      });
+    });
+  })();
+</script>

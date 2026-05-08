@@ -11,7 +11,7 @@ public/media/
 │   └── taller-principal.png        ← Foto principal del taller (16:9, ≥1400px)
 │
 ├── about/
-│   ├── equipo-familia.jpg          ← Foto del equipo / familia (3:4 o 4:3)
+│   ├── equipo-familia.png          ← Foto del equipo / familia (3:4 o 4:3)
 │   └── equipo-trabajo.png          ← Personas trabajando en el taller
 │
 ├── history/

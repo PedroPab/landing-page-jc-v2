@@ -1,0 +1,294 @@
+---
+/**
+ * ProductGallery — galería de fotos de apoyo para la página de detalle del producto.
+ *
+ * Comportamiento:
+ *  - Con fotos: grid "featured" (primera foto grande) + lightbox accesible.
+ *  - Sin fotos: tarjetas placeholder para marcar los huecos mientras se agregan.
+ *
+ * Layouts automáticos:
+ *  - 1 foto   → imagen única, relación 16:9
+ *  - 2 fotos  → dos columnas iguales
+ *  - 3+ fotos → primera foto destacada (2 cols × 2 rows), resto en celdas regulares
+ */
+import MediaPlaceholder from '@/components/ui/MediaPlaceholder.astro';
+import SpringDivider    from '@/components/ui/SpringDivider.astro';
+
+interface MediaItem {
+  type: 'image' | 'video' | 'gif';
+  src: string;
+  alt: string;
+  caption?: string;
+  poster?: string;
+}
+
+interface Props {
+  /** Fotos de apoyo del producto. Array vacío → muestra placeholders. */
+  photos?: MediaItem[];
+  /** ID único para vincular el lightbox a esta galería. Usar product.id. */
+  galleryId: string;
+}
+
+const { photos = [], galleryId } = Astro.props;
+
+const hasPhotos = photos.length > 0;
+const count     = photos.length;
+
+// El primer ítem es "featured" solo cuando hay 3 o más fotos
+const useFeatured = count >= 3;
+---
+
+<!-- ── Sección galería ──────────────────────────────────────────── -->
+<section
+  class="section-pad bg-white border-t border-muted"
+  aria-labelledby={`gh-${galleryId}`}
+>
+  <div class="container-jc">
+
+    <!-- Encabezado -->
+    <div class="mb-8">
+      <p class="font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-primary mb-1">
+        Imágenes de referencia
+      </p>
+      <h2
+        id={`gh-${galleryId}`}
+        class="font-heading text-h3 font-bold uppercase text-foreground mb-4"
+      >
+        Fotos del producto
+      </h2>
+      <SpringDivider width={60} coils={5} class="opacity-30" />
+    </div>
+
+    {hasPhotos ? (
+
+      <!-- ── Grid real ─────────────────────────────────────────── -->
+      <div
+        class:list={[
+          'grid gap-3',
+          count === 1 && 'grid-cols-1',
+          count === 2 && 'grid-cols-2 auto-rows-[260px]',
+          count >= 3  && 'grid-cols-2 sm:grid-cols-3 auto-rows-[165px] sm:auto-rows-[205px]',
+        ]}
+        data-gallery-id={galleryId}
+      >
+        {photos.map((photo, i) => {
+          const featured = useFeatured && i === 0;
+          return (
+            <button
+              class:list={[
+                'group relative overflow-hidden rounded-xl bg-surface/60',
+                'cursor-zoom-in outline-none',
+                'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                'transition-shadow duration-300 hover:shadow-lg',
+                count === 1  && 'aspect-video w-full max-w-2xl',
+                featured     && 'col-span-2 row-span-2',
+              ]}
+              type="button"
+              data-lb-open={galleryId}
+              data-lb-index={i}
+              aria-label={`Ampliar: ${photo.alt}`}
+            >
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+
+              <!-- Overlay hover: fondo oscuro + ícono zoom -->
+              <div
+                class="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/25 transition-colors duration-300"
+                aria-hidden="true"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28" height="28"
+                  viewBox="0 0 24 24"
+                  fill="none" stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"
+                  class="opacity-0 group-hover:opacity-100 drop-shadow-xl transition-opacity duration-300"
+                >
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35M11 8v6M8 11h6"/>
+                </svg>
+              </div>
+
+              <!-- Caption al hover (slide-up) -->
+              {photo.caption && (
+                <div
+                  class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+                  aria-hidden="true"
+                >
+                  <p class="text-white text-[0.75rem] leading-snug">{photo.caption}</p>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+    ) : (
+
+      <!-- ── Estado placeholder ─────────────────────────────────── -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((n) => (
+          <MediaPlaceholder aspect="square" label={`Foto ${n}`} />
+        ))}
+      </div>
+
+    )}
+  </div>
+</section>
+
+<!-- ── Lightbox ────────────────────────────────────────────────── -->
+{hasPhotos && (
+  <div
+    id={`lb-${galleryId}`}
+    class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/92 p-4 sm:p-10"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Visor de imagen ampliada"
+  >
+    <!-- Botón cerrar -->
+    <button
+      type="button"
+      class="absolute top-4 right-4 text-white/60 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+      data-lb-close={galleryId}
+      aria-label="Cerrar visor"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="flex items-center gap-2 sm:gap-6 w-full max-w-5xl">
+
+      <!-- Flecha anterior -->
+      {count > 1 && (
+        <button
+          type="button"
+          class="shrink-0 text-white/50 hover:text-white p-2 sm:p-3 rounded-full hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+          data-lb-prev={galleryId}
+          aria-label="Imagen anterior"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+      )}
+
+      <!-- Imagen + caption + contador -->
+      <div class="flex-1 flex flex-col items-center gap-3 min-w-0">
+        <img
+          data-lb-img={galleryId}
+          src=""
+          alt=""
+          class="max-h-[75vh] max-w-full w-auto object-contain rounded-lg shadow-2xl"
+        />
+        <p data-lb-caption={galleryId} class="text-white/60 text-sm text-center hidden"></p>
+        <p data-lb-counter={galleryId} class="text-white/30 text-xs font-heading uppercase tracking-widest"></p>
+      </div>
+
+      <!-- Flecha siguiente -->
+      {count > 1 && (
+        <button
+          type="button"
+          class="shrink-0 text-white/50 hover:text-white p-2 sm:p-3 rounded-full hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+          data-lb-next={galleryId}
+          aria-label="Imagen siguiente"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      )}
+
+    </div>
+  </div>
+)}
+
+<!-- ── Script del lightbox ─────────────────────────────────────── -->
+<script define:vars={{ photos, galleryId }}>
+  (function () {
+    if (!photos || photos.length === 0) return;
+
+    var overlay   = document.getElementById('lb-' + galleryId);
+    if (!overlay) return;
+
+    var imgEl     = overlay.querySelector('[data-lb-img="'     + galleryId + '"]');
+    var captionEl = overlay.querySelector('[data-lb-caption="' + galleryId + '"]');
+    var counterEl = overlay.querySelector('[data-lb-counter="' + galleryId + '"]');
+    var prevBtn   = overlay.querySelector('[data-lb-prev="'    + galleryId + '"]');
+    var nextBtn   = overlay.querySelector('[data-lb-next="'    + galleryId + '"]');
+    var closeBtn  = overlay.querySelector('[data-lb-close="'   + galleryId + '"]');
+
+    var idx = 0;
+
+    function show(i) {
+      idx = ((i % photos.length) + photos.length) % photos.length;
+      var p = photos[idx];
+
+      if (imgEl)     { imgEl.src = p.src; imgEl.alt = p.alt || ''; }
+      if (captionEl) {
+        if (p.caption) {
+          captionEl.textContent = p.caption;
+          captionEl.classList.remove('hidden');
+        } else {
+          captionEl.classList.add('hidden');
+        }
+      }
+      if (counterEl) {
+        counterEl.textContent = photos.length > 1
+          ? (idx + 1) + ' / ' + photos.length
+          : '';
+      }
+    }
+
+    function open(i) {
+      show(i);
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function close() {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    // Triggers: botones dentro del grid de la galería
+    document.querySelectorAll('[data-lb-open="' + galleryId + '"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        open(parseInt(btn.getAttribute('data-lb-index') || '0', 10));
+      });
+    });
+
+    // Controles del lightbox
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (prevBtn)  prevBtn.addEventListener('click',  function () { show(idx - 1); });
+    if (nextBtn)  nextBtn.addEventListener('click',  function () { show(idx + 1); });
+
+    // Cerrar al hacer clic en el fondo del overlay
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) close();
+    });
+
+    // Teclado: Escape, ←, →
+    document.addEventListener('keydown', function (e) {
+      if (overlay.classList.contains('hidden')) return;
+      if (e.key === 'Escape')      { e.preventDefault(); close(); }
+      if (e.key === 'ArrowLeft')   { e.preventDefault(); show(idx - 1); }
+      if (e.key === 'ArrowRight')  { e.preventDefault(); show(idx + 1); }
+    });
+  })();
+</script>

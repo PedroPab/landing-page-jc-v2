@@ -5,7 +5,7 @@ sectionTitle: "Historia y trayectoria"
 publishedAt: 2024-01-01
 media:
   type: "image"
-  src: "/media/history/taller-espacio.jpg"
+  src: "/media/history/taller-espacio.png"
   alt: "El espacio de trabajo de JC Resortes, donde comenzó todo en 1999"
   caption: "Donde nació JC Resortes"
 ---

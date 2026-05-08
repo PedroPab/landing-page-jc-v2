@@ -1,0 +1,215 @@
+---
+interface Props {
+  href?: string;
+  class?: string;
+}
+const { href = "/catalogo", class: className = "" } = Astro.props;
+---
+
+<a
+  href={href}
+  class={`catalog-full-card group sm:col-span-2 ${className}`}
+  aria-label="Ver catálogo completo de resortes industriales"
+>
+  <div class="catalog-full-card__content">
+    <span class="catalog-full-card__badge">Catálogo</span>
+
+    <div class="catalog-full-card__text">
+      <p class="catalog-full-card__title">Ver catálogo completo</p>
+      <p class="catalog-full-card__desc">
+        Explora todos nuestros resortes industriales: compresión, tensión, torsión y formas especiales.
+      </p>
+    </div>
+
+    <span class="catalog-full-card__cta">
+      Explorar catálogo
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </svg>
+    </span>
+  </div>
+
+  <!-- Decorative grid of dots -->
+  <div class="catalog-full-card__deco" aria-hidden="true">
+    {
+      Array.from({ length: 24 }).map(() => (
+        <span class="catalog-full-card__dot" />
+      ))
+    }
+  </div>
+</a>
+
+<style>
+  @keyframes catalog-glow {
+    0%, 100% { box-shadow: 0 2px 12px rgba(66, 140, 13, 0.08); }
+    50%       { box-shadow: 0 4px 28px rgba(66, 140, 13, 0.22); }
+  }
+
+  @keyframes arrow-nudge {
+    0%, 60%, 100% { transform: translateX(0); }
+    80%           { transform: translateX(4px); }
+  }
+
+  .catalog-full-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: #fff;
+    border: 1.5px solid var(--color-primary, #428c0d);
+    padding: 2rem 2.5rem;
+    text-decoration: none;
+    min-height: 8rem;
+    animation: catalog-glow 3s ease-in-out infinite;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease,
+      background 0.25s ease, transform 0.2s ease;
+  }
+
+  .catalog-full-card:hover {
+    background: #f5faf0;
+    box-shadow: 0 6px 32px rgba(66, 140, 13, 0.22);
+    border-color: var(--color-primary, #428c0d);
+    transform: translateY(-2px);
+    animation-play-state: paused;
+  }
+
+  /* Left accent line */
+  .catalog-full-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: var(--color-primary, #428c0d);
+    border-radius: 0.75rem 0 0 0.75rem;
+  }
+
+  /* Content row */
+  .catalog-full-card__content {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .catalog-full-card__badge {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-primary, #428c0d);
+    background: rgba(66, 140, 13, 0.08);
+    border: 1px solid rgba(66, 140, 13, 0.25);
+    border-radius: 2rem;
+    padding: 0.2rem 0.7rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .catalog-full-card__text {
+    flex: 1;
+    min-width: 10rem;
+  }
+
+  .catalog-full-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-foreground, #111);
+    margin: 0 0 0.25rem;
+    line-height: 1.2;
+  }
+
+  .catalog-full-card__desc {
+    font-size: 0.875rem;
+    color: var(--color-neutral, #555);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .catalog-full-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: var(--color-primary, #428c0d);
+    padding: 0.75rem 1.35rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: gap 0.2s ease, background 0.2s ease;
+  }
+
+  .catalog-full-card__cta svg {
+    animation: arrow-nudge 2s ease-in-out infinite;
+  }
+
+  .catalog-full-card:hover .catalog-full-card__cta {
+    gap: 0.8rem;
+    background: #3a7b0b;
+  }
+
+  .catalog-full-card:hover .catalog-full-card__cta svg {
+    animation: none;
+    transform: translateX(4px);
+  }
+
+  /* Decorative dot grid (right side) */
+  .catalog-full-card__deco {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.35rem;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .catalog-full-card__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-primary, #428c0d);
+  }
+
+  @media (max-width: 480px) {
+    .catalog-full-card {
+      padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+      min-height: 6.5rem;
+    }
+    .catalog-full-card__content {
+      gap: 0.75rem;
+    }
+    .catalog-full-card__deco {
+      display: none;
+    }
+  }
+</style>
