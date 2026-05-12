@@ -4,7 +4,8 @@
  * Each item can be an image, video, or gif.
  * Shows a MediaPlaceholder for missing files during development.
  */
-import MediaPlaceholder from "@/components/ui/MediaPlaceholder.astro";
+import { Image } from 'astro:assets';
+import { resolveImage } from '@/lib/images';
 import VideoBlock from "@/components/ui/VideoBlock.astro";
 
 interface MediaItem {
@@ -66,13 +67,22 @@ const itemClasses: Record<string, string> = {
               <div
                 class={`relative overflow-hidden rounded-lg bg-surface ${layout === "strip" ? "aspect-video" : isFirst && layout === "featured" ? "aspect-video" : "aspect-square"}`}
               >
-                <img
-                  src={item.src}
-                  alt={item.alt}
-                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-[1.03]"
-                  loading={isFirst ? "eager" : "lazy"}
-                  decoding="async"
-                />
+                {resolveImage(item.src) ? (
+                  <Image
+                    src={resolveImage(item.src)!}
+                    alt={item.alt}
+                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+                    loading={isFirst ? "eager" : "lazy"}
+                  />
+                ) : (
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+                    loading={isFirst ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                )}
               </div>
               {item.caption && (
                 <figcaption class="text-[0.7rem] text-neutral leading-snug px-1">

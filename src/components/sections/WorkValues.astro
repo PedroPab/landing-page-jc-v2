@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import resortesEnMano from '@/assets/media/workshop/resortes-en-mano.jpg';
 import SectionMedia from "@/components/ui/SectionMedia.astro";
 
 type MediaItem = {
@@ -106,12 +108,11 @@ const { data } = Astro.props;
           </p>
         </div>
         <div class="mt-auto relative h-80 overflow-hidden">
-          <img
-            src="/media/workshop/resortes-en-mano.jpg"
+          <Image
+            src={resortesEnMano}
             alt="Máquina de fabricación de resortes industriales en JC Resortes"
             class="w-full h-full object-cover object-center"
             loading="lazy"
-            decoding="async"
           />
         </div>
       </article>

@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import { resolveImage } from '@/lib/images';
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import SpringDivider from "@/components/ui/SpringDivider.astro";
 
@@ -62,15 +64,26 @@ const autoSpeed = 500;
                   <div class="jc-client-logo-wrap">
                     {client.logo?.src ? (
                       <>
-                        <img
-                          src={client.logo.src}
-                          alt={isClone ? "" : client.logo.alt}
-                          class="jc-client-logo"
-                          loading={i < clients.length ? "eager" : "lazy"}
-                          decoding="async"
-                          draggable="false"
-                          onerror="this.hidden=true;this.nextElementSibling.hidden=false"
-                        />
+                        {resolveImage(client.logo.src) ? (
+                          <Image
+                            src={resolveImage(client.logo.src)!}
+                            alt={isClone ? "" : client.logo.alt}
+                            class="jc-client-logo"
+                            loading={i < clients.length ? "eager" : "lazy"}
+                            draggable="false"
+                            onerror="this.hidden=true;this.nextElementSibling.hidden=false"
+                          />
+                        ) : (
+                          <img
+                            src={client.logo.src}
+                            alt={isClone ? "" : client.logo.alt}
+                            class="jc-client-logo"
+                            loading={i < clients.length ? "eager" : "lazy"}
+                            decoding="async"
+                            draggable="false"
+                            onerror="this.hidden=true;this.nextElementSibling.hidden=false"
+                          />
+                        )}
                         <span
                           class="jc-client-initial"
                           hidden

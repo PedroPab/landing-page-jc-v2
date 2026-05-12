@@ -11,6 +11,8 @@
  *  - 2 fotos  → dos columnas iguales
  *  - 3+ fotos → primera foto destacada (2 cols × 2 rows), resto en celdas regulares
  */
+import { Image, getImage } from 'astro:assets';
+import { resolveImage } from '@/lib/images';
 import MediaPlaceholder from '@/components/ui/MediaPlaceholder.astro';
 import SpringDivider    from '@/components/ui/SpringDivider.astro';
 
@@ -36,6 +38,17 @@ const count     = photos.length;
 
 // El primer ítem es "featured" solo cuando hay 3 o más fotos
 const useFeatured = count >= 3;
+
+// Pre-resolve each photo's final build URL so the lightbox JS receives
+// the correct hashed path instead of the raw /media/... content path.
+const resolvedPhotos = await Promise.all(
+  photos.map(async (photo) => {
+    const meta = resolveImage(photo.src);
+    if (!meta) return photo;
+    const processed = await getImage({ src: meta });
+    return { ...photo, src: processed.src };
+  }),
+);
 ---
 
 <!-- ── Sección galería ──────────────────────────────────────────── -->
@@ -88,13 +101,22 @@ const useFeatured = count >= 3;
               data-lb-index={i}
               aria-label={`Ampliar: ${photo.alt}`}
             >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-              />
+              {resolveImage(photo.src) ? (
+                <Image
+                  src={resolveImage(photo.src)!}
+                  alt={photo.alt}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              ) : (
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              )}
 
               <!-- Overlay hover: fondo oscuro + ícono zoom -->
               <div
@@ -216,7 +238,7 @@ const useFeatured = count >= 3;
 )}
 
 <!-- ── Script del lightbox ─────────────────────────────────────── -->
-<script define:vars={{ photos, galleryId }}>
+<script define:vars={{ photos: resolvedPhotos, galleryId }}>
   (function () {
     if (!photos || photos.length === 0) return;
 
