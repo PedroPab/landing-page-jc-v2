@@ -251,6 +251,7 @@ const productPages = defineCollection({
       description: z.string(),
       applications: z.array(z.string()),
       materials: z.array(z.string()),
+      finishes: z.array(z.string()).optional(),
       notes: z.string().optional(),
       image: mediaItemSchema.optional(),
       // Support photos shown in the product detail page gallery

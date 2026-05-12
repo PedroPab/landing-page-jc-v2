@@ -36,6 +36,7 @@ interface ProductItem {
   description: string;
   applications: string[];
   materials: string[];
+  finishes?: string[];
   notes?: string;
   photos?: MediaItem[];
 }
@@ -272,6 +273,30 @@ const breadcrumbSchema = {
                 }
               </ul>
             </div>
+
+            <!-- Finishes -->
+            {product.finishes && product.finishes.length > 0 && (
+              <div>
+                <h3
+                  class="font-heading text-[0.6875rem] font-bold uppercase tracking-wider text-primary mb-3"
+                >
+                  Acabados disponibles
+                </h3>
+                <ul class="space-y-2">
+                  {
+                    product.finishes.map((finish) => (
+                      <li class="flex items-start gap-2 text-[0.9375rem] text-foreground/80">
+                        <span
+                          class="mt-2 shrink-0 w-1.5 h-1.5 rounded-full bg-primary/40"
+                          aria-hidden="true"
+                        />
+                        {finish}
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            )}
 
             <!-- Notes -->
             {

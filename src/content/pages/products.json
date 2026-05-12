@@ -5,87 +5,21 @@
     "subtitle": "Fabricamos resortes industriales a la medida según especificación técnica, muestra física o necesidad del cliente. A continuación, los principales tipos de resortes y piezas especiales que producimos.",
     "items": [
       {
-        "id": "resorte-conico",
-        "name": "Resortes cónicos",
-        "description": "Resortes diseñados con forma cónica para aplicaciones que requieren compresión progresiva, espacio reducido o características de amortiguación específicas. Son ideales para sistemas de suspensión, amortiguadores y mecanismos que necesitan una respuesta variable a la carga.",
-        "applications": [
-          "Suspensiones industriales",
-          "Amortiguadores",
-          "Sistemas de absorción de impacto",
-          "Equipos agrícolas",
-          "Maquinaria pesada",
-          "Sistemas de retorno progresivo"
-        ],
-        "materials": [
-          "Acero al carbono",
-          "Acero para resortes",
-          "Acero inoxidable según aplicación"
-        ],
-        "notes": "Se recomienda definir diámetro del alambre, diámetro mayor y menor, largo total, número de vueltas y nivel de carga requerido para un diseño óptimo.",
-        "image": {
-          "type": "image",
-          "src": "/media/products/resorte-conico.jpg",
-          "alt": "Resorte cónico industrial fabricado por JC Resortes"
-        },
-        "photos": [
-          {
-            "type": "image",
-            "src": "/media/products/resorte-conico-1.png",
-            "alt": "Resorte cónico fabricado por JC Resortes"
-          }
-        ]
-      },
-      {
-        "id": "resorte-torsion-doble",
-        "name": "Resortes de torsión doble",
-        "description": "Resortes de torsión con dos brazos o patas diseñados para aplicaciones que requieren un movimiento de giro o torque en ambos sentidos. Son ideales para mecanismos de cierre, bisagras industriales y sistemas de accionamiento que necesitan una respuesta equilibrada en ambos lados.",
-        "applications": [
-          "Bisagras industriales",
-          "Mecanismos de cierre",
-          "Sistemas de accionamiento",
-          "Palancas",
-          "Tapas",
-          "Equipos mecánicos"
-        ],
-        "materials": [
-          "Acero al carbono",
-          "Acero para resortes",
-          "Acero inoxidable según requerimiento"
-        ],
-        "notes": "Se fabrican con brazos, patas, ángulos y sentido de enrollado según el montaje específico del cliente.",
-        "image": {
-          "type": "image",
-          "src": "/media/products/resorte-torsion-doble.png",
-          "alt": "Resorte de torsión doble industrial fabricado por JC Resortes"
-        },
-        "photos": [
-          {
-            "type": "image",
-            "src": "/media/products/resorte-torsion-doble.png",
-            "alt": "Resorte de torsión doble fabricado por JC Resortes"
-          },
-          {
-            "type": "image",
-            "src": "/media/products/resorte-torsion-doble-02.png",
-            "alt": "Resorte de torsión doble fabricado por JC Resortes"
-          }
-        ]
-      },
-      {
         "id": "resortes-bandas-motos",
         "name": "Resortes para bandas de motos",
-        "description": "Resortes diseñados para sistemas de tensión, retorno o ajuste en mecanismos asociados a bandas, transmisión y componentes de motocicletas. Se fabrican según muestra, medida o requerimiento específico.",
+        "description": "Resorte de tensión fabricado en acero 1070 con acabado natural. Cuenta con ganchos en sus extremos y está diseñado para aplicaciones en motos, especialmente en sistemas de bandas, retorno o sujeción.",
         "applications": [
           "Motocicletas",
-          "Bandas y sistemas de tensión",
+          "Sistemas de bandas y transmisión",
           "Mecanismos de retorno",
-          "Repuestos personalizados",
-          "Sistemas mecánicos pequeños"
+          "Sistemas de sujeción",
+          "Repuestos personalizados"
         ],
         "materials": [
-          "Acero al carbono",
-          "Acero para resortes",
-          "Acero inoxidable según aplicación"
+          "Acero 1070"
+        ],
+        "finishes": [
+          "Natural"
         ],
         "notes": "Se recomienda definir diámetro del alambre, largo total, tipo de gancho, distancia entre puntos de anclaje y nivel de tensión requerido.",
         "image": {
@@ -109,7 +43,7 @@
       {
         "id": "tension-gancho-movible",
         "name": "Resortes de tensión con gancho movible",
-        "description": "Resortes que trabajan bajo carga de tracción axial. Son utilizados cuando se necesita fuerza de retorno, sujeción o recuperación de posición entre dos puntos de anclaje. El gancho puede adaptarse según el montaje.",
+        "description": "Resorte helicoidal de tensión fabricado en acero 1070 con acabado natural. Tiene cuerpo alargado y ganchos en los extremos, uno de ellos con función móvil. Ideal para mecanismos que requieren fuerza de tracción, retorno o ajuste.",
         "applications": [
           "Mecanismos de apertura y cierre",
           "Puertas y compuertas",
@@ -119,9 +53,10 @@
           "Sistemas de retorno"
         ],
         "materials": [
-          "Acero al carbono",
-          "Acero inoxidable",
-          "Acero para resortes"
+          "Acero 1070"
+        ],
+        "finishes": [
+          "Natural"
         ],
         "notes": "Puede fabricarse con gancho estándar, gancho movible, argolla o extremos personalizados según la necesidad del cliente.",
         "image": {
@@ -138,9 +73,9 @@
         ]
       },
       {
-        "id": "torsion",
-        "name": "Resortes de torsión",
-        "description": "Resortes diseñados para almacenar y liberar energía rotacional. Trabajan mediante giro o torque, siendo ideales para mecanismos que requieren movimiento controlado, retorno angular o cierre automático.",
+        "id": "resorte-torsion-doble",
+        "name": "Resortes de torsión doble",
+        "description": "Resorte fabricado en acero 1070 con acabado natural. Presenta dos espirales laterales y brazos extendidos con puntas curvas hacia abajo. Diseñado para trabajar por torsión y generar fuerza desde ambos puntos de apoyo.",
         "applications": [
           "Bisagras industriales",
           "Mecanismos de cierre",
@@ -150,28 +85,66 @@
           "Equipos mecánicos"
         ],
         "materials": [
-          "Acero al carbono",
-          "Acero para resortes",
-          "Acero inoxidable según requerimiento"
+          "Acero 1070"
+        ],
+        "finishes": [
+          "Natural"
         ],
         "notes": "Se fabrican con brazos, patas, ángulos y sentido de enrollado según el montaje específico del cliente.",
         "image": {
           "type": "image",
-          "src": "/media/products/resorte-torsion.jpg",
-          "alt": "Resorte de torsión industrial fabricado por JC Resortes"
+          "src": "/media/products/resorte-torsion-doble.png",
+          "alt": "Resorte de torsión doble industrial fabricado por JC Resortes"
         },
         "photos": [
           {
             "type": "image",
-            "src": "/media/products/resorte-torsion.png",
-            "alt": "Resorte de torsión fabricado por JC Resortes"
+            "src": "/media/products/resorte-torsion-doble.png",
+            "alt": "Resorte de torsión doble fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorte-torsion-doble-02.png",
+            "alt": "Resorte de torsión doble fabricado por JC Resortes"
           }
-]
+        ]
+      },
+      {
+        "id": "resorte-conico",
+        "name": "Resortes cónicos de compresión",
+        "description": "Resorte de compresión con forma cónica fabricado en acero inoxidable. Sus espiras tienen diámetros progresivos, lo que permite una compresión más compacta y una adaptación especial al espacio de trabajo con menor altura de cierre.",
+        "applications": [
+          "Suspensiones industriales",
+          "Amortiguadores",
+          "Sistemas de absorción de impacto",
+          "Equipos agrícolas",
+          "Maquinaria pesada",
+          "Sistemas de retorno progresivo"
+        ],
+        "materials": [
+          "Acero inoxidable"
+        ],
+        "finishes": [
+          "Natural / metálico"
+        ],
+        "notes": "Se recomienda definir diámetro del alambre, diámetro mayor y menor, largo total, número de vueltas y nivel de carga requerido para un diseño óptimo.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorte-conico.jpg",
+          "alt": "Resorte cónico de compresión fabricado por JC Resortes"
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-conico-1.png",
+            "alt": "Resorte cónico de compresión fabricado por JC Resortes"
+          }
+        ]
       },
       {
         "id": "formas-especiales",
-        "name": "Formas especiales, clips y grapas",
-        "description": "Piezas especiales fabricadas en alambre o acero según diseño, muestra o necesidad funcional. Incluye clips, grapas, seguros, ganchos, abrazaderas, retenedores y formas no estándar.",
+        "name": "Formas especiales",
+        "description": "Piezas fabricadas en acero inoxidable o acero 302, con posibilidad de acabado pavonado. Son desarrollos personalizados con dobleces tipo S, curvas, aros y geometrías especiales según la necesidad del cliente. Incluye clips, grapas, seguros, ganchos, abrazaderas y retenedores.",
         "applications": [
           "Ensambles industriales",
           "Sistemas de sujeción",
@@ -182,10 +155,12 @@
           "Piezas personalizadas"
         ],
         "materials": [
-          "Acero al carbono",
           "Acero inoxidable",
-          "Alambre acerado",
-          "Material especial según función"
+          "Acero 302"
+        ],
+        "finishes": [
+          "Pavonado",
+          "Natural"
         ],
         "notes": "Ideal para desarrollos personalizados. Se recomienda entregar muestra física, plano, medidas generales, función de la pieza y cantidad requerida.",
         "image": {
@@ -197,24 +172,59 @@
           {
             "type": "image",
             "src": "/media/products/formas-especiales-01.png",
-            "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+            "alt": "Formas especiales en alambre fabricadas por JC Resortes"
           },
           {
             "type": "image",
             "src": "/media/products/formas-especiales-02.png",
-            "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+            "alt": "Formas especiales en alambre fabricadas por JC Resortes"
           },
           {
             "type": "image",
             "src": "/media/products/formas-especiales-03.png",
-            "alt": "Formas especiales en alambre, clips y grapas fabricadas por JC Resortes"
+            "alt": "Formas especiales en alambre fabricadas por JC Resortes"
+          }
+        ]
+      },
+      {
+        "id": "resorteria-especializada",
+        "name": "Resortería especializada",
+        "description": "Resortes y piezas no estándar fabricadas según diseño, función o requerimiento técnico específico. Pueden incluir alambres doblados, resortes de torsión con geometrías complejas, calibres específicos y acabados personalizados pavonados o naturales según la referencia.",
+        "applications": [
+          "Mecanismos de precisión",
+          "Industria automotriz",
+          "Electrodomésticos",
+          "Equipos médicos",
+          "Dispositivos electrónicos",
+          "Desarrollos a medida"
+        ],
+        "materials": [
+          "Acero inoxidable",
+          "Acero 1070",
+          "Acero especial según requerimiento"
+        ],
+        "finishes": [
+          "Pavonado",
+          "Natural"
+        ],
+        "notes": "Resortes no estándar fabricados según diseño del cliente. Para cotizar se requiere plano técnico, muestra física o descripción detallada de función, calibre y geometría.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorte-torsion.jpg",
+          "alt": "Resortería especializada fabricada por JC Resortes"
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorte-torsion.png",
+            "alt": "Resortería especializada fabricada por JC Resortes"
           }
         ]
       },
       {
         "id": "resorteria-pesada",
         "name": "Resortería pesada",
-        "description": "Resortes de alta resistencia fabricados para soportar cargas exigentes, vibración, impacto o condiciones de trabajo severas. Son utilizados en maquinaria pesada, minería, construcción e industria.",
+        "description": "Línea orientada a resortes de mayor resistencia, tamaño o carga. Aplica para maquinaria, procesos industriales o necesidades donde se requiere alta fuerza, durabilidad y fabricación a medida. Soportan cargas exigentes, vibración, impacto o condiciones de trabajo severas.",
         "applications": [
           "Maquinaria vibradora",
           "Equipos mineros",
@@ -229,6 +239,10 @@
           "Acero al carbono de alta resistencia",
           "Acero especial según carga",
           "Material tratado térmicamente"
+        ],
+        "finishes": [
+          "Natural",
+          "Tratamiento térmico según requerimiento"
         ],
         "notes": "Disponible para desarrollos de gran diámetro, alta carga y condiciones industriales exigentes. Puede incluir tratamiento térmico según el tipo de trabajo requerido.",
         "image": {
