@@ -148,12 +148,23 @@ const base =
 </style>
 
 <script>
-  import { createViewerBase, loadProductMesh } from "@/lib/spring-viewer";
-  import * as THREE from "three";
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document
     .querySelectorAll<HTMLCanvasElement>("[data-card-spring]")
-    .forEach((canvas) => {
+    .forEach(async (canvas) => {
+      const loaderEl = canvas.previousElementSibling as HTMLElement | null;
+      if (reducedMotion) {
+        loaderEl?.classList.add("hidden");
+        return;
+      }
+
+      // Lazy-load Three.js + viewer (deferred chunk — improves initial page load)
+      const [{ createViewerBase, loadProductMesh }, THREE] = await Promise.all([
+        import("@/lib/spring-viewer"),
+        import("three"),
+      ]);
+
       const productId = canvas.dataset.productId ?? "compresion";
 
       const { scene, camera, renderer, resize } = createViewerBase(canvas, {
@@ -163,7 +174,6 @@ const base =
       });
 
       let mesh: THREE.Mesh | null = null;
-      const loaderEl = canvas.previousElementSibling as HTMLElement | null;
 
       // lowDetail=true: reduces vertices ~75% for small card preview
       loadProductMesh(

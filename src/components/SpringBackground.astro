@@ -27,260 +27,204 @@ const { fogColor = "#1a1a18" } = Astro.props;
 </style>
 
 <script>
-  import * as THREE from "three";
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Lazy-load Three.js to improve initial page load (deferred chunk)
+  const THREE = await import("three");
 
   function initSpringBackground(canvas: HTMLCanvasElement) {
-    const fogColorStr = canvas.dataset.fogColor ?? "#1a1a18";
-    const fogColorHex = parseInt(fogColorStr.replace("#", ""), 16);
+      const fogColorStr = canvas.dataset.fogColor ?? "#1a1a18";
+      const fogColorHex = parseInt(fogColorStr.replace("#", ""), 16);
 
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(fogColorHex, 0.018);
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(fogColorHex, 0.018);
 
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 18);
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      camera.position.set(0, 0, 18);
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: window.devicePixelRatio < 2,
-      powerPreference: "high-performance",
-    });
-
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-    // Lights — warm top, dark green bottom for industrial atmosphere
-    const ambient = new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.0);
-    scene.add(ambient);
-
-    const dirLight = new THREE.DirectionalLight(0xd8f0c8, 1.5);
-    dirLight.position.set(6, 8, 10);
-    scene.add(dirLight);
-
-    const accentLight = new THREE.DirectionalLight(0x428c0d, 0.8);
-    accentLight.position.set(-8, -4, 5);
-    scene.add(accentLight);
-
-    const group = new THREE.Group();
-    scene.add(group);
-
-    type SpringParams = {
-      radius?: number;
-      height?: number;
-      turns?: number;
-      segments?: number;
-      tube?: number;
-      radialSegments?: number;
-    };
-
-    function makeSpring({
-      radius = 0.45,
-      height = 4,
-      turns = 9,
-      segments = 130,
-      tube = 0.08,
-      radialSegments = 10,
-    }: SpringParams) {
-      const points: THREE.Vector3[] = [];
-      for (let i = 0; i <= segments; i++) {
-        const t = i / segments;
-        const angle = t * Math.PI * 2 * turns;
-        points.push(
-          new THREE.Vector3(
-            Math.cos(angle) * radius,
-            (t - 0.5) * height,
-            Math.sin(angle) * radius,
-          ),
-        );
-      }
-      const curve = new THREE.CatmullRomCurve3(points);
-      return new THREE.TubeGeometry(
-        curve,
-        segments,
-        tube,
-        radialSegments,
-        false,
-      );
-    }
-
-    // Three spring variants — industrial proportions
-    const geometries = [
-      makeSpring({ radius: 0.38, height: 3.2, turns: 8 }),
-      makeSpring({ radius: 0.52, height: 4.6, turns: 10 }),
-      makeSpring({ radius: 0.28, height: 2.6, turns: 7 }),
-    ];
-
-    // Brand-matched materials: soft green, steel-green, near-white steel
-    const materials = [
-      new THREE.MeshStandardMaterial({
-        color: 0x7ab340, // soft brand green
-        metalness: 0.65,
-        roughness: 0.3,
-        transparent: true,
-        opacity: 0.62,
-      }),
-      new THREE.MeshStandardMaterial({
-        color: 0xbac9a8, // metallic steel-green
-        metalness: 0.78,
-        roughness: 0.25,
-        transparent: true,
-        opacity: 0.5,
-      }),
-      new THREE.MeshStandardMaterial({
-        color: 0xdce8d0, // near-white steel highlight
-        metalness: 0.35,
-        roughness: 0.5,
-        transparent: true,
-        opacity: 0.3,
-      }),
-    ];
-
-    type SpringItem = {
-      mesh: THREE.Mesh;
-      baseX: number;
-      baseY: number;
-      baseScale: number; // uniform base scale
-      phase: number; // float phase
-      speed: number; // float speed
-      squishPhase: number; // stretch/compress phase
-      squishSpeed: number; // stretch/compress speed
-      squishAmp: number; // how much it deforms (fraction of baseScale)
-    };
-
-    const items: SpringItem[] = [];
-    const COUNT = 7;
-
-    for (let i = 0; i < COUNT; i++) {
-      const mesh = new THREE.Mesh(
-        geometries[i % geometries.length],
-        materials[i % materials.length].clone(),
-      );
-      mesh.rotation.set(
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-      );
-      const baseScale = THREE.MathUtils.randFloat(0.7, 1.9);
-      mesh.scale.setScalar(baseScale);
-
-      group.add(mesh);
-      items.push({
-        mesh,
-        baseX: 0,
-        baseY: 0,
-        baseScale,
-        phase: Math.random() * Math.PI * 2,
-        speed: THREE.MathUtils.randFloat(0.22, 0.65),
-        squishPhase: Math.random() * Math.PI * 2,
-        squishSpeed: THREE.MathUtils.randFloat(0.4, 1.1),
-        squishAmp: THREE.MathUtils.randFloat(0.28, 0.52),
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: window.devicePixelRatio < 2,
+        powerPreference: "high-performance",
       });
-    }
 
-    const clock = new THREE.Clock();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    function resize() {
-      const parent = canvas.parentElement;
-      const w = parent?.clientWidth ?? window.innerWidth;
-      const h = parent?.clientHeight ?? window.innerHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
+      // Lights — warm top, dark green bottom for industrial atmosphere
+      const ambient = new THREE.HemisphereLight(0xf0f8e8, 0x0d1a08, 1.0);
+      scene.add(ambient);
 
-    // Distribute springs to fill the real visible frustum at the current aspect ratio.
-    // Called once after the first resize() so camera.aspect is accurate.
-    function distributeItems() {
-      const halfH =
-        Math.tan((camera.fov / 2) * (Math.PI / 180)) * camera.position.z;
-      const halfW = halfH * camera.aspect;
-      for (const item of items) {
-        const x = THREE.MathUtils.randFloatSpread(halfW * 2.6);
-        const y = THREE.MathUtils.randFloatSpread(halfH * 2.4);
-        const z = THREE.MathUtils.randFloat(-8, 6);
-        item.baseX = x;
-        item.baseY = y;
-        item.mesh.position.set(x, y, z);
-      }
-    }
+      const dirLight = new THREE.DirectionalLight(0xd8f0c8, 1.5);
+      dirLight.position.set(6, 8, 10);
+      scene.add(dirLight);
 
-    // ── RAF loop (start/stop controlled by IntersectionObserver) ──────────────
-    let rafId = 0;
+      const accentLight = new THREE.DirectionalLight(0x428c0d, 0.8);
+      accentLight.position.set(-8, -4, 5);
+      scene.add(accentLight);
 
-    function startLoop() {
-      if (rafId) return;
-      function tick() {
-        rafId = requestAnimationFrame(tick);
-        if (document.hidden) return;
+      const group = new THREE.Group();
+      scene.add(group);
 
-        const t = clock.getElapsedTime();
+      type SpringParams = {
+        radius?: number;
+        height?: number;
+        turns?: number;
+        segments?: number;
+        tube?: number;
+        radialSegments?: number;
+      };
 
-        group.rotation.y = Math.sin(t * 0.07) * 0.1;
-        group.rotation.x = Math.cos(t * 0.05) * 0.04;
-
-        for (const item of items) {
-          item.mesh.position.y =
-            item.baseY + Math.sin(t * item.speed + item.phase) * 0.25;
-          item.mesh.position.x =
-            item.baseX + Math.cos(t * item.speed + item.phase) * 0.12;
-
-          const squish = Math.sin(t * item.squishSpeed + item.squishPhase);
-          const yScale = item.baseScale * (1 + squish * item.squishAmp);
-          const radialScale =
-            item.baseScale * (1 - squish * item.squishAmp * 0.2);
-          item.mesh.scale.set(radialScale, yScale, radialScale);
-
-          item.mesh.rotation.y += 0.0018;
-          item.mesh.rotation.x += 0.001;
+      function makeSpring({
+        radius = 0.45,
+        height = 4,
+        turns = 9,
+        segments = 130,
+        tube = 0.08,
+        radialSegments = 10,
+      }: SpringParams) {
+        const points: THREE.Vector3[] = [];
+        for (let i = 0; i <= segments; i++) {
+          const t = i / segments;
+          const angle = t * Math.PI * 2 * turns;
+          points.push(
+            new THREE.Vector3(
+              Math.cos(angle) * radius,
+              (t - 0.5) * height,
+              Math.sin(angle) * radius,
+            ),
+          );
         }
-
-        renderer.render(scene, camera);
+        const curve = new THREE.CatmullRomCurve3(points);
+        return new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
       }
-      rafId = requestAnimationFrame(tick);
-    }
 
-    function stopLoop() {
-      cancelAnimationFrame(rafId);
-      rafId = 0;
-    }
+      // Mobile: fewer segments to reduce GPU workload
+      const segMul = isMobile ? 0.5 : 1;
+      const geometries = [
+        makeSpring({ radius: 0.38, height: 3.2, turns: 8,  segments: Math.ceil(130 * segMul), radialSegments: isMobile ? 6 : 10 }),
+        makeSpring({ radius: 0.52, height: 4.6, turns: 10, segments: Math.ceil(130 * segMul), radialSegments: isMobile ? 6 : 10 }),
+        makeSpring({ radius: 0.28, height: 2.6, turns: 7,  segments: Math.ceil(130 * segMul), radialSegments: isMobile ? 6 : 10 }),
+      ];
 
-    // ── Resize — ResizeObserver only (window.resize is redundant) ──────────
-    const resizeObserver = new ResizeObserver(resize);
-    if (canvas.parentElement) {
-      resizeObserver.observe(canvas.parentElement);
-    }
+      const materials = [
+        new THREE.MeshStandardMaterial({ color: 0x7ab340, metalness: 0.65, roughness: 0.3,  transparent: true, opacity: 0.62 }),
+        new THREE.MeshStandardMaterial({ color: 0xbac9a8, metalness: 0.78, roughness: 0.25, transparent: true, opacity: 0.5  }),
+        new THREE.MeshStandardMaterial({ color: 0xdce8d0, metalness: 0.35, roughness: 0.5,  transparent: true, opacity: 0.3  }),
+      ];
 
-    // ── IntersectionObserver: pause render when off-screen ─────────────────
-    const io = new IntersectionObserver(
-      ([entry]) => (entry.isIntersecting ? startLoop() : stopLoop()),
-      { threshold: 0 },
-    );
-    if (canvas.parentElement) io.observe(canvas.parentElement);
+      type SpringItem = {
+        mesh: THREE.Mesh;
+        baseX: number; baseY: number;
+        baseScale: number;
+        phase: number; speed: number;
+        squishPhase: number; squishSpeed: number; squishAmp: number;
+      };
 
-    // ── Cleanup on page unload ──────────────────────────────────────────────
-    window.addEventListener(
-      "pagehide",
-      () => {
+      const items: SpringItem[] = [];
+      // Mobile: fewer spring objects to reduce draw calls and GPU load
+      const COUNT = isMobile ? 4 : 7;
+      for (let i = 0; i < COUNT; i++) {
+        const mesh = new THREE.Mesh(
+          geometries[i % geometries.length],
+          materials[i % materials.length].clone(),
+        );
+        mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+        const baseScale = THREE.MathUtils.randFloat(0.7, 1.9);
+        mesh.scale.setScalar(baseScale);
+        group.add(mesh);
+        items.push({
+          mesh, baseX: 0, baseY: 0, baseScale,
+          phase: Math.random() * Math.PI * 2,
+          speed: THREE.MathUtils.randFloat(0.22, 0.65),
+          squishPhase: Math.random() * Math.PI * 2,
+          squishSpeed: THREE.MathUtils.randFloat(0.4, 1.1),
+          squishAmp: THREE.MathUtils.randFloat(0.28, 0.52),
+        });
+      }
+
+      const clock = new THREE.Clock();
+
+      function resize() {
+        const parent = canvas.parentElement;
+        const w = parent?.clientWidth ?? window.innerWidth;
+        const h = parent?.clientHeight ?? window.innerHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+
+      function distributeItems() {
+        const halfH = Math.tan((camera.fov / 2) * (Math.PI / 180)) * camera.position.z;
+        const halfW = halfH * camera.aspect;
+        for (const item of items) {
+          item.baseX = THREE.MathUtils.randFloatSpread(halfW * 2.6);
+          item.baseY = THREE.MathUtils.randFloatSpread(halfH * 2.4);
+          item.mesh.position.set(item.baseX, item.baseY, THREE.MathUtils.randFloat(-8, 6));
+        }
+      }
+
+      let rafId = 0;
+
+      function startLoop() {
+        if (rafId) return;
+        function tick() {
+          rafId = requestAnimationFrame(tick);
+          if (document.hidden) return;
+          const t = clock.getElapsedTime();
+          group.rotation.y = Math.sin(t * 0.07) * 0.1;
+          group.rotation.x = Math.cos(t * 0.05) * 0.04;
+          for (const item of items) {
+            item.mesh.position.y = item.baseY + Math.sin(t * item.speed + item.phase) * 0.25;
+            item.mesh.position.x = item.baseX + Math.cos(t * item.speed + item.phase) * 0.12;
+            const squish = Math.sin(t * item.squishSpeed + item.squishPhase);
+            item.mesh.scale.set(
+              item.baseScale * (1 - squish * item.squishAmp * 0.2),
+              item.baseScale * (1 + squish * item.squishAmp),
+              item.baseScale * (1 - squish * item.squishAmp * 0.2),
+            );
+            item.mesh.rotation.y += 0.0018;
+            item.mesh.rotation.x += 0.001;
+          }
+          renderer.render(scene, camera);
+        }
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function stopLoop() {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+
+      const resizeObserver = new ResizeObserver(resize);
+      if (canvas.parentElement) resizeObserver.observe(canvas.parentElement);
+
+      const io = new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? startLoop() : stopLoop()),
+        { threshold: 0 },
+      );
+      if (canvas.parentElement) io.observe(canvas.parentElement);
+
+      window.addEventListener("pagehide", () => {
         stopLoop();
         resizeObserver.disconnect();
         io.disconnect();
         geometries.forEach((g) => g.dispose());
-        items.forEach((item) =>
-          (item.mesh.material as THREE.Material).dispose(),
-        );
+        items.forEach((item) => (item.mesh.material as THREE.Material).dispose());
         materials.forEach((m) => m.dispose());
         renderer.forceContextLoss();
         renderer.dispose();
-      },
-      { once: true },
-    );
+      }, { once: true });
 
-    resize();
-    distributeItems(); // position springs after aspect ratio is known
+      resize();
+      distributeItems();
+    }
+
+  if (!reducedMotion) {
+    document
+      .querySelectorAll<HTMLCanvasElement>("[data-spring-background]")
+      .forEach(initSpringBackground);
   }
-
-  // Initialize all spring background canvases on the page
-  document
-    .querySelectorAll<HTMLCanvasElement>("[data-spring-background]")
-    .forEach(initSpringBackground);
 </script>

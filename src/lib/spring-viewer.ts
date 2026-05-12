@@ -95,7 +95,9 @@ export function createViewerBase(
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
-    antialias: true,
+    // Disable antialias on high-DPI displays — pixels are small enough that
+    // MSAA doesn't add visible quality but does cost extra GPU fill-rate.
+    antialias: window.devicePixelRatio < 2,
     powerPreference: 'high-performance',
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));

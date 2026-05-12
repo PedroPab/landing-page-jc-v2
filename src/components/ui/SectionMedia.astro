@@ -77,6 +77,8 @@ const isSingleMedia = hasMedia && media.type !== 'gallery';
               alt={(media as MediaItem).alt}
               class="w-full h-full object-cover"
               loading={(media as MediaItem).priority ? 'eager' : 'lazy'}
+              fetchpriority={(media as MediaItem).priority ? 'high' : 'auto'}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
             />
           ) : (
             <img
@@ -84,7 +86,8 @@ const isSingleMedia = hasMedia && media.type !== 'gallery';
               alt={(media as MediaItem).alt}
               class="w-full h-full object-cover"
               loading={(media as MediaItem).priority ? 'eager' : 'lazy'}
-              decoding="async"
+              fetchpriority={(media as MediaItem).priority ? 'high' : 'auto'}
+              decoding={(media as MediaItem).priority ? 'sync' : 'async'}
             />
           )}
         </div>
