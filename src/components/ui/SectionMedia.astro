@@ -8,8 +8,6 @@
  *   <SectionMedia media={data.hero.media} aspect="video" />
  *   <SectionMedia media={undefined} label="Foto del taller" />
  */
-import { Image } from 'astro:assets';
-import { resolveImage } from '@/lib/images';
 import MediaPlaceholder from '@/components/ui/MediaPlaceholder.astro';
 import VideoBlock from '@/components/ui/VideoBlock.astro';
 import GalleryStrip from '@/components/ui/GalleryStrip.astro';
@@ -71,25 +69,13 @@ const isSingleMedia = hasMedia && media.type !== 'gallery';
     ) : (
       <figure class={`flex flex-col gap-2 ${className}`}>
         <div class={`relative overflow-hidden rounded-lg bg-surface ${aspect === 'video' ? 'aspect-video' : aspect === 'square' ? 'aspect-square' : aspect === 'portrait' ? 'aspect-[3/4]' : ''}`}>
-          {resolveImage((media as MediaItem).src) ? (
-            <Image
-              src={resolveImage((media as MediaItem).src)!}
-              alt={(media as MediaItem).alt}
-              class="w-full h-full object-cover"
-              loading={(media as MediaItem).priority ? 'eager' : 'lazy'}
-              fetchpriority={(media as MediaItem).priority ? 'high' : 'auto'}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-            />
-          ) : (
-            <img
-              src={(media as MediaItem).src}
-              alt={(media as MediaItem).alt}
-              class="w-full h-full object-cover"
-              loading={(media as MediaItem).priority ? 'eager' : 'lazy'}
-              fetchpriority={(media as MediaItem).priority ? 'high' : 'auto'}
-              decoding={(media as MediaItem).priority ? 'sync' : 'async'}
-            />
-          )}
+          <img
+            src={(media as MediaItem).src}
+            alt={(media as MediaItem).alt}
+            class="w-full h-full object-cover"
+            loading={(media as MediaItem).priority ? 'eager' : 'lazy'}
+            decoding="async"
+          />
         </div>
         {(media as MediaItem).caption && (
           <figcaption class="text-[0.75rem] text-neutral leading-relaxed px-1">

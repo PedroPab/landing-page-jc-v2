@@ -27,6 +27,7 @@ const { fogColor = "#1a1a18" } = Astro.props;
 </style>
 
 <script>
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Lazy-load Three.js to improve initial page load (deferred chunk)
@@ -100,10 +101,12 @@ const { fogColor = "#1a1a18" } = Astro.props;
         return new THREE.TubeGeometry(curve, segments, tube, radialSegments, false);
       }
 
+      // Mobile: fewer segments to reduce GPU workload
+      const segMul = isMobile ? 0.5 : 1;
       const geometries = [
-        makeSpring({ radius: 0.38, height: 3.2, turns: 8,  segments: 130, radialSegments: 10 }),
-        makeSpring({ radius: 0.52, height: 4.6, turns: 10, segments: 130, radialSegments: 10 }),
-        makeSpring({ radius: 0.28, height: 2.6, turns: 7,  segments: 130, radialSegments: 10 }),
+        makeSpring({ radius: 0.38, height: 3.2, turns: 8,  segments: Math.ceil(130 * segMul), radialSegments: isMobile ? 6 : 10 }),
+        makeSpring({ radius: 0.52, height: 4.6, turns: 10, segments: Math.ceil(130 * segMul), radialSegments: isMobile ? 6 : 10 }),
+        makeSpring({ radius: 0.28, height: 2.6, turns: 7,  segments: Math.ceil(130 * segMul), radialSegments: isMobile ? 6 : 10 }),
       ];
 
       const materials = [
@@ -121,7 +124,8 @@ const { fogColor = "#1a1a18" } = Astro.props;
       };
 
       const items: SpringItem[] = [];
-      const COUNT = 7;
+      // Mobile: fewer spring objects to reduce draw calls and GPU load
+      const COUNT = isMobile ? 4 : 7;
       for (let i = 0; i < COUNT; i++) {
         const mesh = new THREE.Mesh(
           geometries[i % geometries.length],
