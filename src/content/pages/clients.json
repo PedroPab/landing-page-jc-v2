@@ -73,7 +73,7 @@
         "sector": "Manufactura de utensilios de cocina",
         "description": "Resortes para mecanismos de utensilios y accesorios de cocina y hogar.",
         "logo": { "type": "image", "src": "/media/clients/logos/universal.png", "alt": "Logo Universal" }
-      },
+      }
     ]
   }
 ]

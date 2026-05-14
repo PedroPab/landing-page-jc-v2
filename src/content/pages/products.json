@@ -41,17 +41,27 @@
           },
           {
             "type": "image",
-            "src": "/media/products/resorteria-pesada-01.png",
-            "alt": "Resorte industrial pesado fabricado por JC Resortes"
-          },
-          {
-            "type": "image",
             "src": "/media/products/resorteria-pesada-02.png",
             "alt": "Resorte industrial pesado fabricado por JC Resortes"
           },
           {
             "type": "image",
             "src": "/media/products/resorteria-pesada-03.jpg",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-04.webp",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-05.webp",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-06.jpg",
             "alt": "Resorte industrial pesado fabricado por JC Resortes"
           }
         ]
