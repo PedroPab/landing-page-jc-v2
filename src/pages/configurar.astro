@@ -294,6 +294,12 @@ const whatsappNumber = settings.whatsapp.number;
     pointer-events: none;
   }
 
+  .canvas-badge--warn {
+    border-color: rgba(255, 180, 0, 0.55);
+    color: rgba(255, 200, 60, 0.95);
+    transition: border-color 0.25s, color 0.25s;
+  }
+
   /* ── Sliders ─────────────────────────────────── */
   .config-param {
     display: flex;
@@ -469,10 +475,26 @@ const whatsappNumber = settings.whatsapp.number;
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
 
+  // ── Constants ────────────────────────────────────────────────────────────────
+  const SCALE           = 10;   // mm → THREE units (100 mm = 10 units)
+  const DEBOUNCE_MS     = 150;  // ms antes de reconstruir geometría
+  const MIN_SEGS        = 120;  // segmentos mínimos del path (preview)
+  const MAX_SEGS        = 800;  // tope para no saturar GPU
+  const SEGS_PER_TURN   = 16;   // segmentos por espira
+  const RADIAL_SEGS     = 12;   // caras de la sección transversal (preview)
+  const STL_SEGS        = 200;  // path segments para exportar STL
+  const STL_RADIAL_SEGS = 16;   // radial segments para exportar STL
+  const CAM_BASE_DIST   = 15;   // distancia inicial cámara (unidades THREE)
+  const CAM_FIT_HEIGHT  = 1.7;  // factor fit × altura
+  const CAM_FIT_RADIUS  = 4;    // factor fit × radio
+  const CAM_MIN_FACTOR  = 0.5;  // minDistance = fitDistance * este factor
+  const CAM_MAX_FACTOR  = 1.9;  // maxDistance = fitDistance * este factor
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
   function buildSpringGeo(
     height: number, radius: number, tube: number, turns: number,
-    segments = 120, radialSegs = 12,
+    segments = Math.min(MAX_SEGS, Math.max(MIN_SEGS, turns * SEGS_PER_TURN)),
+    radialSegs = RADIAL_SEGS,
   ): THREE.BufferGeometry {
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i <= segments; i++) {
@@ -515,7 +537,7 @@ const whatsappNumber = settings.whatsapp.number;
   // ── THREE setup ──────────────────────────────────────────────────────────────
   const scene    = new THREE.Scene();
   const camera   = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
-  camera.position.set(0, 0, 15);
+  camera.position.set(0, 0, CAM_BASE_DIST);
 
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.5));
@@ -549,11 +571,11 @@ const whatsappNumber = settings.whatsapp.number;
   controls.addEventListener('start', () => { userInteracting = true; });
   controls.addEventListener('end', () => { userInteracting = false; });
 
-  // ── Debounce: delay geometry rebuild 150ms after last slider move ─────────
+  // ── Debounce: delay geometry rebuild after last slider move ─────────────────
   let rebuildTimer = 0;
   function scheduleRebuild() {
     clearTimeout(rebuildTimer);
-    rebuildTimer = window.setTimeout(() => { needsRebuild = true; }, 150);
+    rebuildTimer = window.setTimeout(() => { needsRebuild = true; }, DEBOUNCE_MS);
   }
 
   // ── Params ───────────────────────────────────────────────────────────────────
@@ -566,8 +588,49 @@ const whatsappNumber = settings.whatsapp.number;
     };
   }
 
-  // Display scale: divide by 10 so 100mm = 10 THREE units
-  const SCALE = 10;
+  // ── Constraint enforcement ──────────────────────────────────────────────────
+  function enforceConstraints() {
+    let clamped = false;
+
+    const radius = +inpRadius.value;
+    const height = +inpHeight.value;
+    const wire   = +inpWire.value;
+    const turns  = +inpTurns.value;
+
+    // Regla 1: alambre no puede superar el 92 % del diámetro del bobinado
+    const maxWire = Math.min(15, radius * 1.85);
+    if (wire > maxWire) {
+      const clampedWire = Math.round(maxWire * 10) / 10;
+      inpWire.value = String(clampedWire);
+      outWire.value = String(clampedWire);
+      updateSliderFill(inpWire);
+      clamped = true;
+    }
+
+    // Regla 2: espiras no pueden superponerse axialmente (pitch ≥ diámetro alambre)
+    const effectiveWire = +inpWire.value;
+    const maxTurns = Math.max(2, Math.floor(height / effectiveWire));
+    if (turns > maxTurns) {
+      inpTurns.value = String(maxTurns);
+      outTurns.value = String(maxTurns);
+      updateSliderFill(inpTurns);
+      clamped = true;
+    }
+
+    // Aviso temporal en el badge si hubo ajuste
+    if (clamped) {
+      const badgeWrap = badgeEl.parentElement as HTMLElement;
+      badgeWrap.classList.add('canvas-badge--warn');
+      badgeEl.textContent = 'Valores ajustados automáticamente';
+      clearTimeout((enforceConstraints as any)._t);
+      (enforceConstraints as any)._t = window.setTimeout(() => {
+        badgeWrap.classList.remove('canvas-badge--warn');
+        const { radius: r, height: h } = getParams();
+        badgeEl.textContent = `Ø ${r * 2} × ${h} mm`;
+      }, 1500);
+    }
+  }
+
 
   function rebuildSpring() {
     const { height, wire, radius, turns } = getParams();
@@ -580,10 +643,10 @@ const whatsappNumber = settings.whatsapp.number;
     scene.add(currentMesh);
 
     // Fit zoom limits and reset camera framing to the current spring size.
-    const fitDistance = Math.max(10, (height / SCALE) * 1.7, (radius / SCALE) * 4);
+    const fitDistance = Math.max(CAM_BASE_DIST, (height / SCALE) * CAM_FIT_HEIGHT, (radius / SCALE) * CAM_FIT_RADIUS);
     controls.target.set(0, 0, 0);
-    controls.minDistance = Math.max(4.5, fitDistance * 0.5);
-    controls.maxDistance = Math.max(controls.minDistance + 4, fitDistance * 1.9);
+    controls.minDistance = Math.max(4.5, fitDistance * CAM_MIN_FACTOR);
+    controls.maxDistance = Math.max(controls.minDistance + 4, fitDistance * CAM_MAX_FACTOR);
     camera.position.set(0, 0, fitDistance);
     camera.updateProjectionMatrix();
     controls.update();
@@ -608,6 +671,7 @@ const whatsappNumber = settings.whatsapp.number;
     inp.addEventListener('input', () => {
       out.value = fmt(+inp.value);
       updateSliderFill(inp);
+      enforceConstraints();
       scheduleRebuild();
     });
   }
@@ -616,12 +680,13 @@ const whatsappNumber = settings.whatsapp.number;
   wireSlider(inpWire,   outWire,   (v) => String(v));
   wireSlider(inpRadius, outRadius);
   wireSlider(inpTurns,  outTurns);
+  enforceConstraints(); // verificar valores iniciales al cargar la página
 
   // ── STL download ─────────────────────────────────────────────────────────────
   btnDl.addEventListener('click', () => {
     const { height, wire, radius, turns } = getParams();
-    // Export at 1:1 mm scale
-    const exportGeo = buildSpringGeo(height, radius, wire / 2, turns, 200, 16);
+    // Export at 1:1 mm scale (fixed high-quality segments)
+    const exportGeo = buildSpringGeo(height, radius, wire / 2, turns, STL_SEGS, STL_RADIAL_SEGS);
     const exportMesh = new THREE.Mesh(exportGeo);
     exportMesh.updateMatrixWorld();
 
