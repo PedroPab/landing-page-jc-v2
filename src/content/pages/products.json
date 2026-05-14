@@ -5,6 +5,58 @@
     "subtitle": "Fabricamos resortes industriales a la medida según especificación técnica, muestra física o necesidad del cliente. A continuación, los principales tipos de resortes y piezas especiales que producimos.",
     "items": [
       {
+        "id": "resorteria-pesada",
+        "name": "Resortería pesada",
+        "description": "Línea orientada a resortes de mayor resistencia, tamaño o carga. Aplica para maquinaria, procesos industriales o necesidades donde se requiere alta fuerza, durabilidad y fabricación a medida. Soportan cargas exigentes, vibración, impacto o condiciones de trabajo severas.",
+        "applications": [
+          "Maquinaria vibradora",
+          "Equipos mineros",
+          "Maquinaria pesada",
+          "Construcción",
+          "Equipos agrícolas",
+          "Suspensiones industriales",
+          "Prensas y sistemas de carga"
+        ],
+        "materials": [
+          "Acero SAE 9254",
+          "Acero al carbono de alta resistencia",
+          "Acero especial según carga",
+          "Material tratado térmicamente"
+        ],
+        "finishes": [
+          "Natural",
+          "Tratamiento térmico según requerimiento"
+        ],
+        "notes": "Disponible para desarrollos de gran diámetro, alta carga y condiciones industriales exigentes. Puede incluir tratamiento térmico según el tipo de trabajo requerido.",
+        "image": {
+          "type": "image",
+          "src": "/media/products/resorteria-pesada.jpg",
+          "alt": "Resorte industrial pesado fabricado por JC Resortes"
+        },
+        "photos": [
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada.png",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-01.png",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-02.png",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          },
+          {
+            "type": "image",
+            "src": "/media/products/resorteria-pesada-03.jpg",
+            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+          }
+        ]
+      },
+      {
         "id": "resortes-bandas-motos",
         "name": "Resortes para bandas de motos",
         "description": "Resorte de tensión fabricado en acero 1070 con acabado natural. Cuenta con ganchos en sus extremos y está diseñado para aplicaciones en motos, especialmente en sistemas de bandas, retorno o sujeción.",
@@ -40,17 +92,18 @@
           }
         ]
       },
+     
       {
-        "id": "tension-gancho-movible",
-        "name": "Resortes de tensión con gancho movible",
-        "description": "Resorte helicoidal de tensión fabricado en acero 1070 con acabado natural. Tiene cuerpo alargado y ganchos en los extremos, uno de ellos con función móvil. Ideal para mecanismos que requieren fuerza de tracción, retorno o ajuste.",
+        "id": "resorte-torsion",
+        "name": "Resorte de torsión",
+        "description": "Resorte helicoidal fabricado para trabajar por torsión, generando fuerza rotacional al girar sus brazos. Fabricado en acero 1070 con acabado natural. Cuenta con brazos rectos o curvos en sus extremos para anclaje al mecanismo.",
         "applications": [
-          "Mecanismos de apertura y cierre",
-          "Puertas y compuertas",
-          "Maquinaria industrial",
-          "Equipos agrícolas",
-          "Motocicletas",
-          "Sistemas de retorno"
+          "Bisagras",
+          "Mecanismos de cierre",
+          "Palancas y actuadores",
+          "Equipos industriales",
+          "Sistemas de retorno angular",
+          "Maquinaria liviana"
         ],
         "materials": [
           "Acero 1070"
@@ -58,17 +111,17 @@
         "finishes": [
           "Natural"
         ],
-        "notes": "Puede fabricarse con gancho estándar, gancho movible, argolla o extremos personalizados según la necesidad del cliente.",
+        "notes": "Se fabrica según el ángulo de trabajo, sentido de enrollado, longitud y geometría de los brazos requeridos por el cliente.",
         "image": {
           "type": "image",
-          "src": "/media/products/resorte-tension-gancho-movible.jpg",
-          "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
+          "src": "/media/products/resorte-torsion.jpg",
+          "alt": "Resorte de torsión fabricado por JC Resortes"
         },
         "photos": [
           {
             "type": "image",
-            "src": "/media/products/resorte-tension-gancho-movible.png",
-            "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
+            "src": "/media/products/resorte-torsion.png",
+            "alt": "Resorte de torsión fabricado por JC Resortes"
           }
         ]
       },
@@ -143,7 +196,7 @@
       },
       {
         "id": "formas-especiales",
-        "name": "Formas especiales",
+        "name": "Formas y resorteria especiales",
         "description": "Piezas fabricadas en acero inoxidable o acero 302, con posibilidad de acabado pavonado. Son desarrollos personalizados con dobleces tipo S, curvas, aros y geometrías especiales según la necesidad del cliente. Incluye clips, grapas, seguros, ganchos, abrazaderas y retenedores.",
         "applications": [
           "Ensambles industriales",
@@ -186,88 +239,39 @@
           }
         ]
       },
-      {
-        "id": "resorteria-especializada",
-        "name": "Resortería especializada",
-        "description": "Resortes y piezas no estándar fabricadas según diseño, función o requerimiento técnico específico. Pueden incluir alambres doblados, resortes de torsión con geometrías complejas, calibres específicos y acabados personalizados pavonados o naturales según la referencia.",
+       {
+        "id": "tension-gancho-movible",
+        "name": "Resortes gancho movible",
+        "description": "Resorte helicoidal de tensión fabricado en acero 1070 con acabado natural. Tiene cuerpo alargado y ganchos en los extremos, uno de ellos con función móvil. Ideal para mecanismos que requieren fuerza de tracción, retorno o ajuste.",
         "applications": [
-          "Mecanismos de precisión",
-          "Industria automotriz",
-          "Electrodomésticos",
-          "Equipos médicos",
-          "Dispositivos electrónicos",
-          "Desarrollos a medida"
+          "Mecanismos de apertura y cierre",
+          "Puertas y compuertas",
+          "Maquinaria industrial",
+          "Equipos agrícolas",
+          "Motocicletas",
+          "Sistemas de retorno"
         ],
         "materials": [
-          "Acero inoxidable",
-          "Acero 1070",
-          "Acero especial según requerimiento"
+          "Acero 1070"
         ],
         "finishes": [
-          "Pavonado",
           "Natural"
         ],
-        "notes": "Resortes no estándar fabricados según diseño del cliente. Para cotizar se requiere plano técnico, muestra física o descripción detallada de función, calibre y geometría.",
+        "notes": "Puede fabricarse con gancho estándar, gancho movible, argolla o extremos personalizados según la necesidad del cliente.",
         "image": {
           "type": "image",
-          "src": "/media/products/resorte-torsion.jpg",
-          "alt": "Resortería especializada fabricada por JC Resortes"
+          "src": "/media/products/resorte-tension-gancho-movible.jpg",
+          "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
         },
         "photos": [
           {
             "type": "image",
-            "src": "/media/products/resorte-torsion.png",
-            "alt": "Resortería especializada fabricada por JC Resortes"
-          }
-        ]
-      },
-      {
-        "id": "resorteria-pesada",
-        "name": "Resortería pesada",
-        "description": "Línea orientada a resortes de mayor resistencia, tamaño o carga. Aplica para maquinaria, procesos industriales o necesidades donde se requiere alta fuerza, durabilidad y fabricación a medida. Soportan cargas exigentes, vibración, impacto o condiciones de trabajo severas.",
-        "applications": [
-          "Maquinaria vibradora",
-          "Equipos mineros",
-          "Maquinaria pesada",
-          "Construcción",
-          "Equipos agrícolas",
-          "Suspensiones industriales",
-          "Prensas y sistemas de carga"
-        ],
-        "materials": [
-          "Acero SAE 9254",
-          "Acero al carbono de alta resistencia",
-          "Acero especial según carga",
-          "Material tratado térmicamente"
-        ],
-        "finishes": [
-          "Natural",
-          "Tratamiento térmico según requerimiento"
-        ],
-        "notes": "Disponible para desarrollos de gran diámetro, alta carga y condiciones industriales exigentes. Puede incluir tratamiento térmico según el tipo de trabajo requerido.",
-        "image": {
-          "type": "image",
-          "src": "/media/products/resorteria-pesada.jpg",
-          "alt": "Resorte industrial pesado fabricado por JC Resortes"
-        },
-        "photos": [
-          {
-            "type": "image",
-            "src": "/media/products/resorteria-pesada.png",
-            "alt": "Resorte industrial pesado fabricado por JC Resortes"
-          },
-          {
-            "type": "image",
-            "src": "/media/products/resorteria-pesada-01.png",
-            "alt": "Resorte industrial pesado fabricado por JC Resortes"
-          },
-          {
-            "type": "image",
-            "src": "/media/products/resorteria-pesada-02.png",
-            "alt": "Resorte industrial pesado fabricado por JC Resortes"
+            "src": "/media/products/resorte-tension-gancho-movible.png",
+            "alt": "Resorte de tensión con gancho movible fabricado por JC Resortes"
           }
         ]
       }
+      
     ]
   }
 ]

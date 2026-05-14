@@ -68,19 +68,12 @@
         "logo": { "type": "image", "src": "/media/clients/logos/isagen.png", "alt": "Logo ISAGEN" }
       },
       {
-        "id": "landers",
-        "name": "Landers",
+        "id": "universal",
+        "name": "Universal",
         "sector": "Manufactura de utensilios de cocina",
         "description": "Resortes para mecanismos de utensilios y accesorios de cocina y hogar.",
-        "logo": { "type": "image", "src": "/media/clients/logos/landers.png", "alt": "Logo Landers" }
+        "logo": { "type": "image", "src": "/media/clients/logos/universal.png", "alt": "Logo Universal" }
       },
-      {
-        "id": "oviedo",
-        "name": "Centro Comercial Oviedo",
-        "sector": "Retail y centros comerciales",
-        "description": "Resortes para infraestructuras y equipamiento de instalaciones comerciales.",
-        "logo": { "type": "image", "src": "/media/clients/logos/oviedo.png", "alt": "Logo Centro Comercial Oviedo" }
-      }
     ]
   }
 ]
