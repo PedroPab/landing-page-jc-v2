@@ -159,7 +159,18 @@ const sitemapGroups: SitemapGroup[] = settings.navSitemap ?? [
     <!-- Copyright bar -->
     <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.7rem] text-white/30">
       <p>&copy; {currentYear} {settings.name}. Todos los derechos reservados.</p>
-      <p class="font-heading uppercase tracking-wide text-[0.65rem]">Medellín, Colombia</p>
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        <p class="font-heading uppercase tracking-wide text-[0.65rem]">Medellín, Colombia</p>
+        <span class="hidden sm:inline text-white/15">·</span>
+        <a
+          href="https://github.com/PauloPabDev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[0.65rem] text-white/20 hover:text-white/50 transition-colors"
+        >
+          Created by PauloPabDev
+        </a>
+      </div>
     </div>
 
   </div>
